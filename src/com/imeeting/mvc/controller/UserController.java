@@ -290,7 +290,7 @@ public class UserController extends ExceptionController {
 			@RequestParam(value = "phonecode") String phoneCode,
 			@RequestParam(value = "password") String password,
 			@RequestParam(value = "password1") String password1,
-			@RequestParam(value = "deviceId") String deviceId,
+			@RequestParam(value = "deviceId", defaultValue="") String deviceId,
 			@RequestParam(value = "nickname", defaultValue = "") String nickname,
 			HttpServletResponse response, HttpSession session) throws Exception {
 		log.info("regUser");

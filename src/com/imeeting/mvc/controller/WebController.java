@@ -26,8 +26,8 @@ import com.imeeting.web.user.UserBean;
 import com.richitec.sms.client.SMSHttpResponse;
 
 @Controller
-public class IMeetingWebController {
-	private static Log log = LogFactory.getLog(IMeetingWebController.class);
+public class WebController {
+	private static Log log = LogFactory.getLog(WebController.class);
 
 	@RequestMapping("/")
 	public ModelAndView index(HttpSession session, HttpServletRequest request) {

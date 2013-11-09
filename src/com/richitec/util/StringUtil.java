@@ -2,7 +2,7 @@ package com.richitec.util;
 
 import java.util.Vector;
 
-public class TextUtility {
+public class StringUtil {
 
 	/**
 	 * split the text with given split word
@@ -163,4 +163,11 @@ public class TextUtility {
 		return input;
 	}
 
+	public static boolean isNullOrEmpty(String str) {
+		if (str == null || "".equals(str)) {
+			return true;
+		} else {
+			return false;
+		}
+	}
 }

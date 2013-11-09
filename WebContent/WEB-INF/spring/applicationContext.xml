@@ -14,7 +14,7 @@
 		</property>
 	</bean>	
 	
-	<bean id="imeeting_config" class="com.imeeting.framework.Configuration">
+	<bean id="web_config" class="com.imeeting.framework.Configuration">
 		<property name="uploadDir">
 			<value>${upload_tmp_dir}</value>
 		</property>
@@ -40,18 +40,6 @@
 			<value>${textMessagePwd}</value>
 		</property>
 	</bean>	
-	
-	<bean id="donkey_client" class="com.richitec.donkey.client.DonkeyClient">
-		<property name="baseUri">
-			<value>${donkey_base_uri}</value>
-		</property>
-		<property name="appId">
-			<value>${donkey_app_id}</value>
-		</property>
-		<property name="appKey">
-			<value>${donkey_app_key}</value>
-		</property>		
-	</bean>
 	
 	<bean id="notifier" class="com.richitec.notify.Notifier">
 		<property name="notifyUrl">
@@ -111,38 +99,14 @@
 		<property name="dataSource" ref="dataSource_mysql_c3p0"></property>
 	</bean>
 	
-	<bean id="conference_dao" class="com.imeeting.mvc.model.conference.ConferenceDB">
-		<property name="dataSource" ref="dataSource_mysql_c3p0"></property>
-	</bean>
-		
-	<bean id="conference_manager" class="com.imeeting.mvc.model.conference.ConferenceManager">
-		<property name="conferenceDao" ref="conference_dao"></property>
-	</bean>
-
 	<bean id="contact_dao" class="com.imeeting.mvc.model.contact.ContactDAO">
 		<property name="dataSource" ref="dataSource_mysql_c3p0"></property>
 	</bean>
-    
-    <bean id="scheduled_conf_task" 
-          class="org.springframework.scheduling.timer.MethodInvokingTimerTaskFactoryBean">
-         <property name="targetObject" ref="conference_manager"></property>
-         <property name="targetMethod">
-           <value>checkAllScheduledConference</value>
-         </property>
-    </bean>    
-    
-    <bean id="scheduled_conf_timer"
-          class="org.springframework.scheduling.timer.ScheduledTimerTask">
-         <property name="delay"><value>5000</value></property>
-         <property name="period"><value>300000</value></property>
-         <property name="timerTask"><ref bean="scheduled_conf_task"/></property>
-    </bean>    
     
     <bean id="timer_factory" 
           class="org.springframework.scheduling.timer.TimerFactoryBean">
          <property name="scheduledTimerTasks">
             <list>
-                <ref bean="scheduled_conf_timer"/>
             </list>
          </property>
     </bean>
@@ -161,4 +125,8 @@
 	         <value>${mail_from_address}</value>
 	     </property>
 	</bean>	
+	
+	<bean id="petinfo_dao" class="com.sego.mv.model.PetInfoDao">
+		<property name="dataSource" ref="dataSource_mysql_c3p0"></property>
+	</bean>
 </beans>

@@ -7,15 +7,13 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.web.context.ContextLoaderListener;
 import org.springframework.web.context.support.WebApplicationContextUtils;
 
-import com.imeeting.mvc.model.conference.ConferenceDB;
-import com.imeeting.mvc.model.conference.ConferenceManager;
 import com.imeeting.mvc.model.contact.ContactDAO;
 import com.mchange.v2.c3p0.ComboPooledDataSource;
-import com.richitec.donkey.client.DonkeyClient;
 import com.richitec.notify.Notifier;
 import com.richitec.sms.client.SMSClient;
 import com.richitec.ucenter.model.UserDAO;
 import com.richitec.util.MailSender;
+import com.sego.mv.model.dao.PetInfoDao;
 
 public class ContextLoader extends ContextLoaderListener {
 
@@ -44,27 +42,15 @@ public class ContextLoader extends ContextLoaderListener {
 	}
 
 	public static Configuration getConfiguration() {
-		return (Configuration) appContext.getBean("imeeting_config");
+		return (Configuration) appContext.getBean("web_config");
 	}
 
 	public static SMSClient getSMSClient() {
 		return (SMSClient) appContext.getBean("sms_client");
 	}
 
-	public static DonkeyClient getDonkeyClient() {
-		return (DonkeyClient) appContext.getBean("donkey_client");
-	}
-
-	public static ConferenceManager getConferenceManager() {
-		return (ConferenceManager) appContext.getBean("conference_manager");
-	}
-
 	public static Notifier getNotifier() {
 		return (Notifier) appContext.getBean("notifier");
-	}
-
-	public static ConferenceDB getConferenceDAO() {
-		return (ConferenceDB) appContext.getBean("conference_dao");
 	}
 
 	public static UserDAO getUserDAO() {
@@ -77,5 +63,9 @@ public class ContextLoader extends ContextLoaderListener {
 
 	public static MailSender getMailSender() {
 		return (MailSender) appContext.getBean("mail_sender");
+	}
+
+	public static PetInfoDao getPetInfoDao() {
+		return (PetInfoDao) appContext.getBean("petinfo_dao");
 	}
 }

@@ -23,21 +23,11 @@
 	   <mvc:interceptor>
 			<mvc:mapping path="/setting"/>
 			<mvc:mapping path="/setting/**"/>
-			<mvc:mapping path="/myconference"/>
-			<mvc:mapping path="/myconference/**"/>
-			<mvc:mapping path="/webconf"/>
-			<mvc:mapping path="/webconf/**"/>
 			<mvc:mapping path="/contcat/search"/>
 			<mvc:mapping path="/contcat/search/**"/>
 			<bean class="com.imeeting.mvc.UserInterceptor" />
 		</mvc:interceptor>	
 		<mvc:interceptor>
-			<mvc:mapping path="/conference/conflist"/>
-			<mvc:mapping path="/conference/generateConfId"/>
-			<mvc:mapping path="/conference/schedule"/>
-			<mvc:mapping path="/conference/scheduleNow"/>
-			<mvc:mapping path="/conference/attendeeList"/>
-			<mvc:mapping path="/conference/invite"/>
 			<mvc:mapping path="/profile/changePwd"/>
 			<bean class="com.imeeting.mvc.APIAuthInterceptor"></bean>
 		</mvc:interceptor>
