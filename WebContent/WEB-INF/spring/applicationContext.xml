@@ -1,0 +1,164 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="
+			http://www.springframework.org/schema/beans 
+			http://www.springframework.org/schema/beans/spring-beans-2.5.xsd">
+			
+	<bean id="propertyConfigurer"
+		class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+		<property name="locations">
+			<list>
+				<value>/WEB-INF/config/Configuration.properties</value>
+			</list>
+		</property>
+	</bean>	
+	
+	<bean id="imeeting_config" class="com.imeeting.framework.Configuration">
+		<property name="uploadDir">
+			<value>${upload_tmp_dir}</value>
+		</property>
+		<property name="appDonwloadPageUrl">
+		    <value>${app_download_page_url}</value>
+		</property>
+		<property name="appvcenterUrl">
+		    <value>${appvcenter_url}</value>
+		</property>
+		<property name="appId">
+		    <value>${app_id}</value>
+		</property>
+	</bean>
+	
+	<bean id="sms_client" class="com.richitec.sms.client.SMSClient">
+		<property name="baseUri">
+			<value>${textMessageUrl}</value>
+		</property>
+		<property name="userName">
+			<value>${textMessageUserName}</value>
+		</property>
+		<property name="password">
+			<value>${textMessagePwd}</value>
+		</property>
+	</bean>	
+	
+	<bean id="donkey_client" class="com.richitec.donkey.client.DonkeyClient">
+		<property name="baseUri">
+			<value>${donkey_base_uri}</value>
+		</property>
+		<property name="appId">
+			<value>${donkey_app_id}</value>
+		</property>
+		<property name="appKey">
+			<value>${donkey_app_key}</value>
+		</property>		
+	</bean>
+	
+	<bean id="notifier" class="com.richitec.notify.Notifier">
+		<property name="notifyUrl">
+			<value>${notify_url}</value>
+		</property>
+	</bean>
+	
+	<bean id="dataSource_mysql_c3p0" 
+		class="com.mchange.v2.c3p0.ComboPooledDataSource"
+		destroy-method="close">
+		
+		<property name="driverClass">
+			<value>${jdbc.driverClassName.mysql}</value>
+		</property>
+		<property name="jdbcUrl">
+			<value>${jdbc.url.mysql}</value>
+		</property>
+		<property name="user">
+			<value>${jdbc.username.mysql}</value>
+		</property>
+		<property name="password">
+			<value>${jdbc.password.mysql}</value>
+		</property>
+		<property name="acquireIncrement">
+			<value>1</value>
+		</property>			
+		<property name="checkoutTimeout">
+			<value>30000</value>
+		</property>	
+		<property name="preferredTestQuery">
+			<value>SELECT 1</value>
+		</property>
+		<property name="testConnectionOnCheckin">
+			<value>true</value>
+		</property>	
+		<property name="idleConnectionTestPeriod">
+			<value>300</value>
+		</property>
+		<property name="maxIdleTimeExcessConnections">
+			<value>600</value>
+		</property>
+		<property name="unreturnedConnectionTimeout">
+			<value>30</value>
+		</property>	
+		<property name="debugUnreturnedConnectionStackTraces">
+			<value>true</value>
+		</property>			
+		<property name="maxStatementsPerConnection">
+			<value>10</value>
+		</property>	
+		<property name="maxStatements">
+			<value>100</value>
+		</property>				 		
+	</bean>	
+	
+	<bean id="user_dao" class="com.richitec.ucenter.model.UserDAO">
+		<property name="dataSource" ref="dataSource_mysql_c3p0"></property>
+	</bean>
+	
+	<bean id="conference_dao" class="com.imeeting.mvc.model.conference.ConferenceDB">
+		<property name="dataSource" ref="dataSource_mysql_c3p0"></property>
+	</bean>
+		
+	<bean id="conference_manager" class="com.imeeting.mvc.model.conference.ConferenceManager">
+		<property name="conferenceDao" ref="conference_dao"></property>
+	</bean>
+
+	<bean id="contact_dao" class="com.imeeting.mvc.model.contact.ContactDAO">
+		<property name="dataSource" ref="dataSource_mysql_c3p0"></property>
+	</bean>
+    
+    <bean id="scheduled_conf_task" 
+          class="org.springframework.scheduling.timer.MethodInvokingTimerTaskFactoryBean">
+         <property name="targetObject" ref="conference_manager"></property>
+         <property name="targetMethod">
+           <value>checkAllScheduledConference</value>
+         </property>
+    </bean>    
+    
+    <bean id="scheduled_conf_timer"
+          class="org.springframework.scheduling.timer.ScheduledTimerTask">
+         <property name="delay"><value>5000</value></property>
+         <property name="period"><value>300000</value></property>
+         <property name="timerTask"><ref bean="scheduled_conf_task"/></property>
+    </bean>    
+    
+    <bean id="timer_factory" 
+          class="org.springframework.scheduling.timer.TimerFactoryBean">
+         <property name="scheduledTimerTasks">
+            <list>
+                <ref bean="scheduled_conf_timer"/>
+            </list>
+         </property>
+    </bean>
+	
+	<bean id="mail_sender" class="com.richitec.util.MailSender">
+	     <property name="host">
+	         <value>${smtp_server}</value>
+	     </property>
+	     <property name="user">
+	         <value>${mail_auth_user}</value>
+	     </property>
+	     <property name="pwd">
+	         <value>${mail_auth_pwd}</value>
+	     </property>
+	     <property name="from">
+	         <value>${mail_from_address}</value>
+	     </property>
+	</bean>	
+</beans>
