@@ -1,0 +1,63 @@
+http://{server_path}/{path}
+
+server_path: www.segopet.com/segopet
+
+Comment: * 为必填
+
+URL Path:
+用户
+1. 请求验证码
+Path: user/getPhoneCode
+Param: phone*
+Return: json {result: "{code}"}
+ code: 	0	成功
+ 		1	手机号码必填
+		2	手机号码格式错误
+		3 	手机号码已存在
+		1001 服务器错误
+
+2. 验证验证码
+Path: user/checkPhoneCode
+Param: code*
+Return: json {result: "code"}
+ code: 	0	成功
+ 		1	验证码必填
+		2	验证码错误
+		6 	Session过期
+		
+3. 完成注册
+Path: user/regUser
+Param: 	phone*
+		phonecode*
+		password*
+		password1*
+		deviceId
+		nickname
+Return: json 	{
+					userId : string, 
+					username : string, 
+					userkey : string
+				}
+
+4. 登录
+Path: user/login
+Param: 	loginName*
+		loginPwd*
+		brand
+		model
+		release
+		sdk
+		width
+		height
+Retrun: json 	{
+					result : "code", 
+					userId : string, 
+					username : string, 
+					userkey : string,
+					nickname : string
+					}
+ code: 	0	成功
+ 		1	失败
+ 		
+ 		
+				

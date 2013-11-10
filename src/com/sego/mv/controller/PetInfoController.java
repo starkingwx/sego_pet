@@ -15,7 +15,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.imeeting.framework.ContextLoader;
+import com.richitec.util.JSONUtil;
 import com.richitec.util.StringUtil;
+import com.sego.mv.model.bean.PetInfos;
+import com.sego.mv.model.bean.PetUpdateReturnBean;
 import com.sego.mv.model.dao.PetInfoDao;
 
 @Controller
@@ -42,39 +45,42 @@ public class PetInfoController {
 			@RequestParam(value = "weight", defaultValue = "") String weight,
 			@RequestParam(value = "district", defaultValue = "") String district,
 			@RequestParam(value = "placeoftengo", defaultValue = "") String placeOftenGo)
-			throws IOException, JSONException {
-		JSONObject ret = new JSONObject();
-		String result = "0";
+			throws IOException {
+		PetUpdateReturnBean petUpdateReturnBean = new PetUpdateReturnBean();
 		if (StringUtil.isNullOrEmpty(petId)) {
 			if (!petInfoDao.hasPetInfo(userName)) {
 				// create pet info
-				int update = petInfoDao.createPetInfo(userName, nickname, sex,
+				int id = petInfoDao.createPetInfo(userName, nickname, sex,
 						breed, age, height, weight, district, placeOftenGo);
-				if (update > 0) {
-					result = "0";
+				log.info("create pet id: " + id);
+				if (id > 0) {
+					petUpdateReturnBean.setResult("0");
+					petUpdateReturnBean.setPetid(String.valueOf(id));
 				} else {
-					result = "4";
+					petUpdateReturnBean.setResult("4");
 				}
 			} else {
-				result = "3";
+				petUpdateReturnBean.setResult("3");
 			}
 		} else {
 			// save pet info
 			int update = petInfoDao.updatePetInfo(petId, nickname, sex, breed, age, height, weight, district, placeOftenGo);
 			if (update > 0) {
-				result = "0";
+				petUpdateReturnBean.setResult("0");
+				petUpdateReturnBean.setPetid(petId);
 			} else {
-				result = "1";
+				petUpdateReturnBean.setResult("1");
 			}
 		}
-		ret.put("result", result);
-		response.getWriter().print(ret.toString());
+		response.getWriter().print(JSONUtil.toString(petUpdateReturnBean));
 	}
 
 	@RequestMapping(value = "/getpets")
 	public void getPetInfoList(	HttpServletResponse response,
-			@RequestParam(value = "username") String userName) {
-		
+			@RequestParam(value = "username") String userName) throws IOException {
+		PetInfos petInfos = petInfoDao.getPetInfos(userName);
+		String json = JSONUtil.toString(petInfos);
+		response.getWriter().print(json);
 	}
 	
 }

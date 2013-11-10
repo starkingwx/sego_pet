@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project-modules id="moduleCoreId" project-version="1.5.0">
-    <wb-module deploy-name="sego_pet">
+    <wb-module deploy-name="segopet">
         <wb-resource deploy-path="/" source-path="/WebContent" tag="defaultRootSource"/>
         <wb-resource deploy-path="/WEB-INF/classes" source-path="/src"/>
-        <property name="java-output-path" value="/sego_pet/build/classes"/>
-        <property name="context-root" value="sego_pet"/>
+        <property name="java-output-path" value="/segopet/build/classes"/>
+        <property name="context-root" value="segopet"/>
     </wb-module>
 </project-modules>

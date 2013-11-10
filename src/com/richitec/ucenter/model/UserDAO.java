@@ -235,8 +235,8 @@ public class UserDAO {
 	 * @return
 	 */
 	public String getUserKey(String userId) {
-		String sql = "SELECT userkey FROM im_user WHERE id = ?";
-		Object[] params = new Object[] { userId };
+		String sql = "SELECT userkey FROM im_user WHERE id = ? OR username = ?";
+		Object[] params = new Object[] { userId, userId };
 		return jdbc.queryForObject(sql, params, String.class);
 	}
 
