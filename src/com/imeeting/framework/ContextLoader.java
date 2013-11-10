@@ -13,7 +13,7 @@ import com.richitec.notify.Notifier;
 import com.richitec.sms.client.SMSClient;
 import com.richitec.ucenter.model.UserDAO;
 import com.richitec.util.MailSender;
-import com.sego.mv.model.dao.PetInfoDao;
+import com.sego.mvc.model.dao.PetInfoDao;
 
 public class ContextLoader extends ContextLoaderListener {
 

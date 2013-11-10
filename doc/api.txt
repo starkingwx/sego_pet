@@ -34,10 +34,15 @@ Param: 	phone*
 		deviceId
 		nickname
 Return: json 	{
+					result : "code"
 					userId : string, 
 					username : string, 
 					userkey : string
 				}
+ code: 	0	成功
+ 		1	失败
+ 		6	Session过期
+ 		7	手机号不同
 
 4. 登录
 Path: user/login

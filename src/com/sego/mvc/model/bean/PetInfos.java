@@ -1,4 +1,4 @@
-package com.sego.mv.model.bean;
+package com.sego.mvc.model.bean;
 
 import java.util.List;
 
