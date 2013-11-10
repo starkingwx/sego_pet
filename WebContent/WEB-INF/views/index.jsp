@@ -158,40 +158,16 @@
 	</div>	
 </div>
 <div class="content">
-	<div class="info">
-		<h1>操作使用<i class="arrow"></i></h1>
+		<form id="file_upload" action="/segopet/petinfo/uploadavatar" method="POST"
+			enctype="multipart/form-data">
+			<input id="select_doc" type="file" name="avatar_file" /> 
+			<input
+				type="text" value="" name="petid" />
+			<input
+				type="text" value="" name="username" />
+			<input type="submit" value="Submit"/>
+		</form>
 	</div>
-	<ul>
-		<li>
-			<div class="snapshot" id="divSnapShot1"></div>
-			<div class="button"><span>第一步</span></div>
-			<div class="description">
-				<p>在通讯录中选择联系人，选中联系人会出现在屏幕右侧的列表中，选好联系人以后点击右侧列表下方的【邀请】按钮。</p>
-			</div>
-		</li>
-		<li>
-			<div class="snapshot" id="divSnapShot2"></div>
-			<div class="button"><span>第二步</span></div>
-			<div class="description">
-				<p>在弹出的时间设置界面上选择开会时间，选好后点击【确定】按钮。</p>
-			</div>		
-		</li>
-		<li>
-			<div class="snapshot" id="divSnapShot3"></div>
-			<div class="button"><span>第三步</span></div>
-			<div class="description">
-				<p>智会软件会自动调用手机发送短信界面，向所有参会者发送短信通知会议时间。</p>
-			</div>			
-		</li>
-		<li>
-			<div class="snapshot" id="divSnapShot4"></div>
-			<div class="button"><span>第四步</span></div>
-			<div class="description">
-				<p>操作完成以后，会在会议列表界面中看到自己安排好的会议。</p>
-			</div>			
-		</li>
-	</ul>
-</div>
 <div class="footer">
 	<p>
 		<span>© 合肥优云信息技术有限公司</span>

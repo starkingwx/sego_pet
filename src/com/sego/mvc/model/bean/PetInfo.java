@@ -2,6 +2,7 @@ package com.sego.mvc.model.bean;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
@@ -143,19 +144,22 @@ public class PetInfo extends ResultBean {
 		// System.out.print("petId: " + petInfo.getPetid() + " nickname: " +
 		// petInfo.getNickname());
 
-		List<PetInfo> list = new ArrayList<PetInfo>();
-		PetInfo petInfo = new PetInfo();
-//		petInfo.setPetid("12");
-		petInfo.setNickname("sdf");
-		list.add(petInfo);
+//		List<PetInfo> list = new ArrayList<PetInfo>();
+//		PetInfo petInfo = new PetInfo();
+////		petInfo.setPetid("12");
+//		petInfo.setNickname("sdf");
+//		list.add(petInfo);
+//		
+//		petInfo = new PetInfo();
+//		petInfo.setPetid("333");
+//		petInfo.setNickname("asdfasdf");
+//		list.add(petInfo);
+//		PetInfos petInfos = new PetInfos();
+//		petInfos.setList(list);
+//		
+//		System.out.println(JSONUtil.toString(petInfos));
 		
-		petInfo = new PetInfo();
-		petInfo.setPetid("333");
-		petInfo.setNickname("asdfasdf");
-		list.add(petInfo);
-		PetInfos petInfos = new PetInfos();
-		petInfos.setList(list);
-		
-		System.out.println(JSONUtil.toString(petInfos));
+		String avatarFileName = UUID.randomUUID().toString();
+		System.out.print(avatarFileName.length() + " " + avatarFileName);
 	}
 }

@@ -27,9 +27,9 @@ USE `sego`;
 CREATE TABLE `f_blacklist` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `loginid` varchar(20) DEFAULT NULL,
-  `blackloginid` varchar(20) DEFAULT NULL,
+  `blackpetid` int(11) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
 
 #
 # Structure for the `f_guanzhu` table : 
@@ -40,7 +40,7 @@ CREATE TABLE `f_guanzhu` (
   `loginid` varchar(32) DEFAULT NULL,
   `petid` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
 
 #
 # Structure for the `f_liuyan` table : 
@@ -48,13 +48,13 @@ CREATE TABLE `f_guanzhu` (
 
 CREATE TABLE `f_liuyan` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `author` varchar(20) DEFAULT NULL,
+  `author` varchar(32) DEFAULT NULL,
   `content` text,
-  `petid` varchar(10) DEFAULT NULL,
-  `parentid` varchar(10) DEFAULT NULL,
-  `date` varchar(40) DEFAULT NULL,
+  `petid` int(11) NOT NULL,
+  `parentid` int(11) DEFAULT '0',
+  `date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
 
 #
 # Structure for the `f_location` table : 
@@ -65,7 +65,7 @@ CREATE TABLE `f_location` (
   `longitude` varchar(20) COLLATE utf8_unicode_ci DEFAULT NULL,
   `latitude` varchar(20) COLLATE utf8_unicode_ci DEFAULT NULL,
   `id` int(11) DEFAULT NULL,
-  `shijian` varchar(60) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `shijian` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`deviceId`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
@@ -89,21 +89,7 @@ CREATE TABLE `f_pets` (
   `deviceId` varchar(60) DEFAULT NULL,
   `score` int(11) DEFAULT NULL,
   PRIMARY KEY (`petid`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
-#
-# Structure for the `f_xiangce` table : 
-#
-
-CREATE TABLE `f_xiangce` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `type` varchar(20) DEFAULT NULL,
-  `parentid` varchar(20) DEFAULT NULL,
-  `path` varchar(100) DEFAULT NULL,
-  `description` varchar(100) DEFAULT NULL,
-  `name` varchar(30) DEFAULT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8;
 
 #
 # Structure for the `f_yundong` table : 
@@ -120,6 +106,19 @@ CREATE TABLE `f_yundong` (
   `shijian` varchar(60) COLLATE utf8_unicode_ci DEFAULT NULL,
   PRIMARY KEY (`deviceId`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+#
+# Structure for the `gallery` table : 
+#
+
+CREATE TABLE `gallery` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `title` varchar(32) DEFAULT NULL,
+  `cover_url` varchar(60) NOT NULL,
+  `ownerid` varchar(32) NOT NULL,
+  `createtime` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 #
 # Structure for the `im_device_info` table : 
@@ -151,6 +150,22 @@ CREATE TABLE `im_user` (
   `nickname` varchar(64) DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `id` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+#
+# Structure for the `photo` table : 
+#
+
+CREATE TABLE `photo` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `type` varchar(20) DEFAULT NULL,
+  `galleryid` int(11) NOT NULL,
+  `path` varchar(100) DEFAULT NULL,
+  `description` varchar(100) DEFAULT NULL,
+  `name` varchar(30) DEFAULT NULL,
+  `ownerid` varchar(32) DEFAULT NULL,
+  `createtime` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 

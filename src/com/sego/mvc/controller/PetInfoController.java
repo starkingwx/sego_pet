@@ -1,10 +1,18 @@
 package com.sego.mvc.controller;
 
 import java.io.IOException;
+import java.util.List;
+import java.util.UUID;
 
 import javax.annotation.PostConstruct;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
+import org.apache.commons.fileupload.FileItem;
+import org.apache.commons.fileupload.FileUploadException;
+import org.apache.commons.fileupload.disk.DiskFileItemFactory;
+import org.apache.commons.fileupload.servlet.ServletFileUpload;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.stereotype.Controller;
@@ -13,11 +21,13 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import com.imeeting.framework.ContextLoader;
 import com.imeeting.mvc.controller.ExceptionController;
+import com.richitec.util.FileUtil;
 import com.richitec.util.JSONUtil;
+import com.richitec.util.RandomString;
 import com.richitec.util.StringUtil;
 import com.sego.mvc.model.bean.PetInfo;
 import com.sego.mvc.model.bean.PetInfos;
-import com.sego.mvc.model.bean.PetUpdateReturnBean;
+import com.sego.mvc.model.bean.IdBean;
 import com.sego.mvc.model.dao.PetInfoDao;
 
 @Controller
@@ -45,7 +55,7 @@ public class PetInfoController extends ExceptionController {
 			@RequestParam(value = "district", defaultValue = "") String district,
 			@RequestParam(value = "placeoftengo", defaultValue = "") String placeOftenGo)
 			throws IOException {
-		PetUpdateReturnBean petUpdateReturnBean = new PetUpdateReturnBean();
+		IdBean petUpdateReturnBean = new IdBean();
 		if (StringUtil.isNullOrEmpty(petId)) {
 			if (!petInfoDao.hasPetInfo(userName)) {
 				// create pet info
@@ -54,12 +64,12 @@ public class PetInfoController extends ExceptionController {
 				log.info("create pet id: " + id);
 				if (id > 0) {
 					petUpdateReturnBean.setResult("0");
-					petUpdateReturnBean.setPetid(String.valueOf(id));
+					petUpdateReturnBean.setId(String.valueOf(id));
 				} else {
 					petUpdateReturnBean.setResult("4");
 				}
 			} else {
-				petUpdateReturnBean.setResult("3");
+				petUpdateReturnBean.setResult("3"); // already has pet
 			}
 		} else {
 			// save pet info
@@ -67,7 +77,7 @@ public class PetInfoController extends ExceptionController {
 					age, height, weight, district, placeOftenGo);
 			if (update > 0) {
 				petUpdateReturnBean.setResult("0");
-				petUpdateReturnBean.setPetid(petId);
+				petUpdateReturnBean.setId(petId);
 			} else {
 				petUpdateReturnBean.setResult("1");
 			}
@@ -90,14 +100,89 @@ public class PetInfoController extends ExceptionController {
 			@RequestParam(value = "petid") String petId) throws IOException {
 		PetInfo petInfo = new PetInfo();
 		if (StringUtil.isNullOrEmpty(petId)) {
-			petInfo.setResult("1");
+			petInfo.setResult("1"); // null id
 		} else {
 			petInfo = petInfoDao.getPetDetail(petId);
 			petInfo.setResult("0");
 		}
-		response.getWriter().print(JSONUtil.toString(petInfo)); 
+		response.getWriter().print(JSONUtil.toString(petInfo));
 	}
-	
-	
+
+	@RequestMapping(value = "/uploadavatar")
+	public void uploadPetAvatar(HttpServletRequest request,
+			HttpServletResponse response) throws IOException {
+		ServletFileUpload upload = new ServletFileUpload(
+				new DiskFileItemFactory());
+
+		upload.setHeaderEncoding("UTF-8");
+
+		List<FileItem> items;
+		String userName = "";
+		String petId = "";
+		IdBean petUpdateReturnBean = new IdBean();
+		try {
+			items = upload.parseRequest(request);
+			log.info("items : " + items);
+			if (items == null) {
+				throw new FileUploadException();
+			}
+
+			FileItem file2Upload = null;
+			for (FileItem item : items) {
+				log.info("field name: " + item.getFieldName());
+				if ("avatar_file".equals(item.getFieldName())) {
+					file2Upload = item;
+				} else if ("petid".equals(item.getFieldName())) {
+					petId = item.getString();
+				} else if ("username".equals(item.getFieldName())) {
+					userName = item.getString();
+				}
+			}
+			if (file2Upload == null) {
+				throw new FileUploadException("No avatar file");
+			}
+			
+			String avatarFileName = UUID.randomUUID().toString();
+			// save avatar file
+			FileUtil.saveFile(avatarFileName, file2Upload);
+			
+			if (StringUtil.isNullOrEmpty(petId)) {
+				if (!petInfoDao.hasPetInfo(userName)) {
+					// create new avatar
+					int id = petInfoDao.createPetAvatarInfo(avatarFileName,
+							userName);
+					log.info("create pet id: " + id);
+					if (id > 0) {
+						petUpdateReturnBean.setResult("0");
+						petUpdateReturnBean.setId(String.valueOf(id));
+					} else {
+						petUpdateReturnBean.setResult("4");
+					}
+				} else {
+					petUpdateReturnBean.setResult("3"); // already has pet
+				}
+			} else {
+				// update avatar
+//				String avatar = petInfoDao.getPetAvatar(petId);
+//				if (!StringUtil.isNullOrEmpty(avatar)) {
+//					avatarFileName = avatar;
+//				}
+				int update = petInfoDao.updatePetAvatar(petId, avatarFileName);
+				if (update > 0) {
+					petUpdateReturnBean.setResult("0");
+					petUpdateReturnBean.setId(petId);
+				} else {
+					petUpdateReturnBean.setResult("1"); // update failed
+				}
+			}
+		} catch (FileUploadException e) {
+			e.printStackTrace();
+			petUpdateReturnBean.setResult("2"); // no file
+		} catch (Exception e) {
+			e.printStackTrace();
+			petUpdateReturnBean.setResult("5"); // save file failed
+		}
+		response.getWriter().print(JSONUtil.toString(petUpdateReturnBean));
+	}
 
 }

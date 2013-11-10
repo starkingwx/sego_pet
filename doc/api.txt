@@ -27,9 +27,7 @@ Return: json {result: "code"}
 		
 3. 完成注册
 Path: user/regUser
-Param: 	phone*
-		phonecode*
-		password*
+Param: 	password*
 		password1*
 		deviceId
 		nickname
@@ -54,15 +52,70 @@ Param: 	loginName*
 		sdk
 		width
 		height
-Retrun: json 	{
+Return: json 	{
 					result : "code", 
 					userId : string, 
 					username : string, 
 					userkey : string,
 					nickname : string
-					}
+				}
  code: 	0	成功
  		1	失败
  		
- 		
+ 宠物信息：
+ 1. 修改创建宠物信息
+ Path: 	petinfo/modify
+ Param: username*
+		petid		- 空则为创建
+		nickname
+		sex
+		breed
+		age
+		height
+		weight
+		district
+		placeoftengo
+Return: json 	{
+					result : "code",
+					id : string
+				}
+ code: 	0	成功
+		1 	修改失败
+		3	已经有宠物
+		4	创建失败
+		
+2. 获取宠物列表
+Path: 	petinfo/getpets
+Param: 	username*
+Return: json	{
+					result : "code",
+					list : [array of PetInfo]
+				}
+		PetInfo structure:
+				{
+					petid : string,
+					nickname : string,
+					sex : string,
+					weight : string,
+					chuanganid : string,
+					ownerid : string,
+					avatar : string,
+					breed : string,
+					age : string,
+					height : string,
+					district : string,
+					placeoftengo : string,
+					deviceid : string,
+					score : string
+				}
+ code: 	0	成功
+				
+3. 获取宠物详细信息
+Path:	petinfo/getpetdetail
+Param:	petid*
+Return: json PetInfo（同上）,多一个 result : "code"
+ code: 	0	成功
+
+ 
+
 				

@@ -5,14 +5,14 @@ import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.richitec.bean.ResultBean;
 
 @JsonInclude(Include.NON_NULL) 
-public class PetUpdateReturnBean extends ResultBean {
-	private String petid;
+public class IdBean extends ResultBean {
+	private String id;
 
-	public String getPetid() {
-		return petid;
+	public String getId() {
+		return id;
 	}
 
-	public void setPetid(String petid) {
-		this.petid = petid;
+	public void setId(String id) {
+		this.id = id;
 	}
 }

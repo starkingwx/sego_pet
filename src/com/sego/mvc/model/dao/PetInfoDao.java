@@ -55,6 +55,17 @@ public class PetInfoDao extends BaseDao {
 		return count > 0;
 	}
 
+	public int createPetAvatarInfo(String avatarFileName, String userName) {
+		String sql = "INSERT INTO f_pets (avatar, ownerid) VALUES(?,?)";
+		int update = jdbc.update(sql, avatarFileName, userName);
+		int id = -1;
+		if (update > 0) {
+			sql = "SELECT LAST_INSERT_ID()";
+			id = jdbc.queryForInt(sql);
+		}
+		return id;
+	}
+	
 	/**
 	 * 
 	 * @param petId
@@ -76,6 +87,16 @@ public class PetInfoDao extends BaseDao {
 				district, placeOftenGo, petId);
 	}
 
+	public int updatePetAvatar(String petId, String avatarFileName) {
+		String sql = "UPDATE f_pets SET avatar = ? WHERE petid = ?";
+		return jdbc.update(sql, avatarFileName, petId);
+	}
+	
+	public String getPetAvatar(String petId) {
+		String sql = "SELECT avatar FROM f_pets WHERE petid = ?";
+		return jdbc.queryForObject(sql, String.class, petId);
+	}
+	
 	public PetInfos getPetInfos(String userName) {
 		String sql = "SELECT * FROM f_pets WHERE ownerid = ?";
 		List<Map<String, Object>> list = jdbc.queryForList(sql, userName);
