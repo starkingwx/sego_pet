@@ -7,6 +7,7 @@ import com.richitec.bean.ResultBean;
 @JsonInclude(Include.NON_NULL) 
 public class LeaveMsg extends ResultBean {
 	private String msgid;
+	private String author;
 	private String leaver_nickname;
 	private String leaver_sex;
 	private String leaver_avatar;
@@ -62,6 +63,12 @@ public class LeaveMsg extends ResultBean {
 	}
 	public void setLeaver_avatar(String leaver_avatar) {
 		this.leaver_avatar = leaver_avatar;
+	}
+	public String getAuthor() {
+		return author;
+	}
+	public void setAuthor(String author) {
+		this.author = author;
 	}
 	
 }

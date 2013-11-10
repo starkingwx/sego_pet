@@ -124,9 +124,9 @@ public class CommunityDao extends BaseDao {
 	}
 
 	public LeaveMsgs getLeaveMsgs(String petId) {
-		String sql = "SELECT l.id as id, l.content as content, l.petid as petid, l.parentid as parentid, UNIX_TIMESTAMP(l.date) AS _date, "
+		String sql = "SELECT l.id as id, l.author as author, l.content as content, l.petid as petid, l.parentid as parentid, UNIX_TIMESTAMP(l.date) AS _date, "
 				+ " p.nickname as leaver_nickname, p.sex as leaver_sex, p.avatar as leaver_avatar "
-				+ " FROM f_liuyan AS l, f_pets AS p WHERE l.petid = ? AND l.petid = p.petid";
+				+ " FROM f_liuyan AS l, f_pets AS p WHERE l.petid = ? AND l.author = p.ownerid";
 		List<Map<String, Object>> list = jdbc.queryForList(sql, petId);
 		LeaveMsgs leaveMsgs = new LeaveMsgs();
 		List<LeaveMsg> msgList = new ArrayList<LeaveMsg>();
@@ -142,6 +142,7 @@ public class CommunityDao extends BaseDao {
 	private LeaveMsg convertMapToLeaveMsg(Map<String, Object> map) {
 		LeaveMsg msg = new LeaveMsg();
 		msg.setMsgid(String.valueOf(map.get(LeaveMsgColumn.id.name())));
+		msg.setAuthor(String.valueOf(map.get(LeaveMsgColumn.author.name())));
 		msg.setContent(String.valueOf(map.get(LeaveMsgColumn.content.name())));
 		msg.setPetid(String.valueOf(map.get(LeaveMsgColumn.petid.name())));
 		msg.setParentid(String.valueOf(map.get(LeaveMsgColumn.parentid.name())));
@@ -153,10 +154,33 @@ public class CommunityDao extends BaseDao {
 	}
 
 	public LeaveMsg getLeaveMsgDetail(String msgId) {
-		String sql = "SELECT l.id as id, l.content as content, l.petid as petid, l.parentid as parentid, UNIX_TIMESTAMP(l.date) AS _date, "
+		String sql = "SELECT l.id as id, l.author as author, l.content as content, l.petid as petid, l.parentid as parentid, UNIX_TIMESTAMP(l.date) AS _date, "
 				+ " p.nickname as leaver_nickname, p.sex as leaver_sex, p.avatar as leaver_avatar "
-				+ " FROM f_liuyan AS l, f_pets AS p WHERE l.id = ? AND l.petid = p.petid";
+				+ " FROM f_liuyan AS l, f_pets AS p WHERE l.id = ? AND l.author = p.ownerid";
 		Map<String, Object> map = jdbc.queryForMap(sql, msgId);
 		return convertMapToLeaveMsg(map);
+	}
+	
+	public PetInfos getPetBlackList(String userName) {
+		String sql = "SELECT * FROM f_pets WHERE petid IN " +
+				"( SELECT blackpetid FROM f_blacklist WHERE loginid = ?) ";
+		List<Map<String, Object>> list = jdbc.queryForList(sql, userName);
+		return PetInfoDao.convertListToPetInfos(list);
+	}
+	
+	public boolean isPetInBlackList(String petId, String userName) {
+		String sql = "SELECT count(id) FROM f_blacklist WHERE loginid = ? AND blackpetid = ?";
+		int count = jdbc.queryForInt(sql, userName, petId);
+		return count > 0;
+	}
+	
+	public int addPetToBlackList(String petId, String userName) {
+		String sql = "INSERT INTO f_blacklist (loginid, blackpetid) VALUES(?,?)";
+		return jdbc.update(sql, userName, petId);
+	}
+	
+	public int delPetFromBlackList(String petId, String userName) {
+		String sql = "DELETE FROM f_blacklist WHERE loginid = ? AND blackpetid = ?";
+		return jdbc.update(sql, userName, petId);
 	}
 }

@@ -164,7 +164,7 @@ public class CommunityController {
 		response.getWriter().print(JSONUtil.toString(resultBean));
 	}
 
-	@RequestMapping(value = "delmsg")
+	@RequestMapping(value = "/delmsg")
 	public void delMsg(HttpServletResponse response,
 			@RequestParam(value = "username") String userName,
 			@RequestParam(value = "msgid") String msgId) throws IOException {
@@ -186,7 +186,7 @@ public class CommunityController {
 		response.getWriter().print(JSONUtil.toString(resultBean));
 	}
 	
-	@RequestMapping(value = "getleavemsgs")
+	@RequestMapping(value = "/getleavemsgs")
 	public void getLeaveMsgs(HttpServletResponse response,
 			@RequestParam(value = "username") String userName,
 			@RequestParam(value = "petid") String petId) throws IOException {
@@ -200,7 +200,7 @@ public class CommunityController {
 		response.getWriter().print(JSONUtil.toString(msgs));
 	}
 	
-	@RequestMapping(value = "getleavemsgdetail")
+	@RequestMapping(value = "/getleavemsgdetail")
 	public void getLeaveMsgDetail(HttpServletResponse response,
 			@RequestParam(value = "msgid") String msgId) throws IOException {
 		LeaveMsg msg = new LeaveMsg();
@@ -213,5 +213,59 @@ public class CommunityController {
 		response.getWriter().print(JSONUtil.toString(msg));
 	}
 	
+	@RequestMapping(value = "/getblacklist")
+	public void getBlackList(HttpServletResponse response,
+			@RequestParam(value = "username") String userName) throws IOException {
+		PetInfos petInfos = communityDao.getPetBlackList(userName);
+		petInfos.setResult("0");
+		response.getWriter().print(JSONUtil.toString(petInfos));
+	}
 	
+	@RequestMapping(value = "/addblacklist")
+	public void addPetToBlackList(HttpServletResponse response,
+			@RequestParam(value = "username") String userName,
+			@RequestParam(value = "petid") String petId) throws IOException {
+		ResultBean resultBean = new ResultBean();
+		if (StringUtil.isNullOrEmpty(petId)) {
+			resultBean.setResult("2"); // petid is null
+		} else {
+			if (!petInfoDao.isPetExist(petId)) {
+				resultBean.setResult("1"); // pet doesn't exist
+			} else if (communityDao.isPetInBlackList(petId, userName)){
+				resultBean.setResult("3"); // already in black list
+			} else {
+				int row = communityDao.addPetToBlackList(petId, userName);
+				if (row > 0) {
+					resultBean.setResult("0");
+				} else {
+					resultBean.setResult("4"); // add failed
+				}
+			}
+		}
+		response.getWriter().print(JSONUtil.toString(resultBean));
+	}
+	
+	@RequestMapping(value = "/delblacklist")
+	public void delPetFromBlackList(HttpServletResponse response,
+			@RequestParam(value = "username") String userName,
+			@RequestParam(value = "petid") String petId) throws IOException {
+		ResultBean resultBean = new ResultBean();
+		if (StringUtil.isNullOrEmpty(petId)) {
+			resultBean.setResult("2"); // petid is null
+		} else {
+			if (!petInfoDao.isPetExist(petId)) {
+				resultBean.setResult("1"); // pet doesn't exist
+			} else if (!communityDao.isPetInBlackList(petId, userName)){
+				resultBean.setResult("3"); // not in black list
+			} else {
+				int row = communityDao.delPetFromBlackList(petId, userName);
+				if (row > 0) {
+					resultBean.setResult("0");
+				} else {
+					resultBean.setResult("4"); // del failed
+				}
+			}
+		}
+		response.getWriter().print(JSONUtil.toString(resultBean));
+	}
 }
