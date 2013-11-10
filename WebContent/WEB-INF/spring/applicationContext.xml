@@ -129,4 +129,8 @@
 	<bean id="petinfo_dao" class="com.sego.mvc.model.dao.PetInfoDao">
 		<property name="dataSource" ref="dataSource_mysql_c3p0"></property>
 	</bean>
+	
+	<bean id="community_dao" class="com.sego.mvc.model.dao.CommunityDao">
+		<property name="dataSource" ref="dataSource_mysql_c3p0"></property>
+	</bean>
 </beans>

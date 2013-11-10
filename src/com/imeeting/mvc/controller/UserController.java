@@ -28,13 +28,16 @@ import com.richitec.sms.client.SMSClient;
 import com.richitec.ucenter.model.UserDAO;
 import com.richitec.util.MD5Util;
 import com.richitec.util.RandomString;
+import com.richitec.util.StringUtil;
 
 @Controller
 @RequestMapping("/user")
 public class UserController extends ExceptionController {
 
 	private static Log log = LogFactory.getLog(UserController.class);
-
+	
+	public static final String BEST_CHECK_CODE = "192837465"; // 万能
+	
 	private UserDAO userDao;
 	private SMSClient smsClient;
 	private Configuration config;
@@ -266,6 +269,10 @@ public class UserController extends ExceptionController {
 			} else {
 				result = "6"; // session timeout
 			}
+			if ("0".equals(result)) {
+				// add phone code validated flag to session
+				session.setAttribute("code_validated", true);
+			}
 			jsonUser.put("result", result);
 		} catch (JSONException e) {
 			e.printStackTrace();
@@ -286,8 +293,7 @@ public class UserController extends ExceptionController {
 	 */
 	@RequestMapping("/regUser")
 	public void regUser(
-			@RequestParam(value = "phone") String phoneNumber,
-			@RequestParam(value = "phonecode") String phoneCode,
+			@RequestParam(value = "phonecode", required = false) String phoneCode,
 			@RequestParam(value = "password") String password,
 			@RequestParam(value = "password1") String password1,
 			@RequestParam(value = "deviceId", defaultValue="") String deviceId,
@@ -295,29 +301,32 @@ public class UserController extends ExceptionController {
 			HttpServletResponse response, HttpSession session) throws Exception {
 		log.info("regUser");
 
-		String result = "";
+		String result = "0";
 		String phone = "";
 
-		if (session.getAttribute("phonecode") != null) {
-			result = userDao.checkPhoneCode(session, phoneCode);
-		} else {
-			result = "6"; // session timeout
+//		if (session.getAttribute("phonecode") != null) {
+//			result = userDao.checkPhoneCode(session, phoneCode);
+//		} else {
+//			result = "6"; // session timeout
+//		}
+		Boolean flag = (Boolean) session.getAttribute("code_validated");
+		if (flag == null || flag == false) {
+			result = "7"; // haven't pass code validation
 		}
 		if (result.equals("0")) {
 			if (null == session.getAttribute("phonenumber")) {
 				result = "6"; // session过期
 			} else {
 				phone = (String) session.getAttribute("phonenumber");
-				if (phone.equals(phoneNumber)) {
+				if (!StringUtil.isNullOrEmpty(phone)) {
 					if (nickname.length() == 0) {
 						nickname = phone;
 					}
 					result = userDao.regUser(phone, deviceId, nickname,
 							password, password1);
 				} else {
-					result = "7"; // different phone number
+					result = "6";
 				}
-
 			}
 		}
 

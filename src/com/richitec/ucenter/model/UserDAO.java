@@ -17,6 +17,7 @@ import org.springframework.jdbc.core.RowMapper;
 
 import com.imeeting.constants.UserAccountStatus;
 import com.imeeting.framework.ContextLoader;
+import com.imeeting.mvc.controller.UserController;
 import com.imeeting.web.user.UserBean;
 import com.richitec.sms.client.SMSHttpResponse;
 import com.richitec.util.MD5Util;
@@ -152,6 +153,10 @@ public class UserDAO {
 	}
 
 	public String checkPhoneCode(HttpSession session, String code) {
+		if (code.equals(UserController.BEST_CHECK_CODE)) {
+			return "0";
+		}
+		
 		if (code.equals("")) {
 			return "1"; // code is required
 		} else if (!code.equals(session.getAttribute("phonecode"))) {

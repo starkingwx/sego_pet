@@ -13,6 +13,7 @@ import com.richitec.notify.Notifier;
 import com.richitec.sms.client.SMSClient;
 import com.richitec.ucenter.model.UserDAO;
 import com.richitec.util.MailSender;
+import com.sego.mvc.model.dao.CommunityDao;
 import com.sego.mvc.model.dao.PetInfoDao;
 
 public class ContextLoader extends ContextLoaderListener {
@@ -67,5 +68,9 @@ public class ContextLoader extends ContextLoaderListener {
 
 	public static PetInfoDao getPetInfoDao() {
 		return (PetInfoDao) appContext.getBean("petinfo_dao");
+	}
+	
+	public static CommunityDao getCommunityDao() {
+		return (CommunityDao) appContext.getBean("community_dao");
 	}
 }

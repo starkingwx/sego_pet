@@ -1,4 +1,4 @@
-package com.imeeting.constants;
+package com.sego.table;
 
 public enum PetInfoColumn {
 	petid,

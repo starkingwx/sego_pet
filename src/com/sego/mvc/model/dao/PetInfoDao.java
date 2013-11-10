@@ -11,19 +11,14 @@ import org.apache.commons.logging.LogFactory;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.imeeting.constants.PetInfoColumn;
+import com.richitec.dao.BaseDao;
 import com.sego.mvc.model.bean.PetInfo;
 import com.sego.mvc.model.bean.PetInfos;
+import com.sego.table.PetInfoColumn;
 
 @Transactional
-public class PetInfoDao {
+public class PetInfoDao extends BaseDao {
 	private static Log log = LogFactory.getLog(PetInfoDao.class);
-
-	private JdbcTemplate jdbc;
-
-	public void setDataSource(DataSource ds) {
-		jdbc = new JdbcTemplate(ds);
-	}
 
 	/**
 	 * 
@@ -84,15 +79,7 @@ public class PetInfoDao {
 	public PetInfos getPetInfos(String userName) {
 		String sql = "SELECT * FROM f_pets WHERE ownerid = ?";
 		List<Map<String, Object>> list = jdbc.queryForList(sql, userName);
-		PetInfos petInfos = new PetInfos();
-		List<PetInfo> petInfoList = new ArrayList<PetInfo>();
-		petInfos.setList(petInfoList);
-		if (list != null) {
-			for (Map<String, Object> map : list) {
-				PetInfo petInfo = convertMapToPetInfo(map);
-				petInfoList.add(petInfo);
-			}
-		}
+		PetInfos petInfos = convertListToPetInfos(list);
 		return petInfos;
 	}
 
@@ -107,7 +94,7 @@ public class PetInfoDao {
 		return convertMapToPetInfo(map);
 	}
 
-	private PetInfo convertMapToPetInfo(Map<String, Object> map) {
+	public static PetInfo convertMapToPetInfo(Map<String, Object> map) {
 		PetInfo petInfo = new PetInfo();
 		petInfo.setPetid(String.valueOf(map.get(PetInfoColumn.petid.name())));
 		petInfo.setNickname(String.valueOf(map.get(PetInfoColumn.nickname
@@ -129,5 +116,27 @@ public class PetInfoDao {
 				.name())));
 		petInfo.setScore(String.valueOf(map.get(PetInfoColumn.score.name())));
 		return petInfo;
+	}
+	
+	public static PetInfos convertListToPetInfos(List<Map<String, Object>> list) {
+		PetInfos petInfos = new PetInfos();
+		List<PetInfo> petInfoList = new ArrayList<PetInfo>();
+		petInfos.setList(petInfoList);
+		if (list != null) {
+			for (Map<String, Object> map : list) {
+				PetInfo petInfo = convertMapToPetInfo(map);
+				petInfoList.add(petInfo);
+			}
+		}
+		return petInfos;
+	}
+	
+	public boolean isPetExist(String petId) {
+		String sql = "SELECT COUNT(petid) FROM f_pets WHERE petid = ?";
+		if (jdbc.queryForInt(sql, petId) > 0) {
+			return true;
+		} else {
+			return false;
+		}
 	}
 }
