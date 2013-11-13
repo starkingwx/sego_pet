@@ -67,7 +67,7 @@ public class GalleryController {
 			@RequestParam(value = "username") String userName,
 			@RequestParam(value = "title") String title) throws IOException {
 		IdBean resultBean = new IdBean();
-		int id = galleryDao.createGallery(userName, title);
+		long id = galleryDao.createGallery(userName, title);
 		if (id > 0) {
 			resultBean.setResult("0");
 			resultBean.setId(String.valueOf(id));
@@ -162,7 +162,7 @@ public class GalleryController {
 				// save photo file
 				FileUtil.saveFile(photoPathName, file2Upload);
 
-				int id = galleryDao.createPhoto(userName, galleryId, name,
+				long id = galleryDao.createPhoto(userName, galleryId, name,
 						type, photoPathName, description);
 				if (id > 0) {
 					idBean.setResult("0");

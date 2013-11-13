@@ -1,9 +1,11 @@
 package com.sego.mvc.model.dao;
 
+import java.sql.Types;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import org.springframework.jdbc.core.SqlParameter;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.richitec.dao.BaseDao;
@@ -13,7 +15,6 @@ import com.sego.mvc.model.bean.Photo;
 import com.sego.table.GalleryColumn;
 import com.sego.table.PhotoColumn;
 
-@Transactional
 public class GalleryDao extends BaseDao {
 
 	public Galleries getGalleries(String userName) {
@@ -73,14 +74,14 @@ public class GalleryDao extends BaseDao {
 	 * @param title
 	 * @return id
 	 */
-	public int createGallery(String userName, String title) {
+	public long createGallery(String userName, String title) {
 		String sql = "INSERT INTO gallery (title, ownerid) VALUES(?,?) ";
-		int update = jdbc.update(sql, title, userName);
-		int id = -1;
-		if (update > 0) {
-			sql = "SELECT LAST_INSERT_ID()";
-			id = jdbc.queryForInt(sql);
-		}
+		SqlParameter[] params = new SqlParameter[] {
+				new SqlParameter(Types.VARCHAR),
+				new SqlParameter(Types.VARCHAR) };
+		String[] keys = new String[] { GalleryColumn.id.name() };
+		Object[] values = new Object[] { title, userName };
+		long id = insertAndReturnLastId(sql, params, values, keys);
 		return id;
 	}
 
@@ -94,24 +95,29 @@ public class GalleryDao extends BaseDao {
 	 * @param description
 	 * @return id
 	 */
-	public int createPhoto(String userName, String galleryId, String name,
+	public long createPhoto(String userName, String galleryId, String name,
 			String type, String path, String description) {
-		String sql = "INSERT INTO photo (type, galleryid, path, description, name, ownerid) " +
-				"VALUES(?,?,?,?,?,?)";
-		int update = jdbc.update(sql, type, galleryId, path, description, name, userName);
-		int id = -1;
-		if (update > 0) {
-			sql = "SELECT LAST_INSERT_ID()";
-			id = jdbc.queryForInt(sql);
-		}
+		String sql = "INSERT INTO photo (type, galleryid, path, description, name, ownerid) "
+				+ "VALUES(?,?,?,?,?,?)";
+		SqlParameter[] params = new SqlParameter[] {
+				new SqlParameter(Types.VARCHAR),
+				new SqlParameter(Types.INTEGER),
+				new SqlParameter(Types.VARCHAR),
+				new SqlParameter(Types.VARCHAR),
+				new SqlParameter(Types.VARCHAR),
+				new SqlParameter(Types.VARCHAR) };
+		String[] keys = new String[] {PhotoColumn.id.name()};
+		Object[] values = new Object[] {type, galleryId, path, description,
+				 name, userName};
+		long id = insertAndReturnLastId(sql, params, values, keys);
 		return id;
 	}
-	
+
 	public int delGallery(String galleryId, String userName) {
 		String sql = "DELETE FROM gallery WHERE id = ? AND ownerid = ? ";
 		return jdbc.update(sql, galleryId, userName);
 	}
-	
+
 	public int delPhoto(String photoId, String userName) {
 		String sql = "DELETE FROM photo WHERE id = ? AND ownerid = ? ";
 		return jdbc.update(sql, photoId, userName);

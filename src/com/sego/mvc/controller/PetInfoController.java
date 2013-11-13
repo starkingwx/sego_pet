@@ -59,7 +59,7 @@ public class PetInfoController extends ExceptionController {
 		if (StringUtil.isNullOrEmpty(petId)) {
 			if (!petInfoDao.hasPetInfo(userName)) {
 				// create pet info
-				int id = petInfoDao.createPetInfo(userName, nickname, sex,
+				long id = petInfoDao.createPetInfo(userName, nickname, sex,
 						breed, age, height, weight, district, placeOftenGo);
 				log.info("create pet id: " + id);
 				if (id > 0) {
@@ -149,7 +149,7 @@ public class PetInfoController extends ExceptionController {
 			if (StringUtil.isNullOrEmpty(petId)) {
 				if (!petInfoDao.hasPetInfo(userName)) {
 					// create new avatar
-					int id = petInfoDao.createPetAvatarInfo(avatarFileName,
+					long id = petInfoDao.createPetAvatarInfo(avatarFileName,
 							userName);
 					log.info("create pet id: " + id);
 					if (id > 0) {

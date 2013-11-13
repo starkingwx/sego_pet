@@ -1,22 +1,24 @@
 package com.sego.mvc.model.dao;
 
+import java.sql.Types;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import javax.sql.DataSource;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.SqlParameter;
+import org.springframework.jdbc.object.SqlUpdate;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.fasterxml.jackson.annotation.JsonSubTypes.Type;
 import com.richitec.dao.BaseDao;
 import com.sego.mvc.model.bean.PetInfo;
 import com.sego.mvc.model.bean.PetInfos;
 import com.sego.table.PetInfoColumn;
 
-@Transactional
 public class PetInfoDao extends BaseDao {
 	private static Log log = LogFactory.getLog(PetInfoDao.class);
 
@@ -33,19 +35,21 @@ public class PetInfoDao extends BaseDao {
 	 * @param placeOftenGo
 	 * @return petid - last insert id
 	 */
-	public int createPetInfo(String userName, String nickname, String sex,
+	public long createPetInfo(String userName, String nickname, String sex,
 			String breed, String age, String height, String weight,
 			String district, String placeOftenGo) {
 		String sql = "INSERT INTO f_pets (nickname, sex, weight, ownerid, breed, age, height, district, placeoftengo) "
 				+ "VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
-		int update = jdbc.update(sql, nickname, sex, weight, userName, breed,
-				age, height, district, placeOftenGo);
-		int id = -1;
-		if (update > 0) {
-			sql = "SELECT LAST_INSERT_ID()";
-			id = jdbc.queryForInt(sql);
+		SqlParameter[] params = new SqlParameter[9];
+		for (int i = 0; i < 9 ; i++) {
+			params[i] = new SqlParameter(Types.VARCHAR);
 		}
+		String[] keys = new String[] {PetInfoColumn.petid.name()};
+		Object[] values = new Object[]{nickname, sex, weight, userName, breed,
+				age, height, district, placeOftenGo};
+		
+		long id = insertAndReturnLastId(sql, params, values, keys);
 		return id;
 	}
 
@@ -55,14 +59,12 @@ public class PetInfoDao extends BaseDao {
 		return count > 0;
 	}
 
-	public int createPetAvatarInfo(String avatarFileName, String userName) {
+	public long createPetAvatarInfo(String avatarFileName, String userName) {
 		String sql = "INSERT INTO f_pets (avatar, ownerid) VALUES(?,?)";
-		int update = jdbc.update(sql, avatarFileName, userName);
-		int id = -1;
-		if (update > 0) {
-			sql = "SELECT LAST_INSERT_ID()";
-			id = jdbc.queryForInt(sql);
-		}
+		SqlParameter[] params = new SqlParameter[]{new SqlParameter(Types.VARCHAR), new SqlParameter(Types.VARCHAR)};
+		String[] keys = new String[] {PetInfoColumn.petid.name()}; 
+		Object[] values = new Object[] {avatarFileName, userName};
+		long id = insertAndReturnLastId(sql, params, values, keys);
 		return id;
 	}
 	
