@@ -116,6 +116,264 @@ Param:	petid*
 Return: json PetInfo（同上）,多一个 result : "code"
  code: 	0	成功
 
- 
+ 4. 上传宠物头像
+Path: petinfo/uploadavatar
+Param: avatar_file*	-	头像文件
+		username*
+		petid			-	空则创建新宠物信息
+Return:	json	{
+					result : "code",
+					id : string
+				}
+ code:	0	成功
+		1	更新失败
+		2	没有文件
+		3	此用户已有宠物
+		4	创建失败
+		5	文件保存失败
 
-				
+社区
+1. 获取推荐宠物
+Path: community/getrecommendpets
+Param:	username*
+Return: json	{
+					result 	: "code",
+					list	: [array of PetInfo]
+				}
+ code: 0	成功
+ 
+2. 获取附近的宠物
+Path:	community/getnearbypets
+Param:	longitude*
+		latitude*
+Return:	json	{
+					result 	: "code",
+					list	: [array of PetInfo]
+				}
+ code: 	0	成功	
+		1	坐标为空
+		2	坐标不是数字
+
+3. 获取关注的宠物
+Path: community/getconcernpets
+Param:	username*
+Return: json	{
+					result 	: "code",
+					list	: [array of PetInfo]
+				}
+ code: 0	成功
+ 
+4. 关注宠物
+Path: community/concernpet
+Param:	username*
+		petid*
+Return: json	{
+					result : "code"
+				}
+ code: 	0	成功
+		1	宠物不存在
+		2	petid为空
+		3	已经关注
+		4	关注失败
+
+5. 取消关注
+Path: community/unconcernpet
+Param:	username*
+		petid*
+Return: json	{
+					result : "code"
+				}
+ code: 	0	成功
+		1	宠物不存在
+		2	petid为空		
+		3	未关注此宠物
+
+6. 留言
+Path: community/leavemsg
+Param: username*
+		petid*
+		content*
+Return: json	{
+					result : "code"
+				}
+ code: 	0	成功
+		1	宠物不存在
+		2	petid为空		
+		3	留言失败
+
+7. 回复留言
+Path: community/replymsg
+Param: username*
+		content*
+		msgid*
+Return: json	{
+					result : "code"
+				}
+ code: 	0	成功
+		1	留言不存在
+		2	msgid为空
+		3	回复失败
+		
+8. 删除留言
+Path: community/delmsg
+Param: username*
+		msgid*
+Return: json		{
+					result : "code"
+				}
+ code: 	0	成功
+		1	留言不存在	
+		2	msgid为空
+		3	删除失败
+		
+9. 获取留言列表
+Path: community/getleavemsgs
+Param:	username*
+		petid*
+Return:	json	{
+					result	: "code",
+					list	: [array of LeaveMsg]
+				}
+		LeaveMsg {
+						msgid : string,
+						author : string,
+						leaver_nickname	: string,
+						leaver_sex : string,
+						leaver_avatar : string,
+						content	: string,
+						petid : string,
+						parentid : string,
+						leave_timestamp : string // seconds 需要自己转成毫秒
+				}
+ code: 	0	成功
+		2	petid为空
+	
+10. 获取留言详情
+Path: community/getleavemsgdetail
+Param:	msgid*
+Return: json	LeaveMsg, 多一个 result : "code"
+ code: 	0	成功
+		2	petid为空
+
+11. 获取黑名单
+Path: community/getblacklist
+Param:	username*
+Return: json	{
+					result 	: "code",
+					list	: [array of PetInfo]
+				}
+ code: 0	成功
+
+12. 添加黑名单
+Path:  community/addblacklist
+Param:	username*
+		petid*
+Return:	json	{
+					result : "code"
+				}
+ code:	0	成功
+		1	宠物不存在
+		2	petid为空
+		3	已经在黑名单中
+		4	添加失败
+
+13. 从黑名单删除
+Path: community/delblacklist
+Param:	username*
+		petid*
+Return:	json	{
+					result : "code"
+				}
+ code:	0	成功
+		1	宠物不存在
+		2	petid为空
+		3	不在黑名单中
+		4	删除失败	
+
+相册
+1. 获取相册列表
+Path: gallery/getgalleries
+Param:	username*
+Return: json	{
+					result : "code",
+					list : [array of Gallery]
+				}
+		Gallery {
+					id : string,
+					title : string,
+					cover_url : string,
+					ownerid : string,
+					createtime : string	// seconds
+				}
+ code: 0	成功
+
+2. 获取相册
+Path: gallery/getgallery
+Param: galleryid*
+Return:	json	{
+					result : "code",
+					photos : [array of Photo]
+				}
+		Photo	{
+					id : string,
+					type : string,
+					galleryid : string,
+					path : string,	//相对路径
+					description : string,
+					name : string
+					ownerid : string,
+					createtime : string // seconds
+				}
+ code: 	0	成功
+		1	galleryid为空
+	
+3. 创建相册
+Path: gallery/creategallery
+Param: username*
+		title*
+Return: json	{
+					result : "code",
+					id	: string
+				}
+ code: 	0	成功
+		1	创建失败
+		
+4. 删除相册
+Path: gallery/delgallery
+Param:	username*
+		galleryid*
+Return:	json	{
+					result : "code"
+				}
+ code:	0	成功
+		1	galleryid为空
+		2	相册不存在
+
+5. 删除照片
+Path: gallery/delphoto
+Param: username*
+		photoid*
+Return: json	{
+					result : "code"
+				}	
+ code:	0	成功
+		1	photoid为空
+		2	照片不存在
+
+6. 上传照片
+Path: gallery/uploadphoto
+Param: photo_file*	- 照片文件
+		galleryid*
+		username*
+		name*		- 照片名
+		type*
+		descritpion
+Return: json	{
+					result : "code",
+					id	: string
+				}
+ code: 	0	成功
+		1	galleryid为空
+		2	没有照片
+		3	照片信息创建失败
+		5	照片保存失败

@@ -156,7 +156,7 @@ public class GalleryController {
 			}
 
 			if (StringUtil.isNullOrEmpty(galleryId)) {
-				idBean.setResult("2"); // id null
+				idBean.setResult("1"); // id null
 			} else {
 				String photoPathName = UUID.randomUUID().toString();
 				// save photo file
