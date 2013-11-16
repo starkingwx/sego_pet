@@ -1,4 +1,5 @@
-http://{server_path}/{path}
+API: http://{server_path}/{path}
+图片访问地址：http://{server_path}/segoimg/{img_path_name}
 
 server_path: www.segopet.com/segopet
 
@@ -236,10 +237,10 @@ Return:	json	{
 				}
 		LeaveMsg {
 						msgid : string,
-						author : string,
-						leaver_nickname	: string,
-						leaver_sex : string,
-						leaver_avatar : string,
+						author : string,    // author为发消息的用户名，根据此字段判断发消息的人是谁
+						leaver_nickname	: string, // 留言的宠物昵称
+						leaver_sex : string,     // 留言的宠物性别
+						leaver_avatar : string,  // 留言的宠物头像
 						content	: string,
 						petid : string,
 						parentid : string,
