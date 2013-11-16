@@ -128,20 +128,17 @@ Return: json	{
 				}
 		PetInfo structure:
 				{
-					petid : string,
-					nickname : string,
-					sex : string,
-					weight : string,
-					chuanganid : string,
-					ownerid : string,
+					petid : long,
 					avatar : string,
-					breed : string,
-					age : string,
-					height : string,
+					nickname : string,
+					sex : int,
+					breed : int,
+					age : int,
+					height : float,
+					weight : float,
 					district : string,
 					placeoftengo : string,
-					deviceid : string,
-					score : string
+					score : int
 				}
  code: 	0	成功
 				
@@ -270,15 +267,15 @@ Return:	json	{
 					list	: [array of LeaveMsg]
 				}
 		LeaveMsg {
-						msgid : string,
+						msgid : long,
 						author : string,    // author为发消息的用户名，根据此字段判断发消息的人是谁
 						leaver_nickname	: string, // 留言的宠物昵称
-						leaver_sex : string,     // 留言的宠物性别
+						leaver_sex : int,     // 留言的宠物性别
 						leaver_avatar : string,  // 留言的宠物头像
 						content	: string,
-						petid : string,
-						parentid : string,
-						leave_timestamp : string // seconds 需要自己转成毫秒
+						petid : long,
+						parentid : long,
+						leave_timestamp : long // seconds 需要自己转成毫秒
 				}
  code: 	0	成功
 		2	petid为空

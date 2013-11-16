@@ -8,12 +8,7 @@ import java.util.Map;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.jdbc.core.SqlParameter;
-import org.springframework.jdbc.object.SqlUpdate;
-import org.springframework.jdbc.support.GeneratedKeyHolder;
-import org.springframework.transaction.annotation.Propagation;
-import org.springframework.transaction.annotation.Transactional;
 
-import com.fasterxml.jackson.annotation.JsonSubTypes.Type;
 import com.richitec.dao.BaseDao;
 import com.sego.mvc.model.bean.PetInfo;
 import com.sego.mvc.model.bean.PetInfos;
@@ -119,25 +114,25 @@ public class PetInfoDao extends BaseDao {
 
 	public static PetInfo convertMapToPetInfo(Map<String, Object> map) {
 		PetInfo petInfo = new PetInfo();
-		petInfo.setPetid(String.valueOf(map.get(PetInfoColumn.petid.name())));
-		petInfo.setNickname(String.valueOf(map.get(PetInfoColumn.nickname
+		petInfo.setPetid((Integer)(map.get(PetInfoColumn.petid.name())));
+		petInfo.setNickname((String) (map.get(PetInfoColumn.nickname
 				.name())));
-		petInfo.setSex(String.valueOf(map.get(PetInfoColumn.sex.name())));
-		petInfo.setWeight(String.valueOf(map.get(PetInfoColumn.weight.name())));
-		petInfo.setChuanganid(String.valueOf(map.get(PetInfoColumn.chuanganid
+		petInfo.setSex((Integer) (map.get(PetInfoColumn.sex.name())));
+		petInfo.setWeight((Float) map.get(PetInfoColumn.weight.name()));
+		petInfo.setChuanganid((String) (map.get(PetInfoColumn.chuanganid
 				.name())));
-		petInfo.setOwnerid(String.valueOf(map.get(PetInfoColumn.ownerid.name())));
-		petInfo.setAvatar(String.valueOf(map.get(PetInfoColumn.avatar.name())));
-		petInfo.setBreed(String.valueOf(map.get(PetInfoColumn.breed.name())));
-		petInfo.setAge(String.valueOf(map.get(PetInfoColumn.age.name())));
-		petInfo.setHeight(String.valueOf(map.get(PetInfoColumn.height.name())));
-		petInfo.setDistrict(String.valueOf(map.get(PetInfoColumn.district
+		petInfo.setOwnerid((String) (map.get(PetInfoColumn.ownerid.name())));
+		petInfo.setAvatar((String) (map.get(PetInfoColumn.avatar.name())));
+		petInfo.setBreed((Integer) map.get(PetInfoColumn.breed.name()));
+		petInfo.setAge((Integer) (map.get(PetInfoColumn.age.name())));
+		petInfo.setHeight((Float) (map.get(PetInfoColumn.height.name())));
+		petInfo.setDistrict((String) (map.get(PetInfoColumn.district
 				.name())));
-		petInfo.setPlaceoftengo(String.valueOf(map
+		petInfo.setPlaceoftengo((String) (map
 				.get(PetInfoColumn.placeoftengo.name())));
-		petInfo.setDeviceid(String.valueOf(map.get(PetInfoColumn.deviceId
+		petInfo.setDeviceid((String) (map.get(PetInfoColumn.deviceId
 				.name())));
-		petInfo.setScore(String.valueOf(map.get(PetInfoColumn.score.name())));
+		petInfo.setScore((Integer) (map.get(PetInfoColumn.score.name())));
 		return petInfo;
 	}
 	

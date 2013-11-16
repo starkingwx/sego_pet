@@ -6,20 +6,20 @@ import com.richitec.bean.ResultBean;
 
 @JsonInclude(Include.NON_NULL) 
 public class LeaveMsg extends ResultBean {
-	private String msgid;
+	private long msgid;
 	private String author;
 	private String leaver_nickname;
-	private String leaver_sex;
+	private int leaver_sex;
 	private String leaver_avatar;
 	private String content;
-	private String petid;
-	private String parentid;
-	private String leave_timestamp;
+	private long petid;
+	private long parentid;
+	private long leave_timestamp;
 
-	public String getMsgid() {
+	public long getMsgid() {
 		return msgid;
 	}
-	public void setMsgid(String msgid) {
+	public void setMsgid(long msgid) {
 		this.msgid = msgid;
 	}
 	public String getLeaver_nickname() {
@@ -28,10 +28,10 @@ public class LeaveMsg extends ResultBean {
 	public void setLeaver_nickname(String leaver_nickname) {
 		this.leaver_nickname = leaver_nickname;
 	}
-	public String getLeaver_sex() {
+	public int getLeaver_sex() {
 		return leaver_sex;
 	}
-	public void setLeaver_sex(String leaver_sex) {
+	public void setLeaver_sex(int leaver_sex) {
 		this.leaver_sex = leaver_sex;
 	}
 	public String getContent() {
@@ -40,22 +40,22 @@ public class LeaveMsg extends ResultBean {
 	public void setContent(String content) {
 		this.content = content;
 	}
-	public String getPetid() {
+	public long getPetid() {
 		return petid;
 	}
-	public void setPetid(String petid) {
+	public void setPetid(long petid) {
 		this.petid = petid;
 	}
-	public String getParentid() {
+	public long getParentid() {
 		return parentid;
 	}
-	public void setParentid(String parentid) {
+	public void setParentid(long parentid) {
 		this.parentid = parentid;
 	}
-	public String getLeave_timestamp() {
+	public long getLeave_timestamp() {
 		return leave_timestamp;
 	}
-	public void setLeave_timestamp(String leave_timestamp) {
+	public void setLeave_timestamp(long leave_timestamp) {
 		this.leave_timestamp = leave_timestamp;
 	}
 	public String getLeaver_avatar() {
