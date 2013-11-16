@@ -7,7 +7,6 @@ import java.util.UUID;
 import javax.annotation.PostConstruct;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 
 import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.fileupload.FileUploadException;
@@ -23,11 +22,10 @@ import com.imeeting.framework.ContextLoader;
 import com.imeeting.mvc.controller.ExceptionController;
 import com.richitec.util.FileUtil;
 import com.richitec.util.JSONUtil;
-import com.richitec.util.RandomString;
 import com.richitec.util.StringUtil;
+import com.sego.mvc.model.bean.IdBean;
 import com.sego.mvc.model.bean.PetInfo;
 import com.sego.mvc.model.bean.PetInfos;
-import com.sego.mvc.model.bean.IdBean;
 import com.sego.mvc.model.dao.PetInfoDao;
 
 @Controller
@@ -141,11 +139,11 @@ public class PetInfoController extends ExceptionController {
 			if (file2Upload == null) {
 				throw new FileUploadException("No avatar file");
 			}
-			
+
 			String avatarFileName = UUID.randomUUID().toString();
 			// save avatar file
 			FileUtil.saveFile(avatarFileName, file2Upload);
-			
+
 			if (StringUtil.isNullOrEmpty(petId)) {
 				if (!petInfoDao.hasPetInfo(userName)) {
 					// create new avatar
@@ -163,10 +161,10 @@ public class PetInfoController extends ExceptionController {
 				}
 			} else {
 				// update avatar
-//				String avatar = petInfoDao.getPetAvatar(petId);
-//				if (!StringUtil.isNullOrEmpty(avatar)) {
-//					avatarFileName = avatar;
-//				}
+				// String avatar = petInfoDao.getPetAvatar(petId);
+				// if (!StringUtil.isNullOrEmpty(avatar)) {
+				// avatarFileName = avatar;
+				// }
 				int update = petInfoDao.updatePetAvatar(petId, avatarFileName);
 				if (update > 0) {
 					petUpdateReturnBean.setResult("0");
@@ -183,6 +181,20 @@ public class PetInfoController extends ExceptionController {
 			petUpdateReturnBean.setResult("5"); // save file failed
 		}
 		response.getWriter().print(JSONUtil.toString(petUpdateReturnBean));
+	}
+
+	@RequestMapping(value = "/searchpets")
+	public void searchPetInfo(HttpServletResponse response,
+			@RequestParam(value = "phone") String phone) throws IOException {
+		PetInfos petInfos = new PetInfos();
+		if (StringUtil.isNullOrEmpty(phone)) {
+			petInfos.setResult("1"); // phone is empty
+		} else {
+			petInfos = petInfoDao.getPetInfos(phone);
+			petInfos.setResult("0");
+		}
+		String json = JSONUtil.toString(petInfos);
+		response.getWriter().print(json);
 	}
 
 }

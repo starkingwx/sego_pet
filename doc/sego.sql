@@ -76,20 +76,20 @@ CREATE TABLE `f_location` (
 CREATE TABLE `f_pets` (
   `petid` int(11) NOT NULL AUTO_INCREMENT,
   `nickname` varchar(40) DEFAULT NULL,
-  `sex` varchar(10) DEFAULT NULL,
-  `weight` varchar(20) DEFAULT NULL,
+  `sex` tinyint(4) NOT NULL DEFAULT '0',
+  `weight` float(9,2) NOT NULL DEFAULT '0.00',
   `chuanganid` varchar(60) DEFAULT NULL,
   `ownerid` varchar(20) DEFAULT NULL,
   `avatar` varchar(60) DEFAULT NULL,
-  `breed` varchar(20) DEFAULT NULL,
-  `age` varchar(20) DEFAULT NULL,
-  `height` varchar(20) DEFAULT NULL,
+  `breed` tinyint(4) NOT NULL DEFAULT '0',
+  `age` int(11) NOT NULL DEFAULT '0',
+  `height` float(9,2) NOT NULL DEFAULT '0.00',
   `district` varchar(20) DEFAULT NULL,
   `placeoftengo` varchar(60) DEFAULT NULL,
   `deviceId` varchar(60) DEFAULT NULL,
-  `score` int(11) DEFAULT NULL,
+  `score` int(11) NOT NULL DEFAULT '0',
   PRIMARY KEY (`petid`)
-) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=20 DEFAULT CHARSET=utf8 AVG_ROW_LENGTH=1024;
 
 #
 # Structure for the `f_yundong` table : 

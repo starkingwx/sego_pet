@@ -4,7 +4,7 @@
 <!DOCTYPE html>
 <html lang="zh">
   <head>
-    <title>智会</title>
+    <title>赛果</title>
 	<jsp:include page="common/_head.jsp"></jsp:include>
   </head>
 
@@ -21,15 +21,8 @@
     			</div>
     		</div>
     		<div class="span4">
-	    		<h1>智会&nbsp;<small>高效能人士的智慧选择</small></h1>
-    			<ul>
-    				<li><h2><small>多人同时通话</small></h2></li>
-	    			<li><h2><small>高清语音质量</small></h2></li>
-	    			<li><h2><small>多路视频随意切换</small></h2></li>
-	    			<li><h2><small>操作快捷方便</small></h2></li>
-    			</ul>
     			<hr>
-    			<h3>立刻下载开始你的智会之旅</h3>
+    			<h3>立刻下载开始你的赛果之旅</h3>
     			<div>
     				<!-- <a class="btn" href="https://itunes.apple.com/us/app/zhi-hui/id554959651?ls=1&mt=8">
     					<div>
@@ -43,7 +36,7 @@
     					<div>
     						<img class="pull-left" alt="app store" src="./img/android.png">
     						<div class="pull-right">
-    							<p><strong>&nbsp;智会 Android 版</strong><br>下载 apk 文件</p>
+    							<p><strong>&nbsp;赛果</strong><br>下载 apk 文件</p>
     						</div>
     					</div>
     				</a>    				

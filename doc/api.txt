@@ -148,7 +148,7 @@ Param:	petid*
 Return: json PetInfo（同上）,多一个 result : "code"
  code: 	0	成功
 
- 4. 上传宠物头像
+4. 上传宠物头像
 Path: petinfo/uploadavatar
 Param: avatar_file*	-	头像文件
 		username*
@@ -164,6 +164,16 @@ Return:	json	{
 		4	创建失败
 		5	文件保存失败
 
+5. 查找宠物(sig)
+Path: petinfo/searchpets
+Param:	phone*
+Return: json	{
+					result : "code",
+					list : [array of PetInfo]
+				}
+ code: 	0	成功
+		1	phone为空
+		
 社区
 1. 获取推荐宠物(sig)
 Path: community/getrecommendpets
