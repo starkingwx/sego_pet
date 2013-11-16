@@ -24,8 +24,10 @@ import com.imeeting.constants.AccountBindStatus;
 import com.imeeting.framework.Configuration;
 import com.imeeting.framework.ContextLoader;
 import com.imeeting.web.user.UserBean;
+import com.richitec.bean.ResultBean;
 import com.richitec.sms.client.SMSClient;
 import com.richitec.ucenter.model.UserDAO;
+import com.richitec.util.JSONUtil;
 import com.richitec.util.MD5Util;
 import com.richitec.util.RandomString;
 import com.richitec.util.StringUtil;
@@ -35,9 +37,9 @@ import com.richitec.util.StringUtil;
 public class UserController extends ExceptionController {
 
 	private static Log log = LogFactory.getLog(UserController.class);
-	
+
 	public static final String BEST_CHECK_CODE = "192837465"; // 万能
-	
+
 	private UserDAO userDao;
 	private SMSClient smsClient;
 	private Configuration config;
@@ -82,7 +84,8 @@ public class UserController extends ExceptionController {
 			json.put("nickname", user.getNickName());
 			if (user.getUserName() != null && !user.getUserName().equals("")) {
 				json.put("bind_status", AccountBindStatus.bind_phone.name());
-				json.put(AccountBindStatus.bind_phone.name(), user.getUserName());
+				json.put(AccountBindStatus.bind_phone.name(),
+						user.getUserName());
 			}
 			session.setAttribute(UserBean.SESSION_BEAN, user);
 			userDao.recordDeviceInfo(user.getUserId(), brand, model, release,
@@ -103,8 +106,9 @@ public class UserController extends ExceptionController {
 	@RequestMapping("/validatePhoneNumber")
 	public @ResponseBody
 	String validatePhoneNumber(HttpSession session,
-			@RequestParam(value = "phone") String phoneNumber) {
-		String result = userDao.checkRegisterPhone(phoneNumber);
+			@RequestParam(value = "phone") String phoneNumber,
+			@RequestParam(value = "type") String type) {
+		String result = userDao.checkRegisterPhone(phoneNumber, type);
 		if ("3".equals(result)) {
 			userDao.getPhoneCode(session, phoneNumber);
 			return "200";
@@ -159,6 +163,42 @@ public class UserController extends ExceptionController {
 		session.removeAttribute("phonenumber");
 		session.removeAttribute("phonecode");
 		return "200";
+	}
+
+	@RequestMapping(value = "/resetpwd")
+	public @ResponseBody
+	String resetPwdForMobile(HttpSession session,
+			@RequestParam(value = "newPwd") String newPassword,
+			@RequestParam(value = "newPwdConfirm") String newPasswordConfirm) {
+		Boolean flag = (Boolean) session.getAttribute("code_validated");
+		String result = "0";
+		if (flag == null || flag == false) {
+			result = "7"; // haven't pass code validation
+		}
+		if (result.equals("0")) {
+			String phone = (String) session.getAttribute("phonenumber");
+			if (!StringUtil.isNullOrEmpty(phone)) {
+				// reset pwd
+				if (StringUtil.isNullOrEmpty(newPassword) || StringUtil.isNullOrEmpty(newPasswordConfirm)) {
+					result = "1"; // password is empty
+				} else if (!newPassword.equals(newPasswordConfirm)) {
+					result = "2"; // two passwords are different
+				} else {
+					String md5Password = MD5Util.md5(newPassword);
+					if(userDao.changePassword(phone, md5Password) > 0) {
+						result = "0"; // success
+					} else {
+						result = "3"; // reset failed
+					}
+				}
+			} else {
+				result = "6"; // session timeout
+			}
+		}
+
+		ResultBean resultBean = new ResultBean();
+		resultBean.setResult(result);
+		return JSONUtil.toString(resultBean);
 	}
 
 	@RequestMapping(value = "/websignup", method = RequestMethod.POST)
@@ -228,17 +268,20 @@ public class UserController extends ExceptionController {
 	 * 用户从手机注册获取验证码请求。
 	 * 
 	 * @param phone
+	 * @param type
+	 *            类型：注册-register, 找回密码-resetpwd
 	 * @param response
 	 * @param session
 	 * @throws Exception
 	 */
 	@RequestMapping("/getPhoneCode")
 	public void getPhoneCode(@RequestParam(value = "phone") String phone,
+			@RequestParam(value = "type") String type,
 			HttpServletResponse response, HttpSession session) throws Exception {
 		JSONObject jsonUser = new JSONObject();
 		try {
 			String result = "0";
-			result = userDao.checkRegisterPhone(phone);
+			result = userDao.checkRegisterPhone(phone, type);
 			log.info("check register phone return: " + result);
 			if (result.equals("0")) {
 				result = userDao.getPhoneCode(session, phone);
@@ -296,7 +339,7 @@ public class UserController extends ExceptionController {
 			@RequestParam(value = "phonecode", required = false) String phoneCode,
 			@RequestParam(value = "password") String password,
 			@RequestParam(value = "password1") String password1,
-			@RequestParam(value = "deviceId", defaultValue="") String deviceId,
+			@RequestParam(value = "deviceId", defaultValue = "") String deviceId,
 			@RequestParam(value = "nickname", defaultValue = "") String nickname,
 			HttpServletResponse response, HttpSession session) throws Exception {
 		log.info("regUser");
@@ -304,11 +347,11 @@ public class UserController extends ExceptionController {
 		String result = "0";
 		String phone = "";
 
-//		if (session.getAttribute("phonecode") != null) {
-//			result = userDao.checkPhoneCode(session, phoneCode);
-//		} else {
-//			result = "6"; // session timeout
-//		}
+		// if (session.getAttribute("phonecode") != null) {
+		// result = userDao.checkPhoneCode(session, phoneCode);
+		// } else {
+		// result = "6"; // session timeout
+		// }
 		Boolean flag = (Boolean) session.getAttribute("code_validated");
 		if (flag == null || flag == false) {
 			result = "7"; // haven't pass code validation
@@ -340,7 +383,8 @@ public class UserController extends ExceptionController {
 				jsonUser.put("username", user.getUserName());
 				jsonUser.put("userkey", user.getUserKey());
 				jsonUser.put("bind_status", AccountBindStatus.bind_phone.name());
-				jsonUser.put(AccountBindStatus.bind_phone.name(), user.getUserName());
+				jsonUser.put(AccountBindStatus.bind_phone.name(),
+						user.getUserName());
 			}
 		} catch (JSONException e) {
 			e.printStackTrace();
@@ -380,6 +424,7 @@ public class UserController extends ExceptionController {
 	}
 
 	@RequestMapping("/getUserPwd")
+	@Deprecated
 	public void getUserPassword(HttpServletResponse response,
 			@RequestParam(value = "username") String userName)
 			throws IOException {

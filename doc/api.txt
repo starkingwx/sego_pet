@@ -4,17 +4,20 @@ API: http://{server_path}/{path}
 server_path: www.segopet.com/segopet
 
 Comment: * 为必填
+		sig	为需要签名
 
 URL Path:
 用户
 1. 请求验证码
 Path: user/getPhoneCode
 Param: phone*
+		type*	- 注册-register, 找回密码-resetpwd
 Return: json {result: "{code}"}
  code: 	0	成功
  		1	手机号码必填
 		2	手机号码格式错误
-		3 	手机号码已存在
+		3 	手机号码已存在 for type register
+		4	手机号不存在 for type resetpwd
 		1001 服务器错误
 
 2. 验证验证码
@@ -41,7 +44,7 @@ Return: json 	{
  code: 	0	成功
  		1	失败
  		6	Session过期
- 		7	手机号不同
+ 		7	未通过验证码验证
 
 4. 登录
 Path: user/login
@@ -63,8 +66,39 @@ Return: json 	{
  code: 	0	成功
  		1	失败
  		
+5. 找回密码
+Path: user/resetpwd
+Param:	newPwd*
+		newPwdConfirm*
+Return: json	{
+					result : "code"
+				}
+ code:	0	成功
+		1	密码为空
+		2	密码和确认密码不一致
+		3	重设失败
+		6 	Session过期
+		7	未通过验证码验证
+
+6. 修改密码(sig)
+Path: profile/changePwd
+Param: 	username*
+		oldPwd*		- need md5
+		newPwd*
+		newPwdConfirm*
+Return:	json	{
+					result : "code",
+					userkey : string
+				}
+ code:	0	成功
+		1	密码为空
+		2	密码和确认密码不一致
+		3	修改失败
+		4	旧密码不正确
+		
+
  宠物信息：
- 1. 修改创建宠物信息
+ 1. 修改创建宠物信息(sig)
  Path: 	petinfo/modify
  Param: username*
 		petid		- 空则为创建
@@ -85,7 +119,7 @@ Return: json 	{
 		3	已经有宠物
 		4	创建失败
 		
-2. 获取宠物列表
+2. 获取宠物列表(sig)
 Path: 	petinfo/getpets
 Param: 	username*
 Return: json	{
@@ -111,7 +145,7 @@ Return: json	{
 				}
  code: 	0	成功
 				
-3. 获取宠物详细信息
+3. 获取宠物详细信息(sig)
 Path:	petinfo/getpetdetail
 Param:	petid*
 Return: json PetInfo（同上）,多一个 result : "code"
@@ -134,7 +168,7 @@ Return:	json	{
 		5	文件保存失败
 
 社区
-1. 获取推荐宠物
+1. 获取推荐宠物(sig)
 Path: community/getrecommendpets
 Param:	username*
 Return: json	{
@@ -143,7 +177,7 @@ Return: json	{
 				}
  code: 0	成功
  
-2. 获取附近的宠物
+2. 获取附近的宠物(sig)
 Path:	community/getnearbypets
 Param:	longitude*
 		latitude*
@@ -155,7 +189,7 @@ Return:	json	{
 		1	坐标为空
 		2	坐标不是数字
 
-3. 获取关注的宠物
+3. 获取关注的宠物(sig)
 Path: community/getconcernpets
 Param:	username*
 Return: json	{
@@ -164,7 +198,7 @@ Return: json	{
 				}
  code: 0	成功
  
-4. 关注宠物
+4. 关注宠物(sig)
 Path: community/concernpet
 Param:	username*
 		petid*
@@ -177,7 +211,7 @@ Return: json	{
 		3	已经关注
 		4	关注失败
 
-5. 取消关注
+5. 取消关注(sig)
 Path: community/unconcernpet
 Param:	username*
 		petid*
@@ -189,7 +223,7 @@ Return: json	{
 		2	petid为空		
 		3	未关注此宠物
 
-6. 留言
+6. 留言(sig)
 Path: community/leavemsg
 Param: username*
 		petid*
@@ -202,7 +236,7 @@ Return: json	{
 		2	petid为空		
 		3	留言失败
 
-7. 回复留言
+7. 回复留言(sig)
 Path: community/replymsg
 Param: username*
 		content*
@@ -215,7 +249,7 @@ Return: json	{
 		2	msgid为空
 		3	回复失败
 		
-8. 删除留言
+8. 删除留言(sig)
 Path: community/delmsg
 Param: username*
 		msgid*
@@ -227,7 +261,7 @@ Return: json		{
 		2	msgid为空
 		3	删除失败
 		
-9. 获取留言列表
+9. 获取留言列表(sig)
 Path: community/getleavemsgs
 Param:	username*
 		petid*
@@ -249,7 +283,7 @@ Return:	json	{
  code: 	0	成功
 		2	petid为空
 	
-10. 获取留言详情
+10. 获取留言详情(sig)
 Path: community/getleavemsgdetail
 Param:	msgid*
 Return: json	LeaveMsg, 多一个 result : "code"
@@ -265,7 +299,7 @@ Return: json	{
 				}
  code: 0	成功
 
-12. 添加黑名单
+12. 添加黑名单(sig)
 Path:  community/addblacklist
 Param:	username*
 		petid*
@@ -278,7 +312,7 @@ Return:	json	{
 		3	已经在黑名单中
 		4	添加失败
 
-13. 从黑名单删除
+13. 从黑名单删除(sig)
 Path: community/delblacklist
 Param:	username*
 		petid*
@@ -292,7 +326,7 @@ Return:	json	{
 		4	删除失败	
 
 相册
-1. 获取相册列表
+1. 获取相册列表(sig)
 Path: gallery/getgalleries
 Param:	username*
 Return: json	{
@@ -308,7 +342,7 @@ Return: json	{
 				}
  code: 0	成功
 
-2. 获取相册
+2. 获取相册(sig)
 Path: gallery/getgallery
 Param: galleryid*
 Return:	json	{
@@ -328,7 +362,7 @@ Return:	json	{
  code: 	0	成功
 		1	galleryid为空
 	
-3. 创建相册
+3. 创建相册(sig)
 Path: gallery/creategallery
 Param: username*
 		title*
@@ -339,7 +373,7 @@ Return: json	{
  code: 	0	成功
 		1	创建失败
 		
-4. 删除相册
+4. 删除相册(sig)
 Path: gallery/delgallery
 Param:	username*
 		galleryid*
@@ -350,7 +384,7 @@ Return:	json	{
 		1	galleryid为空
 		2	相册不存在
 
-5. 删除照片
+5. 删除照片(sig)
 Path: gallery/delphoto
 Param: username*
 		photoid*
