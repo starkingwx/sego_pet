@@ -186,7 +186,8 @@ public class GalleryController {
 	public void setGalleryInfo(HttpServletResponse response,
 			@RequestParam(value = "galleryid") String galleryId,
 			@RequestParam(value = "title", required = false) String title,
-			@RequestParam(value = "coverurl", required = false) String photoPath) throws IOException {
+			@RequestParam(value = "coverurl", required = false) String photoPath)
+			throws IOException {
 		ResultBean resultBean = new ResultBean();
 		if (StringUtil.isNullOrEmpty(galleryId)) {
 			resultBean.setResult("1"); // gallery id null
@@ -199,17 +200,18 @@ public class GalleryController {
 		}
 		response.getWriter().print(JSONUtil.toString(resultBean));
 	}
-	
+
 	@RequestMapping(value = "/setphotoinfo")
-	public void setPhotoInfo(HttpServletResponse response,
+	public void setPhotoInfo(
+			HttpServletResponse response,
 			@RequestParam(value = "photoid") String photoId,
-			@RequestParam(value = "type") String type,
-			@RequestParam(value = "description") String description,
-			@RequestParam(value = "name") String name
-			) throws IOException {
+			@RequestParam(value = "type", required = false) String type,
+			@RequestParam(value = "description", required = false) String description,
+			@RequestParam(value = "name", required = false) String name)
+			throws IOException {
 		ResultBean resultBean = new ResultBean();
 		if (StringUtil.isNullOrEmpty(photoId)) {
-			resultBean.setResult("1"); // gallery id null
+			resultBean.setResult("1"); // photo id null
 		} else {
 			if (galleryDao.updatePhoto(photoId, type, description, name) > 0) {
 				resultBean.setResult("0");

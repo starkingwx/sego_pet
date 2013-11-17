@@ -10,6 +10,7 @@ import org.apache.commons.logging.LogFactory;
 import org.springframework.jdbc.core.SqlParameter;
 
 import com.richitec.dao.BaseDao;
+import com.richitec.dao.BaseDao.TableField;
 import com.richitec.util.ArrayUtil;
 import com.richitec.util.StringUtil;
 import com.sego.mvc.model.bean.PetInfo;
@@ -39,84 +40,14 @@ public class PetInfoDao extends BaseDao {
 				.format("createPetInfo - userName: %s, nickname: %s, sex: %s, breed: %s, age: %s, height: %s, weight: %s, district: %s, place: %s",
 						userName, nickname, sex, breed, age, height, weight,
 						district, placeOftenGo));
-
+		
+		TableField[] values = new TableField[]{new TableField("nickname", nickname, Types.VARCHAR), 
+				new TableField("sex", sex, Types.TINYINT), new TableField("breed", breed, Types.TINYINT),
+				new TableField("age", age, Types.INTEGER), new TableField("height", height, Types.FLOAT),
+				new TableField("weight", weight, Types.FLOAT), new TableField("district", district, Types.VARCHAR),
+				new TableField("placeoftengo", placeOftenGo, Types.VARCHAR), new TableField("ownerid", userName, Types.VARCHAR)};
 		String[] keys = new String[] { PetInfoColumn.petid.name() };
-
-		List<Object> valueList = new ArrayList<Object>();
-		List<SqlParameter> paramList = new ArrayList<SqlParameter>();
-		StringBuffer sqlBuffer = new StringBuffer();
-		StringBuffer valueBuffer = new StringBuffer();
-		sqlBuffer.append("INSERT INTO f_pets (");
-		if (!StringUtil.isNullOrEmpty(nickname)) {
-			sqlBuffer.append(" nickname,");
-			valueBuffer.append("?,");
-			valueList.add(nickname);
-			paramList.add(new SqlParameter(Types.VARCHAR));
-		}
-		if (!StringUtil.isNullOrEmpty(sex)) {
-			sqlBuffer.append(" sex,");
-			valueBuffer.append("?,");
-			valueList.add(sex);
-			paramList.add(new SqlParameter(Types.TINYINT));
-		}
-		if (!StringUtil.isNullOrEmpty(weight)) {
-			sqlBuffer.append(" weight,");
-			valueBuffer.append("?,");
-			valueList.add(weight);
-			paramList.add(new SqlParameter(Types.FLOAT));
-		}
-		if (!StringUtil.isNullOrEmpty(userName)) {
-			sqlBuffer.append(" ownerid,");
-			valueBuffer.append("?,");
-			valueList.add(userName);
-			paramList.add(new SqlParameter(Types.VARCHAR));
-		}
-		if (!StringUtil.isNullOrEmpty(breed)) {
-			sqlBuffer.append(" breed,");
-			valueBuffer.append("?,");
-			paramList.add(new SqlParameter(Types.TINYINT));
-		}
-		if (!StringUtil.isNullOrEmpty(age)) {
-			sqlBuffer.append(" age,");
-			valueBuffer.append("?,");
-			valueList.add(age);
-			paramList.add(new SqlParameter(Types.INTEGER));
-		}
-		if (!StringUtil.isNullOrEmpty(height)) {
-			sqlBuffer.append(" height,");
-			valueBuffer.append("?,");
-			valueList.add(height);
-			paramList.add(new SqlParameter(Types.FLOAT));
-		}
-		if (!StringUtil.isNullOrEmpty(placeOftenGo)) {
-			sqlBuffer.append(" district,");
-			valueBuffer.append("?,");
-			valueList.add(placeOftenGo);
-			paramList.add(new SqlParameter(Types.VARCHAR));
-		}
-		if (!StringUtil.isNullOrEmpty(district)) {
-			sqlBuffer.append(" placeoftengo,");
-			valueBuffer.append("?,");
-			valueList.add(district);
-			paramList.add(new SqlParameter(Types.VARCHAR));
-		}
-		sqlBuffer = StringUtil.deleteLastChar(sqlBuffer, ',');
-		valueBuffer = StringUtil.deleteLastChar(valueBuffer, ',');
-
-		sqlBuffer.append(") VALUES(").append(valueBuffer).append(")");
-
-		SqlParameter[] params = new SqlParameter[paramList.size()];
-		params = paramList.toArray(params);
-
-		log.info("sql: " + sqlBuffer.toString());
-		for (int i = 0; i < paramList.size(); i++) {
-			SqlParameter param = paramList.get(i);
-			log.info("param type: " + param.getSqlType() + " value: "
-					+ valueList.get(i));
-		}
-		long id = insertAndReturnLastId(sqlBuffer.toString(), params,
-				valueList.toArray(), keys);
-		return id;
+		return insert("f_pets", values, keys);
 	}
 
 	public boolean hasPetInfo(String userName) {
@@ -156,71 +87,14 @@ public class PetInfoDao extends BaseDao {
 				.format("updatePetInfo - nickname: %s, sex: %s, breed: %s, age: %s, height: %s, weight: %s, district: %s, place: %s",
 						 nickname, sex, breed, age, height, weight,
 						district, placeOftenGo));
-		
-		StringBuffer sqlBuffer = new StringBuffer();
-		ArrayList<Object> objList = new ArrayList<Object>();
-		ArrayList<Integer> typeList = new ArrayList<Integer>();
-		sqlBuffer.append("UPDATE f_pets SET");
-		if (!StringUtil.isNullOrEmpty(nickname)) {
-			sqlBuffer.append(" nickname = ?,");
-			objList.add(nickname);
-			typeList.add(Types.VARCHAR);
-		}
-		if (!StringUtil.isNullOrEmpty(sex)) {
-			sqlBuffer.append(" sex = ?,");
-			objList.add(sex);
-			typeList.add(Types.TINYINT);
-		}
-		if (!StringUtil.isNullOrEmpty(breed)) {
-			sqlBuffer.append(" breed = ?,");
-			objList.add(breed);
-			typeList.add(Types.TINYINT);
-		}
-		if (!StringUtil.isNullOrEmpty(age)) {
-			sqlBuffer.append(" age = ?,");
-			objList.add(age);
-			typeList.add(Types.INTEGER);
-		}
-		if (!StringUtil.isNullOrEmpty(height)) {
-			sqlBuffer.append(" height = ?,");
-			objList.add(height);
-			typeList.add(Types.FLOAT);
-		}
-		if (!StringUtil.isNullOrEmpty(weight)) {
-			sqlBuffer.append(" weight = ?,");
-			objList.add(weight);
-			typeList.add(Types.FLOAT);
-		}
-		if (!StringUtil.isNullOrEmpty(district)) {
-			sqlBuffer.append(" district = ?,");
-			objList.add(district);
-			typeList.add(Types.VARCHAR);
-		}
-		if (!StringUtil.isNullOrEmpty(placeOftenGo)) {
-			sqlBuffer.append(" placeoftengo = ?,");
-			objList.add(placeOftenGo);
-			typeList.add(Types.VARCHAR);
-		}
-		sqlBuffer = StringUtil.deleteLastChar(sqlBuffer, ',');
-
-		sqlBuffer.append(" WHERE petid = ?");
-		objList.add(petId);
-		typeList.add(Types.INTEGER);
-
-//		Integer[] tmp = new Integer[0];
-//		tmp = typeList.toArray(tmp);
-//		int[] types = new int[tmp.length];
-//		for (int i = 0; i < tmp.length; i++) {
-//			types[i] = tmp[i];
-//		}
-		int[] types = ArrayUtil.convertIntegerListToIntArray(typeList);
-		log.info("sql: " + sqlBuffer.toString());
-		for (int i = 0; i < objList.size(); i++) {
-			log.info("param type: " + types[i] + " value: "
-					+ objList.get(i));
-		}
-		
-		return jdbc.update(sqlBuffer.toString(), objList.toArray(), types);
+		TableField[] updateParams = new TableField[]{new TableField("nickname", nickname, Types.VARCHAR), 
+				new TableField("sex", sex, Types.TINYINT), new TableField("breed", breed, Types.TINYINT),
+				new TableField("age", age, Types.INTEGER), new TableField("height", height, Types.FLOAT),
+				new TableField("weight", weight, Types.FLOAT), new TableField("district", district, Types.VARCHAR),
+				new TableField("placeoftengo", placeOftenGo, Types.VARCHAR)};
+		String selection = "WHERE petid = ?";
+		TableField[] selectionArgs = new TableField[]{new TableField("petid", petId, Types.INTEGER)};
+		return update("f_pets", updateParams, selection, selectionArgs);
 	}
 
 	public int updatePetAvatar(String petId, String avatarFileName) {

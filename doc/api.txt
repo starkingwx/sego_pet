@@ -416,3 +416,29 @@ Return: json	Photo 多一个result : "code"
 		2	没有照片
 		3	照片信息创建失败
 		5	照片保存失败
+
+7. 修改相册信息
+Path: gallery/setgalleryinfo
+Param:	galleryid*
+		title
+		coverurl	//封面URL，取Photo结构的path
+Return: json	{
+					result : "code"
+				}
+ code: 	0	成功
+		1	galleryid为空
+		2	修改失败
+		
+8. 修改照片信息
+Path: gallery/setphotoinfo
+Param:	photoid*
+		type
+		description
+		name
+Return: json	{
+					result : "code"
+				}
+ code: 	0	成功
+		1	photoid 为空
+		2	修改失败
+		
