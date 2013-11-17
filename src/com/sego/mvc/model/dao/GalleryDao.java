@@ -8,6 +8,8 @@ import java.util.Map;
 import org.springframework.jdbc.core.SqlParameter;
 
 import com.richitec.dao.BaseDao;
+import com.richitec.util.ArrayUtil;
+import com.richitec.util.StringUtil;
 import com.sego.mvc.model.bean.Galleries;
 import com.sego.mvc.model.bean.Gallery;
 import com.sego.mvc.model.bean.Photo;
@@ -132,5 +134,60 @@ public class GalleryDao extends BaseDao {
 	public int delPhoto(String photoId, String userName) {
 		String sql = "DELETE FROM photo WHERE id = ? AND ownerid = ? ";
 		return jdbc.update(sql, photoId, userName);
+	}
+	
+	public int updateGallery(String galleryId, String title, String coverUrl) {
+		StringBuffer sqlBuffer = new StringBuffer();
+		ArrayList<Object> objList = new ArrayList<Object>();
+		ArrayList<Integer> typeList = new ArrayList<Integer>();
+		sqlBuffer.append("UPDATE gallery SET");
+		if (!StringUtil.isNullOrEmpty(title)) {
+			sqlBuffer.append(" title = ?,");
+			objList.add(title);
+			typeList.add(Types.VARCHAR);
+		}
+		if (!StringUtil.isNullOrEmpty(coverUrl)) {
+			sqlBuffer.append(" cover_url = ?,");
+			objList.add(coverUrl);
+			typeList.add(Types.VARCHAR);
+		}
+		sqlBuffer = StringUtil.deleteLastChar(sqlBuffer, ',');
+		
+		sqlBuffer.append(" WHERE id = ?");
+		objList.add(galleryId);
+		typeList.add(Types.INTEGER);
+		
+		int[] types = ArrayUtil.convertIntegerListToIntArray(typeList);
+		return jdbc.update(sqlBuffer.toString(), objList.toArray(), types);
+	}
+	
+	public int updatePhoto(String photoId, String type, String description, String name) {
+		StringBuffer sqlBuffer = new StringBuffer();
+		ArrayList<Object> objList = new ArrayList<Object>();
+		ArrayList<Integer> typeList = new ArrayList<Integer>();
+		sqlBuffer.append("UPDATE photo SET");
+		if (!StringUtil.isNullOrEmpty(type)) {
+			sqlBuffer.append(" type = ?,");
+			objList.add(type);
+			typeList.add(Types.VARCHAR);
+		}
+		if (!StringUtil.isNullOrEmpty(description)) {
+			sqlBuffer.append(" description = ?,");
+			objList.add(description);
+			typeList.add(Types.VARCHAR);
+		}
+		if (!StringUtil.isNullOrEmpty(name)) {
+			sqlBuffer.append(" name = ?,");
+			objList.add(name);
+			typeList.add(Types.VARCHAR);
+		}
+		sqlBuffer = StringUtil.deleteLastChar(sqlBuffer, ',');
+		
+		sqlBuffer.append(" WHERE id = ?");
+		objList.add(photoId);
+		typeList.add(Types.INTEGER);
+		
+		int[] types = ArrayUtil.convertIntegerListToIntArray(typeList);
+		return jdbc.update(sqlBuffer.toString(), objList.toArray(), types);
 	}
 }

@@ -10,6 +10,7 @@ import org.apache.commons.logging.LogFactory;
 import org.springframework.jdbc.core.SqlParameter;
 
 import com.richitec.dao.BaseDao;
+import com.richitec.util.ArrayUtil;
 import com.richitec.util.StringUtil;
 import com.sego.mvc.model.bean.PetInfo;
 import com.sego.mvc.model.bean.PetInfos;
@@ -206,12 +207,13 @@ public class PetInfoDao extends BaseDao {
 		objList.add(petId);
 		typeList.add(Types.INTEGER);
 
-		Integer[] tmp = new Integer[0];
-		tmp = typeList.toArray(tmp);
-		int[] types = new int[tmp.length];
-		for (int i = 0; i < tmp.length; i++) {
-			types[i] = tmp[i];
-		}
+//		Integer[] tmp = new Integer[0];
+//		tmp = typeList.toArray(tmp);
+//		int[] types = new int[tmp.length];
+//		for (int i = 0; i < tmp.length; i++) {
+//			types[i] = tmp[i];
+//		}
+		int[] types = ArrayUtil.convertIntegerListToIntArray(typeList);
 		log.info("sql: " + sqlBuffer.toString());
 		for (int i = 0; i < objList.size(); i++) {
 			log.info("param type: " + types[i] + " value: "

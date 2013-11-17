@@ -181,11 +181,42 @@ public class GalleryController {
 		}
 		response.getWriter().print(JSONUtil.toString(photoBean));
 	}
-	
-	@RequestMapping(value = "/setgallerycover")
-	public void setGalleryCover(HttpServletResponse response,
+
+	@RequestMapping(value = "/setgalleryinfo")
+	public void setGalleryInfo(HttpServletResponse response,
 			@RequestParam(value = "galleryid") String galleryId,
-			@RequestParam(value = "photopath") String photoPath) {
-		
+			@RequestParam(value = "title", required = false) String title,
+			@RequestParam(value = "coverurl", required = false) String photoPath) throws IOException {
+		ResultBean resultBean = new ResultBean();
+		if (StringUtil.isNullOrEmpty(galleryId)) {
+			resultBean.setResult("1"); // gallery id null
+		} else {
+			if (galleryDao.updateGallery(galleryId, title, photoPath) > 0) {
+				resultBean.setResult("0");
+			} else {
+				resultBean.setResult("2"); // update failed
+			}
+		}
+		response.getWriter().print(JSONUtil.toString(resultBean));
+	}
+	
+	@RequestMapping(value = "/setphotoinfo")
+	public void setPhotoInfo(HttpServletResponse response,
+			@RequestParam(value = "photoid") String photoId,
+			@RequestParam(value = "type") String type,
+			@RequestParam(value = "description") String description,
+			@RequestParam(value = "name") String name
+			) throws IOException {
+		ResultBean resultBean = new ResultBean();
+		if (StringUtil.isNullOrEmpty(photoId)) {
+			resultBean.setResult("1"); // gallery id null
+		} else {
+			if (galleryDao.updatePhoto(photoId, type, description, name) > 0) {
+				resultBean.setResult("0");
+			} else {
+				resultBean.setResult("2"); // update failed
+			}
+		}
+		response.getWriter().print(JSONUtil.toString(resultBean));
 	}
 }

@@ -74,7 +74,7 @@ public class CommunityDao extends BaseDao {
 	}
 
 	public PetInfos getConcernedPets(String userName) {
-		String sql = "SELECT p.* FROM f_pets AS p JOIN f_guanzhu AS g ON p.petid = g.petidWHERE g.loginid = ?";
+		String sql = "SELECT p.* FROM f_pets AS p JOIN f_guanzhu AS g ON p.petid = g.petid WHERE g.loginid = ?";
 		List<Map<String, Object>> petList = jdbc.queryForList(sql, userName);
 		PetInfos petInfos = PetInfoDao.convertListToPetInfos(petList);
 		return petInfos;
