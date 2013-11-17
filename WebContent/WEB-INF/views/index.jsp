@@ -167,6 +167,25 @@
 				type="text" value="" name="username" />
 			<input type="submit" value="Submit"/>
 		</form>
+		
+		<p>
+		<form action="/segopet/gallery/uploadphoto" method="POST"
+			enctype="multipart/form-data">
+			<input type="file" name="photo_file" /> 
+			<input
+				type="text" value="" name="galleryid" placeholder="gallery id"/>
+			<input
+				type="text" value="" name="username" placeholder="user name" />
+			<input
+				type="text" value="" name="name" placeholder="photo name" />
+			<input
+				type="text" value="" name="type" placeholder="photo type" />
+			<input
+				type="text" value="" name="descritpion" placeholder="photo descritpion" />
+			
+			<input type="submit" value="Submit"/>
+		</form>
+		</p>
 	</div>
 <div class="footer">
 	<p>

@@ -6,20 +6,20 @@ import com.richitec.bean.ResultBean;
 
 @JsonInclude(Include.NON_NULL)
 public class Photo extends ResultBean {
-	private String id;
+	private long id;
 	private String type;
-	private String galleryid;
+	private long galleryid;
 	private String path;
 	private String description;
 	private String name;
 	private String ownerid;
-	private String createtime;
+	private long createtime;
 
-	public String getId() {
+	public long getId() {
 		return id;
 	}
 
-	public void setId(String id) {
+	public void setId(long id) {
 		this.id = id;
 	}
 
@@ -31,11 +31,11 @@ public class Photo extends ResultBean {
 		this.type = type;
 	}
 
-	public String getGalleryid() {
+	public long getGalleryid() {
 		return galleryid;
 	}
 
-	public void setGalleryid(String galleryid) {
+	public void setGalleryid(long galleryid) {
 		this.galleryid = galleryid;
 	}
 
@@ -71,11 +71,11 @@ public class Photo extends ResultBean {
 		this.ownerid = ownerid;
 	}
 
-	public String getCreatetime() {
+	public long getCreatetime() {
 		return createtime;
 	}
 
-	public void setCreatetime(String createtime) {
+	public void setCreatetime(long createtime) {
 		this.createtime = createtime;
 	}
 

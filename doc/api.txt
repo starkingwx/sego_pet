@@ -341,11 +341,11 @@ Return: json	{
 					list : [array of Gallery]
 				}
 		Gallery {
-					id : string,
+					id : long,
 					title : string,
 					cover_url : string,
 					ownerid : string,
-					createtime : string	// seconds
+					createtime : long	// seconds
 				}
  code: 0	成功
 
@@ -357,14 +357,14 @@ Return:	json	{
 					photos : [array of Photo]
 				}
 		Photo	{
-					id : string,
+					id : long,
 					type : string,
-					galleryid : string,
+					galleryid : long,
 					path : string,	//相对路径
 					description : string,
 					name : string
 					ownerid : string,
-					createtime : string // seconds
+					createtime : long // seconds
 				}
  code: 	0	成功
 		1	galleryid为空
@@ -410,10 +410,7 @@ Param: photo_file*	- 照片文件
 		name*		- 照片名
 		type*
 		descritpion
-Return: json	{
-					result : "code",
-					id	: string
-				}
+Return: json	Photo 多一个result : "code"
  code: 	0	成功
 		1	galleryid为空
 		2	没有照片

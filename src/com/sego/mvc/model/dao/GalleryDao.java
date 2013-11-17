@@ -6,7 +6,6 @@ import java.util.List;
 import java.util.Map;
 
 import org.springframework.jdbc.core.SqlParameter;
-import org.springframework.transaction.annotation.Transactional;
 
 import com.richitec.dao.BaseDao;
 import com.sego.mvc.model.bean.Galleries;
@@ -26,14 +25,14 @@ public class GalleryDao extends BaseDao {
 		if (list != null) {
 			for (Map<String, Object> map : list) {
 				Gallery gallery = new Gallery();
-				gallery.setId(String.valueOf(map.get(GalleryColumn.id.name())));
+				gallery.setId((Integer)(map.get(GalleryColumn.id.name())));
 				gallery.setTitle(String.valueOf(map.get(GalleryColumn.title
 						.name())));
 				gallery.setCover_url(String.valueOf(map
 						.get(GalleryColumn.cover_url.name())));
 				gallery.setOwnerid(String.valueOf(map.get(GalleryColumn.ownerid
 						.name())));
-				gallery.setCreatetime(String.valueOf(map
+				gallery.setCreatetime((Long)(map
 						.get(GalleryColumn.createtime.name())));
 				galleryList.add(gallery);
 			}
@@ -50,24 +49,36 @@ public class GalleryDao extends BaseDao {
 		gallery.setPhotos(photoList);
 		if (list != null) {
 			for (Map<String, Object> map : list) {
-				Photo photo = new Photo();
-				photo.setId(String.valueOf(map.get(PhotoColumn.id.name())));
-				photo.setType(String.valueOf(map.get(PhotoColumn.type.name())));
-				photo.setGalleryid(String.valueOf(map.get(PhotoColumn.galleryid
-						.name())));
-				photo.setPath(String.valueOf(map.get(PhotoColumn.path.name())));
-				photo.setDescription(String.valueOf(map
-						.get(PhotoColumn.description.name())));
-				photo.setName(String.valueOf(map.get(PhotoColumn.name.name())));
-				photo.setOwnerid(String.valueOf(map.get(PhotoColumn.ownerid
-						.name())));
-				photo.setCreatetime(String.valueOf(map
-						.get(PhotoColumn.createtime.name())));
+				Photo photo = convertMapToPhoto(map);
 			}
 		}
 		return gallery;
 	}
 
+	public Photo getPhoto(Long photoId) {
+		String sql = "SELECT id, type, galleryid, path, description, name, ownerid, UNIX_TIMESTAMP(createtime) AS createtime "
+			+ "FROM photo WHERE galleryid = ?";
+		Map<String, Object> map = jdbc.queryForMap(sql, photoId);
+		return convertMapToPhoto(map);
+	}
+	
+	private Photo convertMapToPhoto(Map<String, Object> map) {
+		Photo photo = new Photo();
+		photo.setId((Integer)(map.get(PhotoColumn.id.name())));
+		photo.setType(String.valueOf(map.get(PhotoColumn.type.name())));
+		photo.setGalleryid((Integer)(map.get(PhotoColumn.galleryid
+				.name())));
+		photo.setPath(String.valueOf(map.get(PhotoColumn.path.name())));
+		photo.setDescription(String.valueOf(map
+				.get(PhotoColumn.description.name())));
+		photo.setName(String.valueOf(map.get(PhotoColumn.name.name())));
+		photo.setOwnerid(String.valueOf(map.get(PhotoColumn.ownerid
+				.name())));
+		photo.setCreatetime((Long)(map
+				.get(PhotoColumn.createtime.name())));
+		return photo;
+	}
+	
 	/**
 	 * 
 	 * @param userName

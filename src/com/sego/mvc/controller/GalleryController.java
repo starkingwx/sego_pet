@@ -26,6 +26,7 @@ import com.richitec.util.StringUtil;
 import com.sego.mvc.model.bean.Galleries;
 import com.sego.mvc.model.bean.Gallery;
 import com.sego.mvc.model.bean.IdBean;
+import com.sego.mvc.model.bean.Photo;
 import com.sego.mvc.model.dao.GalleryDao;
 
 @Controller
@@ -126,7 +127,7 @@ public class GalleryController {
 		String name = "";
 		String type = "";
 		String description = "";
-		IdBean idBean = new IdBean();
+		Photo photoBean = new Photo();
 		try {
 			items = upload.parseRequest(request);
 			log.info("items : " + items);
@@ -156,7 +157,7 @@ public class GalleryController {
 			}
 
 			if (StringUtil.isNullOrEmpty(galleryId)) {
-				idBean.setResult("1"); // id null
+				photoBean.setResult("1"); // id null
 			} else {
 				String photoPathName = UUID.randomUUID().toString();
 				// save photo file
@@ -165,19 +166,26 @@ public class GalleryController {
 				long id = galleryDao.createPhoto(userName, galleryId, name,
 						type, photoPathName, description);
 				if (id > 0) {
-					idBean.setResult("0");
-					idBean.setId(String.valueOf(id));
+					photoBean = galleryDao.getPhoto(id);
+					photoBean.setResult("0");
 				} else {
-					idBean.setResult("3"); // create failed
+					photoBean.setResult("3"); // create failed
 				}
 			}
 		} catch (FileUploadException e) {
 			e.printStackTrace();
-			idBean.setResult("2"); // no file
+			photoBean.setResult("2"); // no file
 		} catch (Exception e) {
 			e.printStackTrace();
-			idBean.setResult("5"); // save file failed
+			photoBean.setResult("5"); // save file failed
 		}
-		response.getWriter().print(JSONUtil.toString(idBean));
+		response.getWriter().print(JSONUtil.toString(photoBean));
+	}
+	
+	@RequestMapping(value = "/setgallerycover")
+	public void setGalleryCover(HttpServletResponse response,
+			@RequestParam(value = "galleryid") String galleryId,
+			@RequestParam(value = "photopath") String photoPath) {
+		
 	}
 }

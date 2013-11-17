@@ -1,15 +1,11 @@
 package com.richitec.dao;
 
-import java.sql.Types;
-
 import javax.sql.DataSource;
 
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.SqlParameter;
 import org.springframework.jdbc.object.SqlUpdate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
-
-import com.sego.table.PetInfoColumn;
 
 public class BaseDao {
 	protected JdbcTemplate jdbc;
