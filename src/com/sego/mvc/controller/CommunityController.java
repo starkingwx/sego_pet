@@ -186,6 +186,12 @@ public class CommunityController {
 		response.getWriter().print(JSONUtil.toString(resultBean));
 	}
 	
+	@RequestMapping(value = "/getleavemsgbox")
+	public void getLeaveMsgBox(HttpServletResponse response,
+			@RequestParam(value = "username") String userName) {
+		
+	}
+	
 	@RequestMapping(value = "/getleavemsgs")
 	public void getLeaveMsgs(HttpServletResponse response,
 			@RequestParam(value = "username") String userName,
@@ -194,7 +200,7 @@ public class CommunityController {
 		if (StringUtil.isNullOrEmpty(petId)) {
 			msgs.setResult("2"); // petid is null
 		} else {
-			msgs = communityDao.getLeaveMsgs(petId);
+			msgs = communityDao.getLeaveMsgsByUser(userName, petId);
 			msgs.setResult("0");
 		}
 		response.getWriter().print(JSONUtil.toString(msgs));
@@ -203,14 +209,14 @@ public class CommunityController {
 	@RequestMapping(value = "/getleavemsgdetail")
 	public void getLeaveMsgDetail(HttpServletResponse response,
 			@RequestParam(value = "msgid") String msgId) throws IOException {
-		LeaveMsg msg = new LeaveMsg();
+		LeaveMsgs msgs = new LeaveMsgs();
 		if (StringUtil.isNullOrEmpty(msgId)) {
-			msg.setResult("2"); // msgid is null
+			msgs.setResult("2"); // msgid is null
 		} else {
-			msg = communityDao.getLeaveMsgDetail(msgId);
-			msg.setResult("0");
+			msgs = communityDao.getRelatedMsgs(msgId);
+			msgs.setResult("0");
 		}
-		response.getWriter().print(JSONUtil.toString(msg));
+		response.getWriter().print(JSONUtil.toString(msgs));
 	}
 	
 	@RequestMapping(value = "/getblacklist")

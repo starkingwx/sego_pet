@@ -123,24 +123,44 @@ public class CommunityDao extends BaseDao {
 		return jdbc.update(sql, msgId);
 	}
 
-	public LeaveMsgs getLeaveMsgs(String petId) {
+	public LeaveMsgs getLeaveMsgsByUser(String userName, String petId) {
 		String sql = "SELECT l.id as id, l.author as author, l.content as content, l.petid as petid, l.parentid as parentid, UNIX_TIMESTAMP(l.date) AS _date, "
 				+ " p.nickname as leaver_nickname, p.sex as leaver_sex, p.avatar as leaver_avatar "
-				+ " FROM f_liuyan AS l, f_pets AS p WHERE l.petid = ? AND l.author = p.ownerid";
-		List<Map<String, Object>> list = jdbc.queryForList(sql, petId);
+				+ " FROM f_liuyan AS l, f_pets AS p WHERE l.author = p.ownerid AND (l.petid = ? OR l.author = ?) AND l.parentid = 0 ";
+		List<Map<String, Object>> list = jdbc.queryForList(sql, petId, userName);
 		LeaveMsgs leaveMsgs = new LeaveMsgs();
 		List<LeaveMsg> msgList = new ArrayList<LeaveMsg>();
 		leaveMsgs.setList(msgList);
 		if (list != null) {
 			for (Map<String, Object> map : list) {
-				msgList.add(convertMapToLeaveMsg(map));
+				if (map.get(LeaveMsgColumn.id.name()) != null) {
+					msgList.add(convertMapToLeaveMsg(map));
+				}
 			}
 		}
 		return leaveMsgs;
 	}
+	
+	
+//	public LeaveMsgs getLeaveMsgs(String petId) {
+//		String sql = "SELECT l.id as id, l.author as author, l.content as content, l.petid as petid, l.parentid as parentid, UNIX_TIMESTAMP(l.date) AS _date, "
+//				+ " p.nickname as leaver_nickname, p.sex as leaver_sex, p.avatar as leaver_avatar "
+//				+ " FROM f_liuyan AS l, f_pets AS p WHERE l.petid = ? AND l.author = p.ownerid";
+//		List<Map<String, Object>> list = jdbc.queryForList(sql, petId);
+//		LeaveMsgs leaveMsgs = new LeaveMsgs();
+//		List<LeaveMsg> msgList = new ArrayList<LeaveMsg>();
+//		leaveMsgs.setList(msgList);
+//		if (list != null) {
+//			for (Map<String, Object> map : list) {
+//				msgList.add(convertMapToLeaveMsg(map));
+//			}
+//		}
+//		return leaveMsgs;
+//	}
 
 	private LeaveMsg convertMapToLeaveMsg(Map<String, Object> map) {
 		LeaveMsg msg = new LeaveMsg();
+		
 		msg.setMsgid((Integer) (map.get(LeaveMsgColumn.id.name())));
 		msg.setAuthor((String) (map.get(LeaveMsgColumn.author.name())));
 		msg.setContent((String) (map.get(LeaveMsgColumn.content.name())));
@@ -148,11 +168,33 @@ public class CommunityDao extends BaseDao {
 		msg.setParentid((Integer)(map.get(LeaveMsgColumn.parentid.name())));
 		msg.setLeave_timestamp((Long)(map.get("_date")));
 		msg.setLeaver_nickname((String)(map.get("leaver_nickname")));
-		msg.setLeaver_sex((Integer) (map.get("leaver_sex")));
+		Integer sex = (Integer) (map.get("leaver_sex"));
+		msg.setLeaver_sex(sex == null ? 0 : sex);
 		msg.setLeaver_avatar((String) (map.get("leaver_avatar")));
 		return msg;
 	}
 
+	public LeaveMsgs getRelatedMsgs(String msgId) {
+		String sql = "SELECT l.id as id, l.author as author, l.content as content, l.petid as petid, l.parentid as parentid, UNIX_TIMESTAMP(l.date) AS _date, "
+				+ "  p.nickname as leaver_nickname, p.sex as leaver_sex, p.avatar as leaver_avatar "
+				+ "   FROM ((SELECT * FROM f_liuyan AS liu WHERE liu.parentid = 0) "
+				+ "   UNION (SELECT c.* FROM f_liuyan AS parent LEFT JOIN f_liuyan AS c ON c.parentid = parent.id WHERE parent.id = ?)) AS l LEFT JOIN "
+				+ "   f_pets AS p ON l.author = p.ownerid ";
+		
+		List<Map<String, Object>> list = jdbc.queryForList(sql, msgId);
+		LeaveMsgs leaveMsgs = new LeaveMsgs();
+		List<LeaveMsg> msgList = new ArrayList<LeaveMsg>();
+		leaveMsgs.setList(msgList);
+		if (list != null) {
+			for (Map<String, Object> map : list) {
+				if (map.get(LeaveMsgColumn.id.name()) != null) {
+					msgList.add(convertMapToLeaveMsg(map));
+				}
+			}
+		}
+		return leaveMsgs;
+	}
+	
 	public LeaveMsg getLeaveMsgDetail(String msgId) {
 		String sql = "SELECT l.id as id, l.author as author, l.content as content, l.petid as petid, l.parentid as parentid, UNIX_TIMESTAMP(l.date) AS _date, "
 				+ " p.nickname as leaver_nickname, p.sex as leaver_sex, p.avatar as leaver_avatar "
