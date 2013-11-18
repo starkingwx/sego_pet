@@ -1,19 +1,21 @@
 package com.sego.mvc.model.dao;
 
+import java.sql.Types;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import org.springframework.transaction.annotation.Transactional;
+import org.springframework.jdbc.core.SqlParameter;
 
 import com.richitec.dao.BaseDao;
+import com.richitec.util.ArrayUtil;
+import com.richitec.util.StringUtil;
 import com.sego.mvc.model.bean.Galleries;
 import com.sego.mvc.model.bean.Gallery;
 import com.sego.mvc.model.bean.Photo;
 import com.sego.table.GalleryColumn;
 import com.sego.table.PhotoColumn;
 
-@Transactional
 public class GalleryDao extends BaseDao {
 
 	public Galleries getGalleries(String userName) {
@@ -25,14 +27,14 @@ public class GalleryDao extends BaseDao {
 		if (list != null) {
 			for (Map<String, Object> map : list) {
 				Gallery gallery = new Gallery();
-				gallery.setId(String.valueOf(map.get(GalleryColumn.id.name())));
+				gallery.setId((Integer)(map.get(GalleryColumn.id.name())));
 				gallery.setTitle(String.valueOf(map.get(GalleryColumn.title
 						.name())));
 				gallery.setCover_url(String.valueOf(map
 						.get(GalleryColumn.cover_url.name())));
 				gallery.setOwnerid(String.valueOf(map.get(GalleryColumn.ownerid
 						.name())));
-				gallery.setCreatetime(String.valueOf(map
+				gallery.setCreatetime((Long)(map
 						.get(GalleryColumn.createtime.name())));
 				galleryList.add(gallery);
 			}
@@ -49,38 +51,50 @@ public class GalleryDao extends BaseDao {
 		gallery.setPhotos(photoList);
 		if (list != null) {
 			for (Map<String, Object> map : list) {
-				Photo photo = new Photo();
-				photo.setId(String.valueOf(map.get(PhotoColumn.id.name())));
-				photo.setType(String.valueOf(map.get(PhotoColumn.type.name())));
-				photo.setGalleryid(String.valueOf(map.get(PhotoColumn.galleryid
-						.name())));
-				photo.setPath(String.valueOf(map.get(PhotoColumn.path.name())));
-				photo.setDescription(String.valueOf(map
-						.get(PhotoColumn.description.name())));
-				photo.setName(String.valueOf(map.get(PhotoColumn.name.name())));
-				photo.setOwnerid(String.valueOf(map.get(PhotoColumn.ownerid
-						.name())));
-				photo.setCreatetime(String.valueOf(map
-						.get(PhotoColumn.createtime.name())));
+				Photo photo = convertMapToPhoto(map);
 			}
 		}
 		return gallery;
 	}
 
+	public Photo getPhoto(Long photoId) {
+		String sql = "SELECT id, type, galleryid, path, description, name, ownerid, UNIX_TIMESTAMP(createtime) AS createtime "
+			+ "FROM photo WHERE galleryid = ?";
+		Map<String, Object> map = jdbc.queryForMap(sql, photoId);
+		return convertMapToPhoto(map);
+	}
+	
+	private Photo convertMapToPhoto(Map<String, Object> map) {
+		Photo photo = new Photo();
+		photo.setId((Integer)(map.get(PhotoColumn.id.name())));
+		photo.setType(String.valueOf(map.get(PhotoColumn.type.name())));
+		photo.setGalleryid((Integer)(map.get(PhotoColumn.galleryid
+				.name())));
+		photo.setPath(String.valueOf(map.get(PhotoColumn.path.name())));
+		photo.setDescription(String.valueOf(map
+				.get(PhotoColumn.description.name())));
+		photo.setName(String.valueOf(map.get(PhotoColumn.name.name())));
+		photo.setOwnerid(String.valueOf(map.get(PhotoColumn.ownerid
+				.name())));
+		photo.setCreatetime((Long)(map
+				.get(PhotoColumn.createtime.name())));
+		return photo;
+	}
+	
 	/**
 	 * 
 	 * @param userName
 	 * @param title
 	 * @return id
 	 */
-	public int createGallery(String userName, String title) {
+	public long createGallery(String userName, String title) {
 		String sql = "INSERT INTO gallery (title, ownerid) VALUES(?,?) ";
-		int update = jdbc.update(sql, title, userName);
-		int id = -1;
-		if (update > 0) {
-			sql = "SELECT LAST_INSERT_ID()";
-			id = jdbc.queryForInt(sql);
-		}
+		SqlParameter[] params = new SqlParameter[] {
+				new SqlParameter(Types.VARCHAR),
+				new SqlParameter(Types.VARCHAR) };
+		String[] keys = new String[] { GalleryColumn.id.name() };
+		Object[] values = new Object[] { title, userName };
+		long id = insertAndReturnLastId(sql, params, values, keys);
 		return id;
 	}
 
@@ -94,26 +108,46 @@ public class GalleryDao extends BaseDao {
 	 * @param description
 	 * @return id
 	 */
-	public int createPhoto(String userName, String galleryId, String name,
+	public long createPhoto(String userName, String galleryId, String name,
 			String type, String path, String description) {
-		String sql = "INSERT INTO photo (type, galleryid, path, description, name, ownerid) " +
-				"VALUES(?,?,?,?,?,?)";
-		int update = jdbc.update(sql, type, galleryId, path, description, name, userName);
-		int id = -1;
-		if (update > 0) {
-			sql = "SELECT LAST_INSERT_ID()";
-			id = jdbc.queryForInt(sql);
-		}
+		String sql = "INSERT INTO photo (type, galleryid, path, description, name, ownerid) "
+				+ "VALUES(?,?,?,?,?,?)";
+		SqlParameter[] params = new SqlParameter[] {
+				new SqlParameter(Types.VARCHAR),
+				new SqlParameter(Types.INTEGER),
+				new SqlParameter(Types.VARCHAR),
+				new SqlParameter(Types.VARCHAR),
+				new SqlParameter(Types.VARCHAR),
+				new SqlParameter(Types.VARCHAR) };
+		String[] keys = new String[] {PhotoColumn.id.name()};
+		Object[] values = new Object[] {type, galleryId, path, description,
+				 name, userName};
+		long id = insertAndReturnLastId(sql, params, values, keys);
 		return id;
 	}
-	
+
 	public int delGallery(String galleryId, String userName) {
 		String sql = "DELETE FROM gallery WHERE id = ? AND ownerid = ? ";
 		return jdbc.update(sql, galleryId, userName);
 	}
-	
+
 	public int delPhoto(String photoId, String userName) {
 		String sql = "DELETE FROM photo WHERE id = ? AND ownerid = ? ";
 		return jdbc.update(sql, photoId, userName);
+	}
+	
+	public int updateGallery(String galleryId, String title, String coverUrl) {
+		TableField[] updateParams = new TableField[]{new TableField("title", title, Types.VARCHAR), new TableField("cover_url", coverUrl, Types.VARCHAR)};
+		String selection = "WHERE id = ?";
+		TableField[] selectionArgs = new TableField[]{new TableField("id", galleryId, Types.INTEGER)};
+		return update("gallery", updateParams, selection, selectionArgs);
+	}
+	
+	public int updatePhoto(String photoId, String type, String description, String name) {
+		TableField[] updateParams = new TableField[]{new TableField("type", type, Types.VARCHAR), 
+				new TableField("description", description, Types.VARCHAR), new TableField("name", name, Types.VARCHAR)};
+		String selection = "WHERE id = ?";
+		TableField[] selectionArgs = new TableField[]{new TableField("id", photoId, Types.INTEGER)};
+		return update("photo", updateParams, selection, selectionArgs);
 	}
 }

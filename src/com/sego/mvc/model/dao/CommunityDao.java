@@ -74,7 +74,7 @@ public class CommunityDao extends BaseDao {
 	}
 
 	public PetInfos getConcernedPets(String userName) {
-		String sql = "SELECT p.* FROM f_pets AS p JOIN f_guanzhu AS g ON p.petid = g.petidWHERE g.loginid = ?";
+		String sql = "SELECT p.* FROM f_pets AS p JOIN f_guanzhu AS g ON p.petid = g.petid WHERE g.loginid = ?";
 		List<Map<String, Object>> petList = jdbc.queryForList(sql, userName);
 		PetInfos petInfos = PetInfoDao.convertListToPetInfos(petList);
 		return petInfos;
@@ -141,15 +141,15 @@ public class CommunityDao extends BaseDao {
 
 	private LeaveMsg convertMapToLeaveMsg(Map<String, Object> map) {
 		LeaveMsg msg = new LeaveMsg();
-		msg.setMsgid(String.valueOf(map.get(LeaveMsgColumn.id.name())));
-		msg.setAuthor(String.valueOf(map.get(LeaveMsgColumn.author.name())));
-		msg.setContent(String.valueOf(map.get(LeaveMsgColumn.content.name())));
-		msg.setPetid(String.valueOf(map.get(LeaveMsgColumn.petid.name())));
-		msg.setParentid(String.valueOf(map.get(LeaveMsgColumn.parentid.name())));
-		msg.setLeave_timestamp(String.valueOf(map.get("_date")));
-		msg.setLeaver_nickname(String.valueOf(map.get("leaver_nickname")));
-		msg.setLeaver_sex(String.valueOf(map.get("leaver_sex")));
-		msg.setLeaver_avatar(String.valueOf(map.get("leaver_avatar")));
+		msg.setMsgid((Integer) (map.get(LeaveMsgColumn.id.name())));
+		msg.setAuthor((String) (map.get(LeaveMsgColumn.author.name())));
+		msg.setContent((String) (map.get(LeaveMsgColumn.content.name())));
+		msg.setPetid((Integer)(map.get(LeaveMsgColumn.petid.name())));
+		msg.setParentid((Integer)(map.get(LeaveMsgColumn.parentid.name())));
+		msg.setLeave_timestamp((Long)(map.get("_date")));
+		msg.setLeaver_nickname((String)(map.get("leaver_nickname")));
+		msg.setLeaver_sex((Integer) (map.get("leaver_sex")));
+		msg.setLeaver_avatar((String) (map.get("leaver_avatar")));
 		return msg;
 	}
 

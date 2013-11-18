@@ -156,7 +156,7 @@ public class UserDAO {
 		if (code.equals(UserController.BEST_CHECK_CODE)) {
 			return "0";
 		}
-		
+
 		if (code.equals("")) {
 			return "1"; // code is required
 		} else if (!code.equals(session.getAttribute("phonecode"))) {
@@ -204,14 +204,16 @@ public class UserDAO {
 	 * @param phone
 	 * @return
 	 */
-	public String checkRegisterPhone(String phone) {
+	public String checkRegisterPhone(String phone, String type) {
 		try {
 			if (phone.equals("")) {
 				return "1"; // 手机号码必填
 			} else if (!ValidatePattern.isValidMobilePhone(phone)) {
 				return "2"; // 手机号码格式错误
-			} else if (isExistsLoginName(phone)) {
-				return "3"; // 手机号码已存�?
+			} else if ("register".equals(type) && isExistsLoginName(phone)) {
+				return "3"; // 手机号码已存在
+			} else if ("resetpwd".equals(type) && !isExistsLoginName(phone)) {
+				return "4"; // 手机号不存在
 			} else {
 				return "0";
 			}

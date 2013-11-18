@@ -5,11 +5,11 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-<title>智会-客户端下载</title>
+<title>赛果-客户端下载</title>
 <jsp:include page="common/_head.jsp"></jsp:include>
 </head>
 <body>
-	<h3>智会客户端下载</h3>
+	<h3>赛果客户端下载</h3>
 	<br/>
 	<div>
 		<!-- <a class="btn" style="margin: 5px;" href="https://itunes.apple.com/us/app/zhi-hui/id554959651?ls=1&mt=8">
@@ -27,7 +27,7 @@
 				<img class="pull-left" alt="app store" src="./img/android.png">
 				<div class="pull-right">
 					<p>
-						<strong>&nbsp;智会 Android 版</strong><br>下载 apk 文件
+						<strong>&nbsp;赛果</strong><br>下载 apk 文件
 					</p>
 				</div>
 			</div>

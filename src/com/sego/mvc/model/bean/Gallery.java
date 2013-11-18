@@ -8,19 +8,19 @@ import com.richitec.bean.ResultBean;
 
 @JsonInclude(Include.NON_NULL)
 public class Gallery extends ResultBean {
-	private String id;
+	private long id;
 	private String title;
 	private String cover_url;
 	private String ownerid;
-	private String createtime;
+	private long createtime;
 
 	private List<Photo> photos;
 
-	public String getId() {
+	public long getId() {
 		return id;
 	}
 
-	public void setId(String id) {
+	public void setId(long id) {
 		this.id = id;
 	}
 
@@ -48,11 +48,11 @@ public class Gallery extends ResultBean {
 		this.ownerid = ownerid;
 	}
 
-	public String getCreatetime() {
+	public long getCreatetime() {
 		return createtime;
 	}
 
-	public void setCreatetime(String createtime) {
+	public void setCreatetime(long createtime) {
 		this.createtime = createtime;
 	}
 

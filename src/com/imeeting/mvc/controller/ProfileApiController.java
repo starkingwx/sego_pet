@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import com.imeeting.framework.ContextLoader;
 import com.richitec.ucenter.model.UserDAO;
 import com.richitec.util.MD5Util;
+import com.richitec.util.StringUtil;
 
 @Controller
 @RequestMapping("/profile")
@@ -36,31 +37,35 @@ public class ProfileApiController {
 			@RequestParam(value = "newPwd") String newPwd,
 			@RequestParam(value = "newPwdConfirm") String newPwdConfirm)
 			throws IOException, JSONException {
-		log.info(" username: " + userName
-				+ " oldPwd: " + oldPwd + " newpwd: " + newPwd + " confirmpwd: "
-				+ newPwdConfirm);
+		log.info(" username: " + userName + " oldPwd: " + oldPwd + " newpwd: "
+				+ newPwd + " confirmpwd: " + newPwdConfirm);
 		Map<String, Object> user = userDao.getUser(userName);
 		String pwd = (String) user.get("password");
-
+		String result = "0";
 		if (!oldPwd.equals(pwd)) {
-			response.sendError(HttpServletResponse.SC_UNAUTHORIZED);
-			return;
+			result = "4"; // old password incorrect
 		}
 
-		if (newPwd.isEmpty() || !newPwd.equals(newPwdConfirm)) {
-			response.sendError(HttpServletResponse.SC_BAD_REQUEST);
-			return;
+		if ("0".equals(result)) {
+			if (StringUtil.isNullOrEmpty(newPwd)
+					|| StringUtil.isNullOrEmpty(newPwdConfirm)) {
+				result = "1"; // password is empty
+			} else if (!newPwd.equals(newPwdConfirm)) {
+				result = "2"; // two passwords are different
+			}
 		}
 
-		String md5Password = MD5Util.md5(newPwd);
-		if (userDao.changePassword(userName, md5Password) <= 0) {
-			response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-			return;
+		if ("0".equals(result)) {
+			String md5Password = MD5Util.md5(newPwd);
+			if (userDao.changePassword(userName, md5Password) <= 0) {
+				result = "3"; // change failed
+			}
 		}
 
 		Map<String, Object> userMap = userDao.getUser(userName);
 		String userkey = (String) userMap.get("userkey");
 		JSONObject ret = new JSONObject();
+		ret.put("result", result);
 		ret.put("userkey", userkey);
 		response.getWriter().print(ret.toString());
 	}

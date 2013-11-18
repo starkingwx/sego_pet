@@ -40,7 +40,7 @@ CREATE TABLE `f_guanzhu` (
   `loginid` varchar(32) DEFAULT NULL,
   `petid` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
 
 #
 # Structure for the `f_liuyan` table : 
@@ -76,20 +76,20 @@ CREATE TABLE `f_location` (
 CREATE TABLE `f_pets` (
   `petid` int(11) NOT NULL AUTO_INCREMENT,
   `nickname` varchar(40) DEFAULT NULL,
-  `sex` varchar(10) DEFAULT NULL,
-  `weight` varchar(20) DEFAULT NULL,
+  `sex` tinyint(4) NOT NULL DEFAULT '0',
+  `weight` float(9,2) NOT NULL DEFAULT '0.00',
   `chuanganid` varchar(60) DEFAULT NULL,
   `ownerid` varchar(20) DEFAULT NULL,
   `avatar` varchar(60) DEFAULT NULL,
-  `breed` varchar(20) DEFAULT NULL,
-  `age` varchar(20) DEFAULT NULL,
-  `height` varchar(20) DEFAULT NULL,
+  `breed` tinyint(4) NOT NULL DEFAULT '0',
+  `age` int(11) NOT NULL DEFAULT '0',
+  `height` float(9,2) NOT NULL DEFAULT '0.00',
   `district` varchar(20) DEFAULT NULL,
   `placeoftengo` varchar(60) DEFAULT NULL,
   `deviceId` varchar(60) DEFAULT NULL,
-  `score` int(11) DEFAULT NULL,
+  `score` int(11) NOT NULL DEFAULT '0',
   PRIMARY KEY (`petid`)
-) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=23 DEFAULT CHARSET=utf8 AVG_ROW_LENGTH=1024;
 
 #
 # Structure for the `f_yundong` table : 
@@ -114,7 +114,7 @@ CREATE TABLE `f_yundong` (
 CREATE TABLE `gallery` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `title` varchar(32) DEFAULT NULL,
-  `cover_url` varchar(60) NOT NULL,
+  `cover_url` varchar(60) DEFAULT NULL,
   `ownerid` varchar(32) NOT NULL,
   `createtime` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`)
@@ -166,7 +166,7 @@ CREATE TABLE `photo` (
   `ownerid` varchar(32) DEFAULT NULL,
   `createtime` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
 
 
 

@@ -170,4 +170,11 @@ public class StringUtil {
 			return false;
 		}
 	}
+	
+	public static StringBuffer deleteLastChar(StringBuffer sb, char lastChar) {
+		if (sb.toString().endsWith(String.valueOf(lastChar))) {
+			sb.deleteCharAt(sb.length() - 1);
+		}
+		return sb;
+	}
 }

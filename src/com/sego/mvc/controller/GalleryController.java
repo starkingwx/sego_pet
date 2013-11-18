@@ -26,6 +26,7 @@ import com.richitec.util.StringUtil;
 import com.sego.mvc.model.bean.Galleries;
 import com.sego.mvc.model.bean.Gallery;
 import com.sego.mvc.model.bean.IdBean;
+import com.sego.mvc.model.bean.Photo;
 import com.sego.mvc.model.dao.GalleryDao;
 
 @Controller
@@ -67,7 +68,7 @@ public class GalleryController {
 			@RequestParam(value = "username") String userName,
 			@RequestParam(value = "title") String title) throws IOException {
 		IdBean resultBean = new IdBean();
-		int id = galleryDao.createGallery(userName, title);
+		long id = galleryDao.createGallery(userName, title);
 		if (id > 0) {
 			resultBean.setResult("0");
 			resultBean.setId(String.valueOf(id));
@@ -126,7 +127,7 @@ public class GalleryController {
 		String name = "";
 		String type = "";
 		String description = "";
-		IdBean idBean = new IdBean();
+		Photo photoBean = new Photo();
 		try {
 			items = upload.parseRequest(request);
 			log.info("items : " + items);
@@ -156,28 +157,68 @@ public class GalleryController {
 			}
 
 			if (StringUtil.isNullOrEmpty(galleryId)) {
-				idBean.setResult("2"); // id null
+				photoBean.setResult("1"); // id null
 			} else {
 				String photoPathName = UUID.randomUUID().toString();
 				// save photo file
 				FileUtil.saveFile(photoPathName, file2Upload);
 
-				int id = galleryDao.createPhoto(userName, galleryId, name,
+				long id = galleryDao.createPhoto(userName, galleryId, name,
 						type, photoPathName, description);
 				if (id > 0) {
-					idBean.setResult("0");
-					idBean.setId(String.valueOf(id));
+					photoBean = galleryDao.getPhoto(id);
+					photoBean.setResult("0");
 				} else {
-					idBean.setResult("3"); // create failed
+					photoBean.setResult("3"); // create failed
 				}
 			}
 		} catch (FileUploadException e) {
 			e.printStackTrace();
-			idBean.setResult("2"); // no file
+			photoBean.setResult("2"); // no file
 		} catch (Exception e) {
 			e.printStackTrace();
-			idBean.setResult("5"); // save file failed
+			photoBean.setResult("5"); // save file failed
 		}
-		response.getWriter().print(JSONUtil.toString(idBean));
+		response.getWriter().print(JSONUtil.toString(photoBean));
+	}
+
+	@RequestMapping(value = "/setgalleryinfo")
+	public void setGalleryInfo(HttpServletResponse response,
+			@RequestParam(value = "galleryid") String galleryId,
+			@RequestParam(value = "title", required = false) String title,
+			@RequestParam(value = "coverurl", required = false) String photoPath)
+			throws IOException {
+		ResultBean resultBean = new ResultBean();
+		if (StringUtil.isNullOrEmpty(galleryId)) {
+			resultBean.setResult("1"); // gallery id null
+		} else {
+			if (galleryDao.updateGallery(galleryId, title, photoPath) > 0) {
+				resultBean.setResult("0");
+			} else {
+				resultBean.setResult("2"); // update failed
+			}
+		}
+		response.getWriter().print(JSONUtil.toString(resultBean));
+	}
+
+	@RequestMapping(value = "/setphotoinfo")
+	public void setPhotoInfo(
+			HttpServletResponse response,
+			@RequestParam(value = "photoid") String photoId,
+			@RequestParam(value = "type", required = false) String type,
+			@RequestParam(value = "description", required = false) String description,
+			@RequestParam(value = "name", required = false) String name)
+			throws IOException {
+		ResultBean resultBean = new ResultBean();
+		if (StringUtil.isNullOrEmpty(photoId)) {
+			resultBean.setResult("1"); // photo id null
+		} else {
+			if (galleryDao.updatePhoto(photoId, type, description, name) > 0) {
+				resultBean.setResult("0");
+			} else {
+				resultBean.setResult("2"); // update failed
+			}
+		}
+		response.getWriter().print(JSONUtil.toString(resultBean));
 	}
 }

@@ -1,35 +1,32 @@
 package com.sego.mvc.model.bean;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.UUID;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.richitec.bean.ResultBean;
-import com.richitec.util.JSONUtil;
 
 @JsonInclude(Include.NON_NULL) 
 public class PetInfo extends ResultBean {
-	private String petid;
+	private long petid;
 	private String nickname;
-	private String sex;
-	private String weight;
+	private int sex;
+	private float weight;
 	private String chuanganid;
 	private String ownerid;
 	private String avatar;
-	private String breed;
-	private String age;
-	private String height;
+	private int breed;
+	private int age;
+	private float height;
 	private String district;
 	private String placeoftengo;
 	private String deviceid;
-	private String score;
-	public String getPetid() {
+	private int score;
+	public long getPetid() {
 		return petid;
 	}
 
-	public void setPetid(String petId) {
+	public void setPetid(long petId) {
 		this.petid = petId;
 	}
 
@@ -41,19 +38,19 @@ public class PetInfo extends ResultBean {
 		this.nickname = nickname;
 	}
 
-	public String getSex() {
+	public int getSex() {
 		return sex;
 	}
 
-	public void setSex(String sex) {
+	public void setSex(int sex) {
 		this.sex = sex;
 	}
 
-	public String getWeight() {
+	public float getWeight() {
 		return weight;
 	}
 
-	public void setWeight(String weight) {
+	public void setWeight(float weight) {
 		this.weight = weight;
 	}
 
@@ -81,27 +78,27 @@ public class PetInfo extends ResultBean {
 		this.avatar = avatar;
 	}
 
-	public String getBreed() {
+	public int getBreed() {
 		return breed;
 	}
 
-	public void setBreed(String breed) {
+	public void setBreed(int breed) {
 		this.breed = breed;
 	}
 
-	public String getAge() {
+	public int getAge() {
 		return age;
 	}
 
-	public void setAge(String age) {
+	public void setAge(int age) {
 		this.age = age;
 	}
 
-	public String getHeight() {
+	public float getHeight() {
 		return height;
 	}
 
-	public void setHeight(String height) {
+	public void setHeight(float height) {
 		this.height = height;
 	}
 
@@ -129,11 +126,11 @@ public class PetInfo extends ResultBean {
 		this.deviceid = deviceid;
 	}
 
-	public String getScore() {
+	public int getScore() {
 		return score;
 	}
 
-	public void setScore(String score) {
+	public void setScore(int score) {
 		this.score = score;
 	}
 

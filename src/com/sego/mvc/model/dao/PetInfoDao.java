@@ -1,22 +1,22 @@
 package com.sego.mvc.model.dao;
 
+import java.sql.Types;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import javax.sql.DataSource;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.transaction.annotation.Transactional;
+import org.springframework.jdbc.core.SqlParameter;
 
 import com.richitec.dao.BaseDao;
+import com.richitec.dao.BaseDao.TableField;
+import com.richitec.util.ArrayUtil;
+import com.richitec.util.StringUtil;
 import com.sego.mvc.model.bean.PetInfo;
 import com.sego.mvc.model.bean.PetInfos;
 import com.sego.table.PetInfoColumn;
 
-@Transactional
 public class PetInfoDao extends BaseDao {
 	private static Log log = LogFactory.getLog(PetInfoDao.class);
 
@@ -33,20 +33,21 @@ public class PetInfoDao extends BaseDao {
 	 * @param placeOftenGo
 	 * @return petid - last insert id
 	 */
-	public int createPetInfo(String userName, String nickname, String sex,
+	public long createPetInfo(String userName, String nickname, String sex,
 			String breed, String age, String height, String weight,
 			String district, String placeOftenGo) {
-		String sql = "INSERT INTO f_pets (nickname, sex, weight, ownerid, breed, age, height, district, placeoftengo) "
-				+ "VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?)";
-
-		int update = jdbc.update(sql, nickname, sex, weight, userName, breed,
-				age, height, district, placeOftenGo);
-		int id = -1;
-		if (update > 0) {
-			sql = "SELECT LAST_INSERT_ID()";
-			id = jdbc.queryForInt(sql);
-		}
-		return id;
+		log.info(String
+				.format("createPetInfo - userName: %s, nickname: %s, sex: %s, breed: %s, age: %s, height: %s, weight: %s, district: %s, place: %s",
+						userName, nickname, sex, breed, age, height, weight,
+						district, placeOftenGo));
+		
+		TableField[] values = new TableField[]{new TableField("nickname", nickname, Types.VARCHAR), 
+				new TableField("sex", sex, Types.TINYINT), new TableField("breed", breed, Types.TINYINT),
+				new TableField("age", age, Types.INTEGER), new TableField("height", height, Types.FLOAT),
+				new TableField("weight", weight, Types.FLOAT), new TableField("district", district, Types.VARCHAR),
+				new TableField("placeoftengo", placeOftenGo, Types.VARCHAR), new TableField("ownerid", userName, Types.VARCHAR)};
+		String[] keys = new String[] { PetInfoColumn.petid.name() };
+		return insert("f_pets", values, keys);
 	}
 
 	public boolean hasPetInfo(String userName) {
@@ -55,17 +56,17 @@ public class PetInfoDao extends BaseDao {
 		return count > 0;
 	}
 
-	public int createPetAvatarInfo(String avatarFileName, String userName) {
+	public long createPetAvatarInfo(String avatarFileName, String userName) {
 		String sql = "INSERT INTO f_pets (avatar, ownerid) VALUES(?,?)";
-		int update = jdbc.update(sql, avatarFileName, userName);
-		int id = -1;
-		if (update > 0) {
-			sql = "SELECT LAST_INSERT_ID()";
-			id = jdbc.queryForInt(sql);
-		}
+		SqlParameter[] params = new SqlParameter[] {
+				new SqlParameter(Types.VARCHAR),
+				new SqlParameter(Types.VARCHAR) };
+		String[] keys = new String[] { PetInfoColumn.petid.name() };
+		Object[] values = new Object[] { avatarFileName, userName };
+		long id = insertAndReturnLastId(sql, params, values, keys);
 		return id;
 	}
-	
+
 	/**
 	 * 
 	 * @param petId
@@ -82,21 +83,30 @@ public class PetInfoDao extends BaseDao {
 	public int updatePetInfo(String petId, String nickname, String sex,
 			String breed, String age, String height, String weight,
 			String district, String placeOftenGo) {
-		String sql = "UPDATE f_pets SET nickname = ?, sex = ?, breed = ?, age = ?, height = ?, weight = ?, district = ?, placeoftengo = ? WHERE petid = ?";
-		return jdbc.update(sql, nickname, sex, breed, age, height, weight,
-				district, placeOftenGo, petId);
+		log.info(String
+				.format("updatePetInfo - nickname: %s, sex: %s, breed: %s, age: %s, height: %s, weight: %s, district: %s, place: %s",
+						 nickname, sex, breed, age, height, weight,
+						district, placeOftenGo));
+		TableField[] updateParams = new TableField[]{new TableField("nickname", nickname, Types.VARCHAR), 
+				new TableField("sex", sex, Types.TINYINT), new TableField("breed", breed, Types.TINYINT),
+				new TableField("age", age, Types.INTEGER), new TableField("height", height, Types.FLOAT),
+				new TableField("weight", weight, Types.FLOAT), new TableField("district", district, Types.VARCHAR),
+				new TableField("placeoftengo", placeOftenGo, Types.VARCHAR)};
+		String selection = "WHERE petid = ?";
+		TableField[] selectionArgs = new TableField[]{new TableField("petid", petId, Types.INTEGER)};
+		return update("f_pets", updateParams, selection, selectionArgs);
 	}
 
 	public int updatePetAvatar(String petId, String avatarFileName) {
 		String sql = "UPDATE f_pets SET avatar = ? WHERE petid = ?";
 		return jdbc.update(sql, avatarFileName, petId);
 	}
-	
+
 	public String getPetAvatar(String petId) {
 		String sql = "SELECT avatar FROM f_pets WHERE petid = ?";
 		return jdbc.queryForObject(sql, String.class, petId);
 	}
-	
+
 	public PetInfos getPetInfos(String userName) {
 		String sql = "SELECT * FROM f_pets WHERE ownerid = ?";
 		List<Map<String, Object>> list = jdbc.queryForList(sql, userName);
@@ -117,28 +127,24 @@ public class PetInfoDao extends BaseDao {
 
 	public static PetInfo convertMapToPetInfo(Map<String, Object> map) {
 		PetInfo petInfo = new PetInfo();
-		petInfo.setPetid(String.valueOf(map.get(PetInfoColumn.petid.name())));
-		petInfo.setNickname(String.valueOf(map.get(PetInfoColumn.nickname
+		petInfo.setPetid((Integer) (map.get(PetInfoColumn.petid.name())));
+		petInfo.setNickname((String) (map.get(PetInfoColumn.nickname.name())));
+		petInfo.setSex((Integer) (map.get(PetInfoColumn.sex.name())));
+		petInfo.setWeight((Float) map.get(PetInfoColumn.weight.name()));
+		petInfo.setChuanganid((String) (map.get(PetInfoColumn.chuanganid.name())));
+		petInfo.setOwnerid((String) (map.get(PetInfoColumn.ownerid.name())));
+		petInfo.setAvatar((String) (map.get(PetInfoColumn.avatar.name())));
+		petInfo.setBreed((Integer) map.get(PetInfoColumn.breed.name()));
+		petInfo.setAge((Integer) (map.get(PetInfoColumn.age.name())));
+		petInfo.setHeight((Float) (map.get(PetInfoColumn.height.name())));
+		petInfo.setDistrict((String) (map.get(PetInfoColumn.district.name())));
+		petInfo.setPlaceoftengo((String) (map.get(PetInfoColumn.placeoftengo
 				.name())));
-		petInfo.setSex(String.valueOf(map.get(PetInfoColumn.sex.name())));
-		petInfo.setWeight(String.valueOf(map.get(PetInfoColumn.weight.name())));
-		petInfo.setChuanganid(String.valueOf(map.get(PetInfoColumn.chuanganid
-				.name())));
-		petInfo.setOwnerid(String.valueOf(map.get(PetInfoColumn.ownerid.name())));
-		petInfo.setAvatar(String.valueOf(map.get(PetInfoColumn.avatar.name())));
-		petInfo.setBreed(String.valueOf(map.get(PetInfoColumn.breed.name())));
-		petInfo.setAge(String.valueOf(map.get(PetInfoColumn.age.name())));
-		petInfo.setHeight(String.valueOf(map.get(PetInfoColumn.height.name())));
-		petInfo.setDistrict(String.valueOf(map.get(PetInfoColumn.district
-				.name())));
-		petInfo.setPlaceoftengo(String.valueOf(map
-				.get(PetInfoColumn.placeoftengo.name())));
-		petInfo.setDeviceid(String.valueOf(map.get(PetInfoColumn.deviceId
-				.name())));
-		petInfo.setScore(String.valueOf(map.get(PetInfoColumn.score.name())));
+		petInfo.setDeviceid((String) (map.get(PetInfoColumn.deviceId.name())));
+		petInfo.setScore((Integer) (map.get(PetInfoColumn.score.name())));
 		return petInfo;
 	}
-	
+
 	public static PetInfos convertListToPetInfos(List<Map<String, Object>> list) {
 		PetInfos petInfos = new PetInfos();
 		List<PetInfo> petInfoList = new ArrayList<PetInfo>();
@@ -151,7 +157,7 @@ public class PetInfoDao extends BaseDao {
 		}
 		return petInfos;
 	}
-	
+
 	public boolean isPetExist(String petId) {
 		String sql = "SELECT COUNT(petid) FROM f_pets WHERE petid = ?";
 		if (jdbc.queryForInt(sql, petId) > 0) {
