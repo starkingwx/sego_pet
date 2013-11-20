@@ -73,6 +73,7 @@ public class GalleryDao extends BaseDao {
 		if (list != null) {
 			for (Map<String, Object> map : list) {
 				Photo photo = convertMapToPhoto(map);
+				photoList.add(photo);
 			}
 		}
 		return gallery;
