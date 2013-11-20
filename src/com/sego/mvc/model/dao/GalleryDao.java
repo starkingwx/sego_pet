@@ -26,22 +26,43 @@ public class GalleryDao extends BaseDao {
 		galleries.setList(galleryList);
 		if (list != null) {
 			for (Map<String, Object> map : list) {
-				Gallery gallery = new Gallery();
-				gallery.setId((Integer)(map.get(GalleryColumn.id.name())));
-				gallery.setTitle(String.valueOf(map.get(GalleryColumn.title
-						.name())));
-				gallery.setCover_url(String.valueOf(map
-						.get(GalleryColumn.cover_url.name())));
-				gallery.setOwnerid(String.valueOf(map.get(GalleryColumn.ownerid
-						.name())));
-				gallery.setCreatetime((Long)(map
-						.get(GalleryColumn.createtime.name())));
+				Gallery gallery = convertMapToGallery(map);
+				galleryList.add(gallery);
+			}
+		}
+		return galleries;
+	}
+	
+	public Galleries getGalleriesByPetId(String petId) {
+		String sql = "SELECT g.id as id, g.title as title, g.cover_url as cover_url, g.ownerid as ownerid, UNIX_TIMESTAMP(g.createtime) AS createtime "
+				+ "FROM gallery AS g JOIN f_pets AS p ON p.ownerid = g.ownerid WHERE p.petid = ?";
+		List<Map<String, Object>> list = jdbc.queryForList(sql, petId);
+		Galleries galleries = new Galleries();
+		List<Gallery> galleryList = new ArrayList<Gallery>();
+		galleries.setList(galleryList);
+		if (list != null) {
+			for (Map<String, Object> map : list) {
+				Gallery gallery = convertMapToGallery(map);
 				galleryList.add(gallery);
 			}
 		}
 		return galleries;
 	}
 
+	private Gallery convertMapToGallery(Map<String, Object> map) {
+		Gallery gallery = new Gallery();
+		gallery.setId((Integer)(map.get(GalleryColumn.id.name())));
+		gallery.setTitle(String.valueOf(map.get(GalleryColumn.title
+				.name())));
+		gallery.setCover_url(String.valueOf(map
+				.get(GalleryColumn.cover_url.name())));
+		gallery.setOwnerid(String.valueOf(map.get(GalleryColumn.ownerid
+				.name())));
+		gallery.setCreatetime((Long)(map
+				.get(GalleryColumn.createtime.name())));
+		return gallery;
+	}
+	
 	public Gallery getGallery(String galleryId) {
 		Gallery gallery = new Gallery();
 		String sql = "SELECT id, type, galleryid, path, description, name, ownerid, UNIX_TIMESTAMP(createtime) AS createtime "
@@ -59,8 +80,8 @@ public class GalleryDao extends BaseDao {
 
 	public Photo getPhoto(Long photoId) {
 		String sql = "SELECT id, type, galleryid, path, description, name, ownerid, UNIX_TIMESTAMP(createtime) AS createtime "
-			+ "FROM photo WHERE galleryid = ?";
-		Map<String, Object> map = jdbc.queryForMap(sql, photoId);
+			+ "FROM photo WHERE id = ?";
+		Map<String, Object> map = jdbc.queryForMap(sql, String.valueOf(photoId));
 		return convertMapToPhoto(map);
 	}
 	

@@ -42,9 +42,15 @@ public class GalleryController {
 
 	@RequestMapping(value = "/getgalleries")
 	public void getGalleries(HttpServletResponse response,
-			@RequestParam(value = "username") String userName)
+			@RequestParam(value = "username") String userName,
+			@RequestParam(value = "petid", required = false) String petId)
 			throws IOException {
-		Galleries galleries = galleryDao.getGalleries(userName);
+		Galleries galleries = new Galleries();
+		if (StringUtil.isNullOrEmpty(petId)) {
+			galleries = galleryDao.getGalleries(userName);
+		} else {
+			galleries = galleryDao.getGalleriesByPetId(petId);
+		}
 		galleries.setResult("0");
 		response.getWriter().print(JSONUtil.toString(galleries));
 	}
@@ -165,6 +171,7 @@ public class GalleryController {
 
 				long id = galleryDao.createPhoto(userName, galleryId, name,
 						type, photoPathName, description);
+				log.info("create photo id: " + id);
 				if (id > 0) {
 					photoBean = galleryDao.getPhoto(id);
 					photoBean.setResult("0");

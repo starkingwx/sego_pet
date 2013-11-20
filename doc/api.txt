@@ -336,6 +336,7 @@ Return:	json	{
 1. 获取相册列表(sig)
 Path: gallery/getgalleries
 Param:	username*
+		petid
 Return: json	{
 					result : "code",
 					list : [array of Gallery]
