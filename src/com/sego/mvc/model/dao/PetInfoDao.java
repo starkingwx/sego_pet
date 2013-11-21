@@ -116,6 +116,26 @@ public class PetInfoDao extends BaseDao {
 		return petInfos;
 	}
 
+	public PetInfos searchPetInfos(String phone) {
+		String sql = "SELECT * FROM f_pets WHERE ownerid LIKE ?";
+		List<Map<String, Object>> list = jdbc.queryForList(sql, "%" + phone + "%");
+		PetInfos petInfos = new PetInfos();
+		List<PetInfo> petInfoList = new ArrayList<PetInfo>();
+		petInfos.setList(petInfoList);
+		if (list != null) {
+			int size = list.size();
+			for (Map<String, Object> map : list) {
+				PetInfo petInfo = convertMapToPetInfo(map);
+				if (size == 1) {
+					Galleries galleries = ContextLoader.getGalleryDao().getRecentGalleriesByPetId(String.valueOf(petInfo.getPetid()), 3);
+					petInfo.setGalleries(galleries.getList());
+				}
+				petInfoList.add(petInfo);
+			}
+		}
+		return petInfos;
+	}
+	
 	/**
 	 * 
 	 * @param petId

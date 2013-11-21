@@ -190,7 +190,7 @@ public class PetInfoController extends ExceptionController {
 		if (StringUtil.isNullOrEmpty(phone)) {
 			petInfos.setResult("1"); // phone is empty
 		} else {
-			petInfos = petInfoDao.getPetInfos(phone);
+			petInfos = petInfoDao.searchPetInfos(phone);
 			petInfos.setResult("0");
 		}
 		String json = JSONUtil.toString(petInfos);
