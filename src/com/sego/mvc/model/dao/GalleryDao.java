@@ -35,7 +35,7 @@ public class GalleryDao extends BaseDao {
 	
 	public Galleries getGalleriesByPetId(String petId) {
 		String sql = "SELECT g.id as id, g.title as title, g.cover_url as cover_url, g.ownerid as ownerid, UNIX_TIMESTAMP(g.createtime) AS createtime "
-				+ "FROM gallery AS g JOIN f_pets AS p ON p.ownerid = g.ownerid WHERE p.petid = ?";
+				+ "FROM gallery AS g JOIN f_pets AS p ON p.ownerid = g.ownerid WHERE p.petid = ? ORDER BY g.createtime ASC";
 		List<Map<String, Object>> list = jdbc.queryForList(sql, petId);
 		Galleries galleries = new Galleries();
 		List<Gallery> galleryList = new ArrayList<Gallery>();
@@ -49,6 +49,22 @@ public class GalleryDao extends BaseDao {
 		return galleries;
 	}
 
+	public Galleries getRecentGalleriesByPetId(String petId, int limit) {
+		String sql = "SELECT g.id as id, g.title as title, g.cover_url as cover_url, g.ownerid as ownerid, UNIX_TIMESTAMP(g.createtime) AS createtime "
+				+ "FROM gallery AS g JOIN f_pets AS p ON p.ownerid = g.ownerid WHERE p.petid = ? ORDER BY g.createtime DESC LIMIT 0,?";
+		List<Map<String, Object>> list = jdbc.queryForList(sql, petId, limit);
+		Galleries galleries = new Galleries();
+		List<Gallery> galleryList = new ArrayList<Gallery>();
+		galleries.setList(galleryList);
+		if (list != null) {
+			for (Map<String, Object> map : list) {
+				Gallery gallery = convertMapToGallery(map);
+				galleryList.add(gallery);
+			}
+		}
+		return galleries;
+	}
+	
 	private Gallery convertMapToGallery(Map<String, Object> map) {
 		Gallery gallery = new Gallery();
 		gallery.setId((Integer)(map.get(GalleryColumn.id.name())));

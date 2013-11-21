@@ -3,11 +3,16 @@ package com.sego.mvc.model.dao;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.richitec.dao.BaseDao;
 import com.richitec.util.DistanceUtil;
+import com.richitec.util.RandomString;
+import com.sego.mvc.controller.PetInfoController;
 import com.sego.mvc.model.bean.LeaveMsg;
 import com.sego.mvc.model.bean.LeaveMsgs;
 import com.sego.mvc.model.bean.PetInfo;
@@ -17,11 +22,26 @@ import com.sego.table.LocationColum;
 
 @Transactional
 public class CommunityDao extends BaseDao {
+	private static Log log = LogFactory.getLog(CommunityDao.class);
 	private static final double MAX_DISTANCE = 3000; // km
-
+	public int getTotalPetsWithPhoto() {
+		String sql = "SELECT count(p.petid) FROM f_pets AS p WHERE p.ownerid IN (SELECT DISTINCT(ownerid) FROM photo GROUP BY ownerid)";
+		return jdbc.queryForInt(sql);
+	}
+	
 	public PetInfos getRecommendedPets(String userName) {
-		String sql = "SELECT * FROM f_pets WHERE username <> ? LIMIT 0, 10";
-		List<Map<String, Object>> list = jdbc.queryForList(sql, userName);
+		int total = getTotalPetsWithPhoto();
+		int start = 0;
+		final int pageSize = 8;
+		if (total > pageSize) {
+			int diff = total - pageSize + 1;
+			Random random = new Random();
+			start = random.nextInt(diff);
+		}
+		log.info("getRecommendedPets start: " + start);
+		
+		String sql = "SELECT p.* FROM f_pets AS p WHERE p.ownerid IN (SELECT DISTINCT(ownerid) FROM photo GROUP BY ownerid) LIMIT ?,?";
+		List<Map<String, Object>> list = jdbc.queryForList(sql, start, pageSize);
 		PetInfos petInfos = new PetInfos();
 		List<PetInfo> petInfoList = new ArrayList<PetInfo>();
 		petInfos.setList(petInfoList);

@@ -145,7 +145,7 @@ Return: json	{
 3. 获取宠物详细信息(sig)
 Path:	petinfo/getpetdetail
 Param:	petid*
-Return: json PetInfo（同上）,多一个 result : "code"
+Return: json PetInfo（同上）,多了 result : "code", galleries : [array of Gallery]
  code: 	0	成功
 
 4. 上传宠物头像

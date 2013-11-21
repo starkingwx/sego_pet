@@ -1,5 +1,6 @@
 package com.sego.mvc.model.bean;
 
+import java.util.List;
 import java.util.UUID;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
@@ -22,6 +23,9 @@ public class PetInfo extends ResultBean {
 	private String placeoftengo;
 	private String deviceid;
 	private int score;
+	
+	private List<Gallery> galleries;
+	
 	public long getPetid() {
 		return petid;
 	}
@@ -132,6 +136,14 @@ public class PetInfo extends ResultBean {
 
 	public void setScore(int score) {
 		this.score = score;
+	}
+
+	public List<Gallery> getGalleries() {
+		return galleries;
+	}
+
+	public void setGalleries(List<Gallery> galleries) {
+		this.galleries = galleries;
 	}
 
 	public static void main(String[] args) {

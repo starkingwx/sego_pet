@@ -9,10 +9,12 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.jdbc.core.SqlParameter;
 
+import com.imeeting.framework.ContextLoader;
 import com.richitec.dao.BaseDao;
 import com.richitec.dao.BaseDao.TableField;
 import com.richitec.util.ArrayUtil;
 import com.richitec.util.StringUtil;
+import com.sego.mvc.model.bean.Galleries;
 import com.sego.mvc.model.bean.PetInfo;
 import com.sego.mvc.model.bean.PetInfos;
 import com.sego.table.PetInfoColumn;
@@ -122,7 +124,10 @@ public class PetInfoDao extends BaseDao {
 	public PetInfo getPetDetail(String petId) {
 		String sql = "SELECT * FROM f_pets WHERE petid = ?";
 		Map<String, Object> map = jdbc.queryForMap(sql, petId);
-		return convertMapToPetInfo(map);
+		PetInfo petInfo = convertMapToPetInfo(map);
+		Galleries galleries = ContextLoader.getGalleryDao().getRecentGalleriesByPetId(petId, 3);
+		petInfo.setGalleries(galleries.getList());
+		return petInfo;
 	}
 
 	public static PetInfo convertMapToPetInfo(Map<String, Object> map) {
