@@ -293,7 +293,10 @@ Return:	json	{
 10. 获取留言详情(sig)
 Path: community/getleavemsgdetail
 Param:	msgid*
-Return: json	LeaveMsg, 多一个 result : "code"
+Return: json	{
+					result	: "code",
+					list	: [array of LeaveMsg]
+				}
  code: 	0	成功
 		2	petid为空
 

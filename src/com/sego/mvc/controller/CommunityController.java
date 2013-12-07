@@ -15,6 +15,7 @@ import com.richitec.util.JSONUtil;
 import com.richitec.util.StringUtil;
 import com.sego.mvc.model.bean.LeaveMsg;
 import com.sego.mvc.model.bean.LeaveMsgs;
+import com.sego.mvc.model.bean.PetInfo;
 import com.sego.mvc.model.bean.PetInfos;
 import com.sego.mvc.model.dao.CommunityDao;
 import com.sego.mvc.model.dao.PetInfoDao;
@@ -121,20 +122,34 @@ public class CommunityController {
 	@RequestMapping(value = "/leavemsg")
 	public void leaveMsgToPet(HttpServletResponse response,
 			@RequestParam(value = "username") String userName,
-			@RequestParam(value = "petid") String petId,
+			@RequestParam(value = "petid") String receiverPetId,
 			@RequestParam(value = "content") String content) throws IOException {
 		ResultBean resultBean = new ResultBean();
-		if (StringUtil.isNullOrEmpty(petId)) {
+		if (StringUtil.isNullOrEmpty(receiverPetId)) {
 			resultBean.setResult("2"); // petid is null
+		} else if (!petInfoDao.isPetExist(receiverPetId)) {
+			resultBean.setResult("1"); // pet doesn't exist
 		} else {
-			if (!petInfoDao.isPetExist(petId)) {
-				resultBean.setResult("1"); // pet doesn't exist
+			PetInfos petInfos = petInfoDao.getPetInfos(userName);
+			if (petInfos.getList().size() <= 0) {
+				// the msg leaver has no pets
+				resultBean.setResult("4");
 			} else {
-				int row = communityDao.leaveMsg(userName, petId, content, "0");
-				if (row > 0) {
-					resultBean.setResult("0");
+				PetInfo petInfo = petInfos.getList().get(0);
+				// create msg entry
+				long entryId = communityDao.createLeaveMsgEntry(
+						String.valueOf(petInfo.getPetid()), receiverPetId);
+				if (entryId > 0) {
+					int row = communityDao.leaveMsg(userName,
+							String.valueOf(petInfo.getPetid()), receiverPetId,
+							content, String.valueOf(entryId));
+					if (row > 0) {
+						resultBean.setResult("0");
+					} else {
+						resultBean.setResult("3"); // add msg failed
+					}
 				} else {
-					resultBean.setResult("3"); // add msg failed
+					resultBean.setResult("3");
 				}
 			}
 		}
@@ -150,12 +165,19 @@ public class CommunityController {
 		if (StringUtil.isNullOrEmpty(msgId)) {
 			resultBean.setResult("2"); // msgid is null
 		} else {
-			if (!communityDao.isMsgExist(msgId)) {
+			if (!communityDao.isMsgEntryExist(msgId)) {
 				resultBean.setResult("1"); // msg doesn't exist
 			} else {
-				int row = communityDao.replyMsg(userName, content, msgId);
-				if (row > 0) {
-					resultBean.setResult("0");
+				PetInfos petInfos = petInfoDao.getPetInfos(userName);
+				if (petInfos.getList().size() > 0) {
+					PetInfo petInfo = petInfos.getList().get(0);
+					int row = communityDao.replyMsg(userName,
+							String.valueOf(petInfo.getPetid()), content, msgId);
+					if (row > 0) {
+						resultBean.setResult("0");
+					} else {
+						resultBean.setResult("3"); // add msg failed
+					}
 				} else {
 					resultBean.setResult("3"); // add msg failed
 				}
@@ -172,10 +194,10 @@ public class CommunityController {
 		if (StringUtil.isNullOrEmpty(msgId)) {
 			resultBean.setResult("2"); // msgid is null
 		} else {
-			if (!communityDao.isMsgExist(msgId)) {
+			if (!communityDao.isMsgEntryExist(msgId)) {
 				resultBean.setResult("1"); // msg doesn't exist
 			} else {
-				int row = communityDao.delMsg(msgId);
+				int row = communityDao.delLeaveMsg(msgId);
 				if (row > 0) {
 					resultBean.setResult("0");
 				} else {
@@ -185,13 +207,7 @@ public class CommunityController {
 		}
 		response.getWriter().print(JSONUtil.toString(resultBean));
 	}
-	
-	@RequestMapping(value = "/getleavemsgbox")
-	public void getLeaveMsgBox(HttpServletResponse response,
-			@RequestParam(value = "username") String userName) {
-		
-	}
-	
+
 	@RequestMapping(value = "/getleavemsgs")
 	public void getLeaveMsgs(HttpServletResponse response,
 			@RequestParam(value = "username") String userName,
@@ -205,7 +221,7 @@ public class CommunityController {
 		}
 		response.getWriter().print(JSONUtil.toString(msgs));
 	}
-	
+
 	@RequestMapping(value = "/getleavemsgdetail")
 	public void getLeaveMsgDetail(HttpServletResponse response,
 			@RequestParam(value = "msgid") String msgId) throws IOException {
@@ -218,15 +234,16 @@ public class CommunityController {
 		}
 		response.getWriter().print(JSONUtil.toString(msgs));
 	}
-	
+
 	@RequestMapping(value = "/getblacklist")
 	public void getBlackList(HttpServletResponse response,
-			@RequestParam(value = "username") String userName) throws IOException {
+			@RequestParam(value = "username") String userName)
+			throws IOException {
 		PetInfos petInfos = communityDao.getPetBlackList(userName);
 		petInfos.setResult("0");
 		response.getWriter().print(JSONUtil.toString(petInfos));
 	}
-	
+
 	@RequestMapping(value = "/addblacklist")
 	public void addPetToBlackList(HttpServletResponse response,
 			@RequestParam(value = "username") String userName,
@@ -237,7 +254,7 @@ public class CommunityController {
 		} else {
 			if (!petInfoDao.isPetExist(petId)) {
 				resultBean.setResult("1"); // pet doesn't exist
-			} else if (communityDao.isPetInBlackList(petId, userName)){
+			} else if (communityDao.isPetInBlackList(petId, userName)) {
 				resultBean.setResult("3"); // already in black list
 			} else {
 				int row = communityDao.addPetToBlackList(petId, userName);
@@ -250,7 +267,7 @@ public class CommunityController {
 		}
 		response.getWriter().print(JSONUtil.toString(resultBean));
 	}
-	
+
 	@RequestMapping(value = "/delblacklist")
 	public void delPetFromBlackList(HttpServletResponse response,
 			@RequestParam(value = "username") String userName,
@@ -261,7 +278,7 @@ public class CommunityController {
 		} else {
 			if (!petInfoDao.isPetExist(petId)) {
 				resultBean.setResult("1"); // pet doesn't exist
-			} else if (!communityDao.isPetInBlackList(petId, userName)){
+			} else if (!communityDao.isPetInBlackList(petId, userName)) {
 				resultBean.setResult("3"); // not in black list
 			} else {
 				int row = communityDao.delPetFromBlackList(petId, userName);
