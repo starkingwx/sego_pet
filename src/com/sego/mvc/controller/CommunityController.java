@@ -216,7 +216,7 @@ public class CommunityController {
 		if (StringUtil.isNullOrEmpty(petId)) {
 			msgs.setResult("2"); // petid is null
 		} else {
-			msgs = communityDao.getLeaveMsgsByUser(userName, petId);
+			msgs = communityDao.getLeaveMsgsByPet(petId);
 			msgs.setResult("0");
 		}
 		response.getWriter().print(JSONUtil.toString(msgs));
