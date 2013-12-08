@@ -24,6 +24,7 @@ import com.richitec.bean.ResultBean;
 import com.richitec.util.FileUtil;
 import com.richitec.util.JSONUtil;
 import com.richitec.util.StringUtil;
+import com.sego.mvc.model.DeviceManager;
 import com.sego.mvc.model.bean.IdBean;
 import com.sego.mvc.model.bean.PetInfo;
 import com.sego.mvc.model.bean.PetInfos;
@@ -202,15 +203,19 @@ public class PetInfoController extends ExceptionController {
 	public void bindPetDevice(HttpServletResponse response, 
 			@RequestParam(value = "username") String userName,
 			@RequestParam(value = "petid") String petId,
-			@RequestParam(value = "deviceid") String deviceId
-			) {
+			@RequestParam(value = "deviceno") String deviceNo
+			) throws IOException {
 		ResultBean resultBean = new ResultBean();
-		if (StringUtil.isNullOrEmpty(deviceId)) {
-			resultBean.setResult("1"); // device id is empty
+		if (StringUtil.isNullOrEmpty(deviceNo)) {
+			resultBean.setResult("4"); // device id is empty
 		} else {
-			petInfoDao.updatePetInfo(petId, null, null, null, null, null, null, null, null, deviceId);
+			petInfoDao.updatePetInfo(petId, null, null, null, null, null, null, null, null, deviceNo);
 			
+			DeviceManager deviceManager = ContextLoader.getDeviceManager();
+			String result = deviceManager.bindDevice(userName, deviceNo);
+			resultBean.setResult(result);
 		}
+		response.getWriter().print(JSONUtil.toString(resultBean));
 	}
 	
 	

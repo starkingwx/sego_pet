@@ -19,10 +19,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.imeeting.bean.UserBean;
 import com.imeeting.constants.WebConstants;
 import com.imeeting.framework.Configuration;
 import com.imeeting.framework.ContextLoader;
-import com.imeeting.web.user.UserBean;
 import com.richitec.sms.client.SMSHttpResponse;
 
 @Controller

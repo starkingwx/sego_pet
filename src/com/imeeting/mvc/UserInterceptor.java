@@ -9,7 +9,7 @@ import org.apache.commons.logging.LogFactory;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
 
-import com.imeeting.web.user.UserBean;
+import com.imeeting.bean.UserBean;
 
 public class UserInterceptor implements HandlerInterceptor {
 	private static Log log = LogFactory.getLog(UserInterceptor.class);

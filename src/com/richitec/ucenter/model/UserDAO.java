@@ -15,10 +15,10 @@ import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 
+import com.imeeting.bean.UserBean;
 import com.imeeting.constants.UserAccountStatus;
 import com.imeeting.framework.ContextLoader;
 import com.imeeting.mvc.controller.UserController;
-import com.imeeting.web.user.UserBean;
 import com.richitec.sms.client.SMSHttpResponse;
 import com.richitec.util.CryptoUtil;
 import com.richitec.util.RandomString;
@@ -117,7 +117,7 @@ public class UserDAO {
 				user.setUserName(rs.getString("username"));
 				user.setNickName(rs.getString("nickname"));
 				user.setPassword(rs.getString("password"));
-				user.setUserKey(rs.getString("userkey"));
+				user.setUserkey(rs.getString("userkey"));
 				return user;
 			}
 		});
@@ -306,6 +306,7 @@ public class UserDAO {
 		return jdbc.queryForMap(sql, userName);
 	}
 
+	@Deprecated
 	public Map<String, Object> getUserByDeviceId(String deviceId) {
 		String sql = "SELECT * FROM im_user WHERE deviceId = ?";
 		Map<String, Object> user = null;
@@ -317,6 +318,7 @@ public class UserDAO {
 		return user;
 	}
 
+	@Deprecated
 	public Map<String, Object> getUserById(String userId) {
 		String sql = "SELECT * FROM im_user WHERE id = ?";
 		Map<String, Object> user = null;
@@ -339,5 +341,37 @@ public class UserDAO {
 			result = "1001";
 		}
 		return result;
+	}
+
+	public UserBean loginWithThirdIdentifier(String identifier) {
+		UserBean userBean = new UserBean();
+		try {
+			Map<String, Object> userInfo = getUser(identifier);
+			// user exist, just return
+			userBean.setUserId((String) userInfo.get("id"));
+			userBean.setUserName((String) userInfo.get("username"));
+			userBean.setUserkey((String) userInfo.get("userkey"));
+			userBean.setResult("0");
+			// TODO: insert user data to device server
+		} catch (Exception e) {
+			log.info(e.getMessage());
+			// user doesn't exist, insert new
+			String id = RandomString.genRandomChars(32);
+			String userkey = RandomString.genRandomChars(32);
+			String sql = "INSERT INTO im_user(id, username, password, userkey) VALUES (?,?,?,?)";
+			Object[] params = new Object[] { id, identifier,
+					CryptoUtil.md5("123"), userkey };
+			try {
+				jdbc.update(sql, params);
+				userBean.setResult("0");
+				userBean.setUserId(id);
+				userBean.setUserName(identifier);
+				userBean.setUserkey(userkey);
+			} catch (Exception ex) {
+				log.info(e.getMessage());
+				userBean.setResult("1");
+			}
+		}
+		return userBean;
 	}
 }

@@ -20,10 +20,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.imeeting.bean.UserBean;
 import com.imeeting.constants.AccountBindStatus;
 import com.imeeting.framework.Configuration;
 import com.imeeting.framework.ContextLoader;
-import com.imeeting.web.user.UserBean;
 import com.richitec.bean.ResultBean;
 import com.richitec.sms.client.SMSClient;
 import com.richitec.ucenter.model.UserDAO;
@@ -31,6 +31,7 @@ import com.richitec.util.JSONUtil;
 import com.richitec.util.CryptoUtil;
 import com.richitec.util.RandomString;
 import com.richitec.util.StringUtil;
+import com.sego.mvc.model.DeviceManager;
 
 @Controller
 @RequestMapping("/user")
@@ -80,13 +81,13 @@ public class UserController extends ExceptionController {
 			json.put("result", "0");
 			json.put("userId", user.getUserId());
 			json.put("username", user.getUserName());
-			json.put("userkey", user.getUserKey());
+			json.put("userkey", user.getUserkey());
 			json.put("nickname", user.getNickName());
-			if (user.getUserName() != null && !user.getUserName().equals("")) {
-				json.put("bind_status", AccountBindStatus.bind_phone.name());
-				json.put(AccountBindStatus.bind_phone.name(),
-						user.getUserName());
-			}
+//			if (user.getUserName() != null && !user.getUserName().equals("")) {
+//				json.put("bind_status", AccountBindStatus.bind_phone.name());
+//				json.put(AccountBindStatus.bind_phone.name(),
+//						user.getUserName());
+//			}
 			session.setAttribute(UserBean.SESSION_BEAN, user);
 			userDao.recordDeviceInfo(user.getUserId(), brand, model, release,
 					sdk, width, height);
@@ -381,7 +382,7 @@ public class UserController extends ExceptionController {
 						CryptoUtil.md5(password));
 				jsonUser.put("userId", user.getUserId());
 				jsonUser.put("username", user.getUserName());
-				jsonUser.put("userkey", user.getUserKey());
+				jsonUser.put("userkey", user.getUserkey());
 				jsonUser.put("bind_status", AccountBindStatus.bind_phone.name());
 				jsonUser.put(AccountBindStatus.bind_phone.name(),
 						user.getUserName());
@@ -390,26 +391,11 @@ public class UserController extends ExceptionController {
 			e.printStackTrace();
 		}
 		response.getWriter().print(jsonUser.toString());
-	}
-
-	/**
-	 * iphone 客户端每次启动登录后会发送该请求
-	 * 
-	 * @param userName
-	 * @param token
-	 * @param response
-	 * @throws JSONException
-	 * @throws IOException
-	 */
-	@RequestMapping("/regToken")
-	public void regToken(
-			@RequestParam(value = "username", required = true) String userName,
-			@RequestParam String token, HttpServletResponse response)
-			throws JSONException, IOException {
-		JSONObject resultJson = new JSONObject();
-		String result = userDao.saveToken(userName, token);
-		resultJson.put("result", result);
-		response.getWriter().print(resultJson.toString());
+		
+		if ("0".equals(result)) {
+			DeviceManager deviceManager = ContextLoader.getDeviceManager();
+			deviceManager.insertUserData(phone, CryptoUtil.md5(password));
+		}
 	}
 
 	@RequestMapping("/checkUserExist")
@@ -498,5 +484,17 @@ public class UserController extends ExceptionController {
 			ret.put("result", result);
 		}
 		response.getWriter().print(ret.toString());
+	}
+	
+	@RequestMapping(value = "/thirdlogin")
+	public void thirdAccountLogin(HttpServletResponse response,
+			@RequestParam(value = "identifier") String identifier) throws IOException {
+		ResultBean resultBean = new ResultBean();
+		if (StringUtil.isNullOrEmpty(identifier)) {
+			resultBean.setResult("1"); // identifier is empty
+		} else {
+			resultBean = userDao.loginWithThirdIdentifier(identifier);
+		}
+		response.getWriter().print(JSONUtil.toString(resultBean));
 	}
 }
