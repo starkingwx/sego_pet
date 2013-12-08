@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import com.imeeting.framework.ContextLoader;
 import com.imeeting.mvc.controller.ExceptionController;
+import com.richitec.bean.ResultBean;
 import com.richitec.util.FileUtil;
 import com.richitec.util.JSONUtil;
 import com.richitec.util.StringUtil;
@@ -72,7 +73,7 @@ public class PetInfoController extends ExceptionController {
 		} else {
 			// save pet info
 			int update = petInfoDao.updatePetInfo(petId, nickname, sex, breed,
-					age, height, weight, district, placeOftenGo);
+					age, height, weight, district, placeOftenGo, null);
 			if (update > 0) {
 				petUpdateReturnBean.setResult("0");
 				petUpdateReturnBean.setId(petId);
@@ -197,4 +198,20 @@ public class PetInfoController extends ExceptionController {
 		response.getWriter().print(json);
 	}
 
+	@RequestMapping(value = "/binddevice")
+	public void bindPetDevice(HttpServletResponse response, 
+			@RequestParam(value = "username") String userName,
+			@RequestParam(value = "petid") String petId,
+			@RequestParam(value = "deviceid") String deviceId
+			) {
+		ResultBean resultBean = new ResultBean();
+		if (StringUtil.isNullOrEmpty(deviceId)) {
+			resultBean.setResult("1"); // device id is empty
+		} else {
+			petInfoDao.updatePetInfo(petId, null, null, null, null, null, null, null, null, deviceId);
+			
+		}
+	}
+	
+	
 }

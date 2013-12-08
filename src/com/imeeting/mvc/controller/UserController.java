@@ -28,7 +28,7 @@ import com.richitec.bean.ResultBean;
 import com.richitec.sms.client.SMSClient;
 import com.richitec.ucenter.model.UserDAO;
 import com.richitec.util.JSONUtil;
-import com.richitec.util.MD5Util;
+import com.richitec.util.CryptoUtil;
 import com.richitec.util.RandomString;
 import com.richitec.util.StringUtil;
 
@@ -155,7 +155,7 @@ public class UserController extends ExceptionController {
 			return "403";
 		}
 
-		String md5Password = MD5Util.md5(newPassword);
+		String md5Password = CryptoUtil.md5(newPassword);
 		if (userDao.changePassword(phoneNumber, md5Password) <= 0) {
 			return "500";
 		}
@@ -184,7 +184,7 @@ public class UserController extends ExceptionController {
 				} else if (!newPassword.equals(newPasswordConfirm)) {
 					result = "2"; // two passwords are different
 				} else {
-					String md5Password = MD5Util.md5(newPassword);
+					String md5Password = CryptoUtil.md5(newPassword);
 					if(userDao.changePassword(phone, md5Password) > 0) {
 						result = "0"; // success
 					} else {
@@ -378,7 +378,7 @@ public class UserController extends ExceptionController {
 			jsonUser.put("result", result);
 			if ("0".equals(result)) {
 				UserBean user = userDao.getUserBean(phone,
-						MD5Util.md5(password));
+						CryptoUtil.md5(password));
 				jsonUser.put("userId", user.getUserId());
 				jsonUser.put("username", user.getUserName());
 				jsonUser.put("userkey", user.getUserKey());
@@ -436,7 +436,7 @@ public class UserController extends ExceptionController {
 				return;
 			}
 			String newPwd = RandomString.genRandomNum(6);
-			int rows = userDao.changePassword(userName, MD5Util.md5(newPwd));
+			int rows = userDao.changePassword(userName, CryptoUtil.md5(newPwd));
 			if (rows > 0) {
 				String msg = String
 						.format("您的新密码是%s，请登录后及时修改您的密码。[智会]", newPwd);

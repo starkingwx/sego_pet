@@ -27,6 +27,9 @@
 		<property name="appId">
 		    <value>${app_id}</value>
 		</property>
+		<property name="deviceServerUrl">
+		    <value>${pet_device_server_url}</value>
+		</property>
 	</bean>
 	
 	<bean id="sms_client" class="com.richitec.sms.client.SMSClient">

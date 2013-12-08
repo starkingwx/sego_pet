@@ -22,7 +22,7 @@ import com.imeeting.framework.Configuration;
 import com.imeeting.framework.ContextLoader;
 import com.imeeting.web.user.UserBean;
 import com.richitec.ucenter.model.UserDAO;
-import com.richitec.util.MD5Util;
+import com.richitec.util.CryptoUtil;
 import com.richitec.util.RandomString;
 
 @Controller
@@ -65,7 +65,7 @@ public class ProfileController {
 			return "403";
 		}
 		
-		String md5Password = MD5Util.md5(newPwd);
+		String md5Password = CryptoUtil.md5(newPwd);
 		if (userDao.changePassword(user.getUserName(), md5Password)<=0){
 			return "500";
 		}

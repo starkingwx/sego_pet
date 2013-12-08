@@ -15,7 +15,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.imeeting.constants.AuthConstant;
 import com.imeeting.framework.ContextLoader;
-import com.richitec.util.MD5Util;
+import com.richitec.util.CryptoUtil;
 
 
 
@@ -113,7 +113,7 @@ public class APIAuthInterceptor implements HandlerInterceptor {
 		sb2.append(userkey);
 
 		boolean ret = false;
-		String digest = MD5Util.md5(sb2.toString());
+		String digest = CryptoUtil.md5(sb2.toString());
 		log.debug("digest: " + digest);
 		if (digest.equalsIgnoreCase(sig)) {
 			ret = true;

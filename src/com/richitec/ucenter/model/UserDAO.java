@@ -20,7 +20,7 @@ import com.imeeting.framework.ContextLoader;
 import com.imeeting.mvc.controller.UserController;
 import com.imeeting.web.user.UserBean;
 import com.richitec.sms.client.SMSHttpResponse;
-import com.richitec.util.MD5Util;
+import com.richitec.util.CryptoUtil;
 import com.richitec.util.RandomString;
 import com.richitec.util.ValidatePattern;
 
@@ -75,7 +75,7 @@ public class UserDAO {
 					String id = (String) user.get("id");
 					String sql = "UPDATE im_user SET username = ?, password = ?, nickname = ? WHERE id = ?";
 					try {
-						jdbc.update(sql, userName, MD5Util.md5(password),
+						jdbc.update(sql, userName, CryptoUtil.md5(password),
 								nickname, id);
 						result = "0";
 					} catch (Exception e) {
@@ -90,7 +90,7 @@ public class UserDAO {
 				String userkey = RandomString.genRandomChars(32);
 				String sql = "INSERT INTO im_user(id, username, deviceId, password, userkey, nickname) VALUES (?,?,?,?,?,?)";
 				Object[] params = new Object[] { id, userName, deviceId,
-						MD5Util.md5(password), userkey, nickname };
+						CryptoUtil.md5(password), userkey, nickname };
 				try {
 					jdbc.update(sql, params);
 					result = "0";
@@ -262,7 +262,7 @@ public class UserDAO {
 
 	public int changePassword(String userName, String md5Password) {
 		String sql = "UPDATE im_user SET password=?, userkey=? WHERE username=?";
-		String userkey = MD5Util.md5(RandomString.genRandomChars(10));
+		String userkey = CryptoUtil.md5(RandomString.genRandomChars(10));
 		return jdbc.update(sql, md5Password, userkey, userName);
 	}
 
@@ -330,7 +330,7 @@ public class UserDAO {
 
 	public String registerDeviceId(String deviceId) {
 		String id = RandomString.genRandomChars(20);
-		String userKey = MD5Util.md5(id);
+		String userKey = CryptoUtil.md5(id);
 		String sql = "INSERT INTO im_user (id, username, deviceId, password, userkey, nickname) VALUES(?,?,?,?,?,?)";
 		String result = "0";
 		try {

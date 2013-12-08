@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import com.imeeting.framework.ContextLoader;
 import com.richitec.ucenter.model.UserDAO;
-import com.richitec.util.MD5Util;
+import com.richitec.util.CryptoUtil;
 import com.richitec.util.StringUtil;
 
 @Controller
@@ -56,7 +56,7 @@ public class ProfileApiController {
 		}
 
 		if ("0".equals(result)) {
-			String md5Password = MD5Util.md5(newPwd);
+			String md5Password = CryptoUtil.md5(newPwd);
 			if (userDao.changePassword(userName, md5Password) <= 0) {
 				result = "3"; // change failed
 			}

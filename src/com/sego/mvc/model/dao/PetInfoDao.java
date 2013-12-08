@@ -84,7 +84,7 @@ public class PetInfoDao extends BaseDao {
 	 */
 	public int updatePetInfo(String petId, String nickname, String sex,
 			String breed, String age, String height, String weight,
-			String district, String placeOftenGo) {
+			String district, String placeOftenGo, String deviceId) {
 		log.info(String
 				.format("updatePetInfo - nickname: %s, sex: %s, breed: %s, age: %s, height: %s, weight: %s, district: %s, place: %s",
 						 nickname, sex, breed, age, height, weight,
@@ -93,7 +93,7 @@ public class PetInfoDao extends BaseDao {
 				new TableField("sex", sex, Types.TINYINT), new TableField("breed", breed, Types.TINYINT),
 				new TableField("age", age, Types.INTEGER), new TableField("height", height, Types.FLOAT),
 				new TableField("weight", weight, Types.FLOAT), new TableField("district", district, Types.VARCHAR),
-				new TableField("placeoftengo", placeOftenGo, Types.VARCHAR)};
+				new TableField("placeoftengo", placeOftenGo, Types.VARCHAR), new TableField("deviceId", deviceId, Types.VARCHAR)};
 		String selection = "WHERE petid = ?";
 		TableField[] selectionArgs = new TableField[]{new TableField("petid", petId, Types.INTEGER)};
 		return update("f_pets", updateParams, selection, selectionArgs);

@@ -13,7 +13,9 @@ public class Configuration {
 	private Double signupGift;
 	private String appvcenterUrl;
 	private String appId;
-
+	private String deviceServerUrl;
+		
+	
 	public void setUploadDir(String uploadDir) {
 		this.uploadDir = uploadDir;
 	}
@@ -60,6 +62,14 @@ public class Configuration {
 
 	public void setAppId(String appId) {
 		this.appId = appId;
+	}
+
+	public String getDeviceServerUrl() {
+		return deviceServerUrl;
+	}
+
+	public void setDeviceServerUrl(String deviceServerUrl) {
+		this.deviceServerUrl = deviceServerUrl;
 	}
 
 }
