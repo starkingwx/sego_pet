@@ -21,19 +21,19 @@ public class UserBean extends ResultBean {
 		this.userId = userId;
 	}
 
-	public String getUserName() {
+	public String getUsername() {
 		return username;
 	}
 
-	public void setUserName(String name) {
+	public void setUsername(String name) {
 		this.username = name;
 	}
 
-	public String getNickName() {
+	public String getNickname() {
 		return nickname;
 	}
 
-	public void setNickName(String nickName) {
+	public void setNickname(String nickName) {
 		this.nickname = nickName;
 	}
 

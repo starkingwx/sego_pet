@@ -66,7 +66,7 @@ public class ProfileController {
 		}
 		
 		String md5Password = CryptoUtil.md5(newPwd);
-		if (userDao.changePassword(user.getUserName(), md5Password)<=0){
+		if (userDao.changePassword(user.getUsername(), md5Password)<=0){
 			return "500";
 		}
 		
@@ -85,7 +85,7 @@ public class ProfileController {
 			return view;
 		}
 		
-		int rows = userDao.changeNickname(user.getUserName(), nickname);
+		int rows = userDao.changeNickname(user.getUsername(), nickname);
 		if (rows <= 0) {
 			view.addObject(NicknameRetCode, HttpServletResponse.SC_NOT_FOUND);
 			return view;
@@ -93,7 +93,7 @@ public class ProfileController {
 		
 		
 		view.addObject(NicknameRetCode, HttpServletResponse.SC_OK);
-		user.setNickName(nickname);
+		user.setNickname(nickname);
 		
 		view.setViewName("redirect:/setting");
 		return view;

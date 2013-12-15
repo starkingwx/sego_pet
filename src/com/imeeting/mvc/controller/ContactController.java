@@ -37,7 +37,7 @@ public class ContactController {
 			@RequestParam String searchWord )
 			throws JSONException, IOException {
 		UserBean user = (UserBean) session.getAttribute(UserBean.SESSION_BEAN);
-		List<ContactBean> contactList = contactDao.getContactList(user.getUserName(), searchWord);
+		List<ContactBean> contactList = contactDao.getContactList(user.getUsername(), searchWord);
 		JSONArray array = new JSONArray();
 		for (ContactBean c : contactList){
 			JSONObject jo = new JSONObject();

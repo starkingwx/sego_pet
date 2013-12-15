@@ -114,8 +114,8 @@ public class UserDAO {
 					throws SQLException {
 				UserBean user = new UserBean();
 				user.setUserId(rs.getString("id"));
-				user.setUserName(rs.getString("username"));
-				user.setNickName(rs.getString("nickname"));
+				user.setUsername(rs.getString("username"));
+				user.setNickname(rs.getString("nickname"));
 				user.setPassword(rs.getString("password"));
 				user.setUserkey(rs.getString("userkey"));
 				return user;
@@ -349,7 +349,7 @@ public class UserDAO {
 			Map<String, Object> userInfo = getUser(identifier);
 			// user exist, just return
 			userBean.setUserId((String) userInfo.get("id"));
-			userBean.setUserName((String) userInfo.get("username"));
+			userBean.setUsername((String) userInfo.get("username"));
 			userBean.setUserkey((String) userInfo.get("userkey"));
 			userBean.setResult("0");
 			// TODO: insert user data to device server
@@ -366,7 +366,7 @@ public class UserDAO {
 				if (rows > 0) {
 					userBean.setResult("0");
 					userBean.setUserId(id);
-					userBean.setUserName(identifier);
+					userBean.setUsername(identifier);
 					userBean.setUserkey(userkey);
 					// TODO: insert user data to device server
 				} else {

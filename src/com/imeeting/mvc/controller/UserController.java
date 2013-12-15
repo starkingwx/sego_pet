@@ -80,9 +80,9 @@ public class UserController extends ExceptionController {
 		if (null != user) {
 			json.put("result", "0");
 			json.put("userId", user.getUserId());
-			json.put("username", user.getUserName());
+			json.put("username", user.getUsername());
 			json.put("userkey", user.getUserkey());
-			json.put("nickname", user.getNickName());
+			json.put("nickname", user.getNickname());
 //			if (user.getUserName() != null && !user.getUserName().equals("")) {
 //				json.put("bind_status", AccountBindStatus.bind_phone.name());
 //				json.put(AccountBindStatus.bind_phone.name(),
@@ -381,11 +381,11 @@ public class UserController extends ExceptionController {
 				UserBean user = userDao.getUserBean(phone,
 						CryptoUtil.md5(password));
 				jsonUser.put("userId", user.getUserId());
-				jsonUser.put("username", user.getUserName());
+				jsonUser.put("username", user.getUsername());
 				jsonUser.put("userkey", user.getUserkey());
 				jsonUser.put("bind_status", AccountBindStatus.bind_phone.name());
 				jsonUser.put(AccountBindStatus.bind_phone.name(),
-						user.getUserName());
+						user.getUsername());
 			}
 		} catch (JSONException e) {
 			e.printStackTrace();
