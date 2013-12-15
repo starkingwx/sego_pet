@@ -362,14 +362,19 @@ public class UserDAO {
 			Object[] params = new Object[] { id, identifier,
 					CryptoUtil.md5("123"), userkey };
 			try {
-				jdbc.update(sql, params);
-				userBean.setResult("0");
-				userBean.setUserId(id);
-				userBean.setUserName(identifier);
-				userBean.setUserkey(userkey);
+				int rows = jdbc.update(sql, params);
+				if (rows > 0) {
+					userBean.setResult("0");
+					userBean.setUserId(id);
+					userBean.setUserName(identifier);
+					userBean.setUserkey(userkey);
+					// TODO: insert user data to device server
+				} else {
+					userBean.setResult("2");
+				}
 			} catch (Exception ex) {
 				log.info(e.getMessage());
-				userBean.setResult("1");
+				userBean.setResult("2"); // login failed
 			}
 		}
 		return userBean;

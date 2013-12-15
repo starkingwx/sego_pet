@@ -60,8 +60,7 @@ Return: json 	{
 					result : "code", 
 					userId : string, 
 					username : string, 
-					userkey : string,
-					nickname : string
+					userkey : string
 				}
  code: 	0	成功
  		1	失败
@@ -96,7 +95,19 @@ Return:	json	{
 		3	修改失败
 		4	旧密码不正确
 		
-
+7. 第三方登录
+Path: user/thirdlogin
+Param:	identifier*
+Return:	json	{
+					result : "code", 
+					userId : string, 
+					username : string, 
+					userkey : string
+				}
+ code:	0	成功
+		1	identifier为空
+		2	登录失败
+		
  宠物信息：
  1. 修改创建宠物信息(sig)
  Path: 	petinfo/modify

@@ -24,41 +24,20 @@ USE `sego`;
 # Structure for the `f_blacklist` table : 
 #
 
+DROP TABLE IF EXISTS `f_blacklist`;
+
 CREATE TABLE `f_blacklist` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `loginid` varchar(20) DEFAULT NULL,
   `blackpetid` int(11) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
-
-#
-# Structure for the `f_guanzhu` table : 
-#
-
-CREATE TABLE `f_guanzhu` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `loginid` varchar(32) DEFAULT NULL,
-  `petid` int(11) DEFAULT NULL,
-  PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
-
-#
-# Structure for the `f_liuyan` table : 
-#
-
-CREATE TABLE `f_liuyan` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `author` varchar(32) DEFAULT NULL,
-  `content` text,
-  `petid` int(11) NOT NULL,
-  `parentid` int(11) DEFAULT '0',
-  `date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
 
 #
 # Structure for the `f_location` table : 
 #
+
+DROP TABLE IF EXISTS `f_location`;
 
 CREATE TABLE `f_location` (
   `deviceId` varchar(100) COLLATE utf8_unicode_ci NOT NULL,
@@ -70,8 +49,41 @@ CREATE TABLE `f_location` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 #
+# Structure for the `f_guanzhu` table : 
+#
+
+DROP TABLE IF EXISTS `f_guanzhu`;
+
+CREATE TABLE `f_guanzhu` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `loginid` varchar(32) DEFAULT NULL,
+  `petid` int(11) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=17 DEFAULT CHARSET=utf8;
+
+#
+# Structure for the `f_yundong` table : 
+#
+
+DROP TABLE IF EXISTS `f_yundong`;
+
+CREATE TABLE `f_yundong` (
+  `deviceId` varchar(100) COLLATE utf8_unicode_ci NOT NULL,
+  `score` varchar(10) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `rest` varchar(10) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `walk` varchar(10) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `run` varchar(10) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `strenuousExercise` varchar(10) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `id` int(11) DEFAULT NULL,
+  `shijian` varchar(60) COLLATE utf8_unicode_ci DEFAULT NULL,
+  PRIMARY KEY (`deviceId`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+#
 # Structure for the `f_pets` table : 
 #
+
+DROP TABLE IF EXISTS `f_pets`;
 
 CREATE TABLE `f_pets` (
   `petid` int(11) NOT NULL AUTO_INCREMENT,
@@ -89,40 +101,13 @@ CREATE TABLE `f_pets` (
   `deviceId` varchar(60) DEFAULT NULL,
   `score` int(11) NOT NULL DEFAULT '0',
   PRIMARY KEY (`petid`)
-) ENGINE=InnoDB AUTO_INCREMENT=23 DEFAULT CHARSET=utf8 AVG_ROW_LENGTH=1024;
-
-#
-# Structure for the `f_yundong` table : 
-#
-
-CREATE TABLE `f_yundong` (
-  `deviceId` varchar(100) COLLATE utf8_unicode_ci NOT NULL,
-  `score` varchar(10) COLLATE utf8_unicode_ci DEFAULT NULL,
-  `rest` varchar(10) COLLATE utf8_unicode_ci DEFAULT NULL,
-  `walk` varchar(10) COLLATE utf8_unicode_ci DEFAULT NULL,
-  `run` varchar(10) COLLATE utf8_unicode_ci DEFAULT NULL,
-  `strenuousExercise` varchar(10) COLLATE utf8_unicode_ci DEFAULT NULL,
-  `id` int(11) DEFAULT NULL,
-  `shijian` varchar(60) COLLATE utf8_unicode_ci DEFAULT NULL,
-  PRIMARY KEY (`deviceId`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
-
-#
-# Structure for the `gallery` table : 
-#
-
-CREATE TABLE `gallery` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `title` varchar(32) DEFAULT NULL,
-  `cover_url` varchar(60) DEFAULT NULL,
-  `ownerid` varchar(32) NOT NULL,
-  `createtime` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=31 DEFAULT CHARSET=utf8 AVG_ROW_LENGTH=1024;
 
 #
 # Structure for the `im_device_info` table : 
 #
+
+DROP TABLE IF EXISTS `im_device_info`;
 
 CREATE TABLE `im_device_info` (
   `userId` varchar(32) NOT NULL,
@@ -136,8 +121,45 @@ CREATE TABLE `im_device_info` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 #
+# Structure for the `gallery` table : 
+#
+
+DROP TABLE IF EXISTS `gallery`;
+
+CREATE TABLE `gallery` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `title` varchar(32) DEFAULT NULL,
+  `cover_url` varchar(60) DEFAULT NULL,
+  `ownerid` varchar(32) NOT NULL,
+  `createtime` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=29 DEFAULT CHARSET=utf8;
+
+CREATE DEFINER = 'root'@'localhost' TRIGGER `delete_photo` AFTER DELETE ON `gallery`
+  FOR EACH ROW
+BEGIN
+	DELETE FROM photo WHERE galleryid = old.id;
+END;
+
+#
+# Structure for the `leave_msg_entry` table : 
+#
+
+DROP TABLE IF EXISTS `leave_msg_entry`;
+
+CREATE TABLE `leave_msg_entry` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `leaver_petid` int(11) NOT NULL,
+  `receiver_petid` int(11) NOT NULL,
+  `createtime` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8;
+
+#
 # Structure for the `im_user` table : 
 #
+
+DROP TABLE IF EXISTS `im_user`;
 
 CREATE TABLE `im_user` (
   `id` varchar(32) NOT NULL,
@@ -153,8 +175,29 @@ CREATE TABLE `im_user` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 #
+# Structure for the `message` table : 
+#
+
+DROP TABLE IF EXISTS `message`;
+
+CREATE TABLE `message` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `author` varchar(32) DEFAULT NULL,
+  `content` text,
+  `leaver_petid` int(11) NOT NULL,
+  `petid` int(11) NOT NULL,
+  `parentid` int(11) DEFAULT '0',
+  `date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
+  KEY `parentid` (`parentid`),
+  CONSTRAINT `message_fk` FOREIGN KEY (`parentid`) REFERENCES `leave_msg_entry` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB AUTO_INCREMENT=17 DEFAULT CHARSET=utf8;
+
+#
 # Structure for the `photo` table : 
 #
+
+DROP TABLE IF EXISTS `photo`;
 
 CREATE TABLE `photo` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -166,7 +209,7 @@ CREATE TABLE `photo` (
   `ownerid` varchar(32) DEFAULT NULL,
   `createtime` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=52 DEFAULT CHARSET=utf8;
 
 
 
