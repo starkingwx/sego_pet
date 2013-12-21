@@ -185,6 +185,20 @@ Return: json	{
  code: 	0	成功
 		1	phone为空
 		
+
+6. 绑定宠物设备
+Path: petinfo/binddevice
+Param:	username*
+		petid*
+		deviceno*
+Return:	json	{
+					result : "code"
+				}
+ code:	0	成功
+		1	设备不存在
+		2	设备已绑定
+		4	deviceno为空
+		
 社区
 1. 获取推荐宠物(sig)
 Path: community/getrecommendpets
