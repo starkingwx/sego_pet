@@ -193,11 +193,15 @@ Param:	username*
 		deviceno*
 Return:	json	{
 					result : "code"
+					device_id : long,
+					device_password : string	// 设备密码，用于生成和设备服务器通信所用的cipherkey
 				}
  code:	0	成功
 		1	设备不存在
 		2	设备已绑定
+		3	绑定失败
 		4	deviceno为空
+		5	petid为空
 		
 社区
 1. 获取推荐宠物(sig)

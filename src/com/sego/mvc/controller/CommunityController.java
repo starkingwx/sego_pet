@@ -43,6 +43,7 @@ public class CommunityController {
 
 	@RequestMapping(value = "/getnearbypets")
 	public void getNearbyPets(HttpServletResponse response,
+			@RequestParam(value = "petid") String petId,
 			@RequestParam(value = "longitude") String longitude,
 			@RequestParam(value = "latitude") String latitude)
 			throws IOException {
@@ -52,9 +53,9 @@ public class CommunityController {
 			petInfos.setResult("1");
 		} else {
 			try {
-				double lng = Double.parseDouble(longitude);
-				double lat = Double.parseDouble(latitude);
-				petInfos = communityDao.getNearbyPets(lng, lat);
+				long lng = Long.parseLong(longitude);
+				long lat = Long.parseLong(latitude);
+				petInfos = communityDao.getNearbyPets(petId, lng, lat);
 				petInfos.setResult("0");
 			} catch (NumberFormatException e) {
 				e.printStackTrace();

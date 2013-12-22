@@ -5,10 +5,21 @@ import com.fasterxml.jackson.annotation.JsonInclude.Include;
 
 @JsonInclude(Include.NON_NULL)
 public class DeviceServerResponse {
+	
+	public static enum Status {
+		SUCCESS,
+		FAILED
+	}
+	
+	public static enum CommandType {
+		ARCHIVE_OPERATION,
+		ERROR_MESSAGE
+	}
+	
 	private String status;
 	private long ts;
 	private String cmdtype;
-	private DatabaseOperation database_operation;
+	private ArchiveOperation archive_operation;
 	private ErrorMsg error_message;
 
 	public String getStatus() {
@@ -35,12 +46,12 @@ public class DeviceServerResponse {
 		this.cmdtype = cmdtype;
 	}
 
-	public DatabaseOperation getDatabase_operation() {
-		return database_operation;
+	public ArchiveOperation getArchive_operation() {
+		return archive_operation;
 	}
 
-	public void setDatabase_operation(DatabaseOperation database_operation) {
-		this.database_operation = database_operation;
+	public void setArchive_operation(ArchiveOperation database_operation) {
+		this.archive_operation = database_operation;
 	}
 
 	public ErrorMsg getError_message() {

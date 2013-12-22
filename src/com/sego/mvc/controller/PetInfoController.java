@@ -2,6 +2,7 @@ package com.sego.mvc.controller;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 import javax.annotation.PostConstruct;
@@ -18,6 +19,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import com.imeeting.bean.UserBean;
 import com.imeeting.framework.ContextLoader;
 import com.imeeting.mvc.controller.ExceptionController;
 import com.richitec.bean.ResultBean;
@@ -25,6 +27,7 @@ import com.richitec.util.FileUtil;
 import com.richitec.util.JSONUtil;
 import com.richitec.util.StringUtil;
 import com.sego.mvc.model.DeviceManager;
+import com.sego.mvc.model.bean.DeviceBindResult;
 import com.sego.mvc.model.bean.IdBean;
 import com.sego.mvc.model.bean.PetInfo;
 import com.sego.mvc.model.bean.PetInfos;
@@ -208,12 +211,14 @@ public class PetInfoController extends ExceptionController {
 		ResultBean resultBean = new ResultBean();
 		if (StringUtil.isNullOrEmpty(deviceNo)) {
 			resultBean.setResult("4"); // device id is empty
+		} else if (StringUtil.isNullOrEmpty(petId)) {
+			resultBean.setResult("5"); // pet id is empty
 		} else {
-			petInfoDao.updatePetInfo(petId, null, null, null, null, null, null, null, null, deviceNo);
-			
 			DeviceManager deviceManager = ContextLoader.getDeviceManager();
-			String result = deviceManager.bindDevice(userName, deviceNo);
-			resultBean.setResult(result);
+			resultBean = deviceManager.bindDevice(Integer.parseInt(petId), deviceNo);
+			if ("0".equals(resultBean.getResult())) {
+				petInfoDao.updatePetInfo(petId, null, null, null, null, null, null, null, null, deviceNo);
+			}
 		}
 		response.getWriter().print(JSONUtil.toString(resultBean));
 	}

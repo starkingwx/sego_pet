@@ -6,7 +6,7 @@ import com.fasterxml.jackson.annotation.JsonInclude.Include;
 @JsonInclude(Include.NON_NULL)
 public class Operation {
 	private String cmdtype;
-	private DatabaseOperation database_operation;
+	private ArchiveOperation archive_operation;
 
 	public String getCmdtype() {
 		return cmdtype;
@@ -16,12 +16,12 @@ public class Operation {
 		this.cmdtype = cmdtype;
 	}
 
-	public DatabaseOperation getDatabase_operation() {
-		return database_operation;
+	public ArchiveOperation getArchive_operation() {
+		return archive_operation;
 	}
 
-	public void setDatabase_operation(DatabaseOperation database_operation) {
-		this.database_operation = database_operation;
+	public void setArchive_operation(ArchiveOperation archive_operation) {
+		this.archive_operation = archive_operation;
 	}
 
 }

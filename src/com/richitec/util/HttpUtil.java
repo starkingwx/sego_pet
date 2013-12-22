@@ -210,7 +210,7 @@ public class HttpUtil {
 			PostRequestFormat pPostFormat, Map<String, String> pParam, String cipherKey) {
 		if (pParam != null && !pParam.isEmpty()) {
 			String sig = CryptoUtil.signHttpParam(pParam, cipherKey);
-			pParam.put("sign", sig);
+			pParam.put("s", sig);
 		}
 		return postRequest(pUrl, pPostFormat, pParam);
 	}

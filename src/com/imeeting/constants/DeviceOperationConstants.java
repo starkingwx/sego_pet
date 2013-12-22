@@ -1,7 +1,8 @@
 package com.imeeting.constants;
 
 public enum DeviceOperationConstants {
-	DATABASE_OPERATION,
+	ARCHIVE_OPERATION,
 	UPDATE,
-	INSERT
+	INSERT,
+	QUERY
 }

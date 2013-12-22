@@ -7,7 +7,7 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.richitec.bean.ResultBean;
 
-@JsonInclude(Include.NON_NULL) 
+@JsonInclude(Include.NON_NULL)
 public class PetInfo extends ResultBean {
 	private long petid;
 	private String nickname;
@@ -23,9 +23,16 @@ public class PetInfo extends ResultBean {
 	private String placeoftengo;
 	private String deviceid;
 	private int score;
-	
+
+	// used for nearby pets
+	private long longitude;
+	private long latitude;
+	private String address;
+	private String termtime;
+	private long vitality;
+
 	private List<Gallery> galleries;
-	
+
 	public long getPetid() {
 		return petid;
 	}
@@ -146,6 +153,46 @@ public class PetInfo extends ResultBean {
 		this.galleries = galleries;
 	}
 
+	public long getLongitude() {
+		return longitude;
+	}
+
+	public void setLongitude(long longitude) {
+		this.longitude = longitude;
+	}
+
+	public long getLatitude() {
+		return latitude;
+	}
+
+	public void setLatitude(long latitude) {
+		this.latitude = latitude;
+	}
+
+	public String getAddress() {
+		return address;
+	}
+
+	public void setAddress(String address) {
+		this.address = address;
+	}
+
+	public String getTermtime() {
+		return termtime;
+	}
+
+	public void setTermtime(String termtime) {
+		this.termtime = termtime;
+	}
+
+	public long getVitality() {
+		return vitality;
+	}
+
+	public void setVitality(long vitality) {
+		this.vitality = vitality;
+	}
+
 	public static void main(String[] args) {
 		// String json =
 		// "{\"list\": [{\"petid\" : \"123\", \"nickname\" : \"kkk\" }]}";
@@ -153,22 +200,26 @@ public class PetInfo extends ResultBean {
 		// System.out.print("petId: " + petInfo.getPetid() + " nickname: " +
 		// petInfo.getNickname());
 
-//		List<PetInfo> list = new ArrayList<PetInfo>();
-//		PetInfo petInfo = new PetInfo();
-////		petInfo.setPetid("12");
-//		petInfo.setNickname("sdf");
-//		list.add(petInfo);
-//		
-//		petInfo = new PetInfo();
-//		petInfo.setPetid("333");
-//		petInfo.setNickname("asdfasdf");
-//		list.add(petInfo);
-//		PetInfos petInfos = new PetInfos();
-//		petInfos.setList(list);
-//		
-//		System.out.println(JSONUtil.toString(petInfos));
+		// List<PetInfo> list = new ArrayList<PetInfo>();
+		// PetInfo petInfo = new PetInfo();
+		// // petInfo.setPetid("12");
+		// petInfo.setNickname("sdf");
+		// list.add(petInfo);
+		//
+		// petInfo = new PetInfo();
+		// petInfo.setPetid("333");
+		// petInfo.setNickname("asdfasdf");
+		// list.add(petInfo);
+		// PetInfos petInfos = new PetInfos();
+		// petInfos.setList(list);
+		//
+		// System.out.println(JSONUtil.toString(petInfos));
+
+//		String avatarFileName = UUID.randomUUID().toString();
+//		System.out.print(avatarFileName.length() + " " + avatarFileName);
 		
-		String avatarFileName = UUID.randomUUID().toString();
-		System.out.print(avatarFileName.length() + " " + avatarFileName);
+		StringBuffer sb = new StringBuffer();
+		sb.append(1).append(' ').append(23232).append(' ').append('a');
+		System.out.println(sb.toString());
 	}
 }

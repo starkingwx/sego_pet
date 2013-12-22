@@ -352,7 +352,6 @@ public class UserDAO {
 			userBean.setUsername((String) userInfo.get("username"));
 			userBean.setUserkey((String) userInfo.get("userkey"));
 			userBean.setResult("0");
-			// TODO: insert user data to device server
 		} catch (Exception e) {
 			log.info(e.getMessage());
 			// user doesn't exist, insert new
@@ -368,7 +367,6 @@ public class UserDAO {
 					userBean.setUserId(id);
 					userBean.setUsername(identifier);
 					userBean.setUserkey(userkey);
-					// TODO: insert user data to device server
 				} else {
 					userBean.setResult("2");
 				}

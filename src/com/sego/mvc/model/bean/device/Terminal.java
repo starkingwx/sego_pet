@@ -4,9 +4,9 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 
 @JsonInclude(Include.NON_NULL)
-public class TerminalInfo {
+public class Terminal {
 	private String deviceno;
-	private String userid;
+	private long userid;
 	private String name1;
 	private String name2;
 	private int type;
@@ -18,6 +18,8 @@ public class TerminalInfo {
 	private String installdate;
 	private String expirydate;
 	private String password;
+	private long id;
+	
 	
 	public String getDeviceno() {
 		return deviceno;
@@ -27,11 +29,11 @@ public class TerminalInfo {
 		this.deviceno = deviceno;
 	}
 
-	public String getUserid() {
+	public long getUserid() {
 		return userid;
 	}
 
-	public void setUserid(String userid) {
+	public void setUserid(long userid) {
 		this.userid = userid;
 	}
 
@@ -121,6 +123,14 @@ public class TerminalInfo {
 
 	public void setPassword(String password) {
 		this.password = password;
+	}
+
+	public long getId() {
+		return id;
+	}
+
+	public void setId(long id) {
+		this.id = id;
 	}
 
 }

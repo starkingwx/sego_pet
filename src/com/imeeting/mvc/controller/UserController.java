@@ -392,10 +392,10 @@ public class UserController extends ExceptionController {
 		}
 		response.getWriter().print(jsonUser.toString());
 		
-		if ("0".equals(result)) {
-			DeviceManager deviceManager = ContextLoader.getDeviceManager();
-			deviceManager.insertUserData(phone, CryptoUtil.md5(password));
-		}
+//		if ("0".equals(result)) {
+//			DeviceManager deviceManager = ContextLoader.getDeviceManager();
+//			deviceManager.insertUserData(phone, CryptoUtil.md5(password));
+//		}
 	}
 
 	@RequestMapping("/checkUserExist")

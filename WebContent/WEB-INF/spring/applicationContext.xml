@@ -4,7 +4,7 @@
 	xsi:schemaLocation="
 			http://www.springframework.org/schema/beans 
 			http://www.springframework.org/schema/beans/spring-beans-2.5.xsd">
-			
+
 	<bean id="propertyConfigurer"
 		class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
 		<property name="locations">
@@ -12,26 +12,26 @@
 				<value>/WEB-INF/config/Configuration.properties</value>
 			</list>
 		</property>
-	</bean>	
-	
+	</bean>
+
 	<bean id="web_config" class="com.imeeting.framework.Configuration">
 		<property name="uploadDir">
 			<value>${upload_tmp_dir}</value>
 		</property>
 		<property name="appDonwloadPageUrl">
-		    <value>${app_download_page_url}</value>
+			<value>${app_download_page_url}</value>
 		</property>
 		<property name="appvcenterUrl">
-		    <value>${appvcenter_url}</value>
+			<value>${appvcenter_url}</value>
 		</property>
 		<property name="appId">
-		    <value>${app_id}</value>
+			<value>${app_id}</value>
 		</property>
 		<property name="deviceServerUrl">
-		    <value>${pet_device_server_url}</value>
+			<value>${pet_device_server_url}</value>
 		</property>
 	</bean>
-	
+
 	<bean id="sms_client" class="com.richitec.sms.client.SMSClient">
 		<property name="baseUri">
 			<value>${textMessageUrl}</value>
@@ -42,18 +42,17 @@
 		<property name="password">
 			<value>${textMessagePwd}</value>
 		</property>
-	</bean>	
-	
+	</bean>
+
 	<bean id="notifier" class="com.richitec.notify.Notifier">
 		<property name="notifyUrl">
 			<value>${notify_url}</value>
 		</property>
 	</bean>
-	
-	<bean id="dataSource_mysql_c3p0" 
-		class="com.mchange.v2.c3p0.ComboPooledDataSource"
+
+	<bean id="dataSource_mysql_c3p0" class="com.mchange.v2.c3p0.ComboPooledDataSource"
 		destroy-method="close">
-		
+
 		<property name="driverClass">
 			<value>${jdbc.driverClassName.mysql}</value>
 		</property>
@@ -68,16 +67,16 @@
 		</property>
 		<property name="acquireIncrement">
 			<value>1</value>
-		</property>			
+		</property>
 		<property name="checkoutTimeout">
 			<value>30000</value>
-		</property>	
+		</property>
 		<property name="preferredTestQuery">
 			<value>SELECT 1</value>
 		</property>
 		<property name="testConnectionOnCheckin">
 			<value>true</value>
-		</property>	
+		</property>
 		<property name="idleConnectionTestPeriod">
 			<value>300</value>
 		</property>
@@ -86,61 +85,81 @@
 		</property>
 		<property name="unreturnedConnectionTimeout">
 			<value>30</value>
-		</property>	
+		</property>
 		<property name="debugUnreturnedConnectionStackTraces">
 			<value>true</value>
-		</property>			
+		</property>
 		<property name="maxStatementsPerConnection">
 			<value>10</value>
-		</property>	
+		</property>
 		<property name="maxStatements">
 			<value>100</value>
-		</property>				 		
-	</bean>	
-	
+		</property>
+	</bean>
+
 	<bean id="user_dao" class="com.richitec.ucenter.model.UserDAO">
 		<property name="dataSource" ref="dataSource_mysql_c3p0"></property>
 	</bean>
-	
+
 	<bean id="contact_dao" class="com.imeeting.mvc.model.contact.ContactDAO">
 		<property name="dataSource" ref="dataSource_mysql_c3p0"></property>
 	</bean>
-    
-    <bean id="timer_factory" 
-          class="org.springframework.scheduling.timer.TimerFactoryBean">
-         <property name="scheduledTimerTasks">
-            <list>
-            </list>
-         </property>
-    </bean>
-	
+
+	<bean id="timer_factory" class="org.springframework.scheduling.timer.TimerFactoryBean">
+		<property name="scheduledTimerTasks">
+			<list>
+			     <ref bean="scheduled_synctime_timer"/>
+			</list>
+		</property>
+	</bean>
+
 	<bean id="mail_sender" class="com.richitec.util.MailSender">
-	     <property name="host">
-	         <value>${smtp_server}</value>
-	     </property>
-	     <property name="user">
-	         <value>${mail_auth_user}</value>
-	     </property>
-	     <property name="pwd">
-	         <value>${mail_auth_pwd}</value>
-	     </property>
-	     <property name="from">
-	         <value>${mail_from_address}</value>
-	     </property>
-	</bean>	
-	
+		<property name="host">
+			<value>${smtp_server}</value>
+		</property>
+		<property name="user">
+			<value>${mail_auth_user}</value>
+		</property>
+		<property name="pwd">
+			<value>${mail_auth_pwd}</value>
+		</property>
+		<property name="from">
+			<value>${mail_from_address}</value>
+		</property>
+	</bean>
+
 	<bean id="petinfo_dao" class="com.sego.mvc.model.dao.PetInfoDao">
 		<property name="dataSource" ref="dataSource_mysql_c3p0"></property>
 	</bean>
-	
+
 	<bean id="community_dao" class="com.sego.mvc.model.dao.CommunityDao">
 		<property name="dataSource" ref="dataSource_mysql_c3p0"></property>
 	</bean>
-	
+
 	<bean id="gallery_dao" class="com.sego.mvc.model.dao.GalleryDao">
 		<property name="dataSource" ref="dataSource_mysql_c3p0"></property>
 	</bean>
-	
+
 	<bean id="device_manager" class="com.sego.mvc.model.DeviceManager">
+	</bean>
+
+	<bean id="scheduled_synctime_task"
+		class="org.springframework.scheduling.timer.MethodInvokingTimerTaskFactoryBean">
+		<property name="targetObject" ref="device_manager"></property>
+		<property name="targetMethod">
+			<value>syncTime</value>
+		</property>
+	</bean>
+
+	<bean id="scheduled_synctime_timer" class="org.springframework.scheduling.timer.ScheduledTimerTask">
+		<property name="delay">
+			<value>5000</value>
+		</property>
+		<property name="period">
+			<value>20000</value>
+		</property>
+		<property name="timerTask">
+			<ref bean="scheduled_synctime_task" />
+		</property>
 	</bean>
 </beans>

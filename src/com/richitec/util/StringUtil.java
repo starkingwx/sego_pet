@@ -170,7 +170,12 @@ public class StringUtil {
 			return false;
 		}
 	}
-	
+	/**
+	 * Delete the last char if it's equal to lastChar parameter
+	 * @param sb
+	 * @param lastChar
+	 * @return
+	 */
 	public static StringBuffer deleteLastChar(StringBuffer sb, char lastChar) {
 		if (sb.toString().endsWith(String.valueOf(lastChar))) {
 			sb.deleteCharAt(sb.length() - 1);
