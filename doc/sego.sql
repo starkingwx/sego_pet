@@ -24,8 +24,6 @@ USE `sego`;
 # Structure for the `f_blacklist` table : 
 #
 
-DROP TABLE IF EXISTS `f_blacklist`;
-
 CREATE TABLE `f_blacklist` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `loginid` varchar(20) DEFAULT NULL,
@@ -34,10 +32,19 @@ CREATE TABLE `f_blacklist` (
 ) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
 
 #
-# Structure for the `f_location` table : 
+# Structure for the `f_guanzhu` table : 
 #
 
-DROP TABLE IF EXISTS `f_location`;
+CREATE TABLE `f_guanzhu` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `loginid` varchar(32) DEFAULT NULL,
+  `petid` int(11) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=17 DEFAULT CHARSET=utf8;
+
+#
+# Structure for the `f_location` table : 
+#
 
 CREATE TABLE `f_location` (
   `deviceId` varchar(100) COLLATE utf8_unicode_ci NOT NULL,
@@ -49,23 +56,30 @@ CREATE TABLE `f_location` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 #
-# Structure for the `f_guanzhu` table : 
+# Structure for the `f_pets` table : 
 #
 
-DROP TABLE IF EXISTS `f_guanzhu`;
-
-CREATE TABLE `f_guanzhu` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `loginid` varchar(32) DEFAULT NULL,
-  `petid` int(11) DEFAULT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=17 DEFAULT CHARSET=utf8;
+CREATE TABLE `f_pets` (
+  `petid` int(11) NOT NULL AUTO_INCREMENT,
+  `nickname` varchar(40) DEFAULT NULL,
+  `sex` tinyint(4) NOT NULL DEFAULT '0',
+  `weight` float(9,2) NOT NULL DEFAULT '0.00',
+  `birthday` bigint(20) DEFAULT NULL,
+  `chuanganid` varchar(60) DEFAULT NULL,
+  `ownerid` varchar(64) DEFAULT NULL,
+  `avatar` varchar(60) DEFAULT NULL,
+  `breed` tinyint(4) NOT NULL DEFAULT '0',
+  `height` float(9,2) NOT NULL DEFAULT '0.00',
+  `district` varchar(20) DEFAULT NULL,
+  `placeoftengo` varchar(60) DEFAULT NULL,
+  `deviceId` varchar(60) DEFAULT NULL,
+  `score` int(11) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`petid`)
+) ENGINE=InnoDB AUTO_INCREMENT=32 DEFAULT CHARSET=utf8 AVG_ROW_LENGTH=1024;
 
 #
 # Structure for the `f_yundong` table : 
 #
-
-DROP TABLE IF EXISTS `f_yundong`;
 
 CREATE TABLE `f_yundong` (
   `deviceId` varchar(100) COLLATE utf8_unicode_ci NOT NULL,
@@ -80,51 +94,8 @@ CREATE TABLE `f_yundong` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 #
-# Structure for the `f_pets` table : 
-#
-
-DROP TABLE IF EXISTS `f_pets`;
-
-CREATE TABLE `f_pets` (
-  `petid` int(11) NOT NULL AUTO_INCREMENT,
-  `nickname` varchar(40) DEFAULT NULL,
-  `sex` tinyint(4) NOT NULL DEFAULT '0',
-  `weight` float(9,2) NOT NULL DEFAULT '0.00',
-  `chuanganid` varchar(60) DEFAULT NULL,
-  `ownerid` varchar(20) DEFAULT NULL,
-  `avatar` varchar(60) DEFAULT NULL,
-  `breed` tinyint(4) NOT NULL DEFAULT '0',
-  `age` int(11) NOT NULL DEFAULT '0',
-  `height` float(9,2) NOT NULL DEFAULT '0.00',
-  `district` varchar(20) DEFAULT NULL,
-  `placeoftengo` varchar(60) DEFAULT NULL,
-  `deviceId` varchar(60) DEFAULT NULL,
-  `score` int(11) NOT NULL DEFAULT '0',
-  PRIMARY KEY (`petid`)
-) ENGINE=InnoDB AUTO_INCREMENT=31 DEFAULT CHARSET=utf8 AVG_ROW_LENGTH=1024;
-
-#
-# Structure for the `im_device_info` table : 
-#
-
-DROP TABLE IF EXISTS `im_device_info`;
-
-CREATE TABLE `im_device_info` (
-  `userId` varchar(32) NOT NULL,
-  `brand` varchar(20) DEFAULT NULL,
-  `model` varchar(20) DEFAULT NULL,
-  `release_ver` varchar(20) DEFAULT NULL,
-  `sdk` varchar(20) DEFAULT NULL,
-  `width` int(11) DEFAULT NULL,
-  `height` int(11) DEFAULT NULL,
-  PRIMARY KEY (`userId`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
-#
 # Structure for the `gallery` table : 
 #
-
-DROP TABLE IF EXISTS `gallery`;
 
 CREATE TABLE `gallery` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -142,24 +113,23 @@ BEGIN
 END;
 
 #
-# Structure for the `leave_msg_entry` table : 
+# Structure for the `im_device_info` table : 
 #
 
-DROP TABLE IF EXISTS `leave_msg_entry`;
-
-CREATE TABLE `leave_msg_entry` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `leaver_petid` int(11) NOT NULL,
-  `receiver_petid` int(11) NOT NULL,
-  `createtime` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8;
+CREATE TABLE `im_device_info` (
+  `userId` varchar(32) NOT NULL,
+  `brand` varchar(20) DEFAULT NULL,
+  `model` varchar(20) DEFAULT NULL,
+  `release_ver` varchar(20) DEFAULT NULL,
+  `sdk` varchar(20) DEFAULT NULL,
+  `width` int(11) DEFAULT NULL,
+  `height` int(11) DEFAULT NULL,
+  PRIMARY KEY (`userId`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 #
 # Structure for the `im_user` table : 
 #
-
-DROP TABLE IF EXISTS `im_user`;
 
 CREATE TABLE `im_user` (
   `id` varchar(32) NOT NULL,
@@ -175,10 +145,20 @@ CREATE TABLE `im_user` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 #
-# Structure for the `message` table : 
+# Structure for the `leave_msg_entry` table : 
 #
 
-DROP TABLE IF EXISTS `message`;
+CREATE TABLE `leave_msg_entry` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `leaver_petid` int(11) NOT NULL,
+  `receiver_petid` int(11) NOT NULL,
+  `createtime` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8;
+
+#
+# Structure for the `message` table : 
+#
 
 CREATE TABLE `message` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -196,8 +176,6 @@ CREATE TABLE `message` (
 #
 # Structure for the `photo` table : 
 #
-
-DROP TABLE IF EXISTS `photo`;
 
 CREATE TABLE `photo` (
   `id` int(11) NOT NULL AUTO_INCREMENT,

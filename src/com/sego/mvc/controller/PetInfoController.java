@@ -52,7 +52,7 @@ public class PetInfoController extends ExceptionController {
 			@RequestParam(value = "nickname", defaultValue = "") String nickname,
 			@RequestParam(value = "sex", defaultValue = "") String sex,
 			@RequestParam(value = "breed", defaultValue = "") String breed,
-			@RequestParam(value = "age", defaultValue = "") String age,
+			@RequestParam(value = "birthday", defaultValue = "") String birthday,
 			@RequestParam(value = "height", defaultValue = "") String height,
 			@RequestParam(value = "weight", defaultValue = "") String weight,
 			@RequestParam(value = "district", defaultValue = "") String district,
@@ -63,7 +63,7 @@ public class PetInfoController extends ExceptionController {
 			if (!petInfoDao.hasPetInfo(userName)) {
 				// create pet info
 				long id = petInfoDao.createPetInfo(userName, nickname, sex,
-						breed, age, height, weight, district, placeOftenGo);
+						breed, birthday, height, weight, district, placeOftenGo);
 				log.info("create pet id: " + id);
 				if (id > 0) {
 					petUpdateReturnBean.setResult("0");
@@ -77,7 +77,7 @@ public class PetInfoController extends ExceptionController {
 		} else {
 			// save pet info
 			int update = petInfoDao.updatePetInfo(petId, nickname, sex, breed,
-					age, height, weight, district, placeOftenGo, null);
+					birthday, height, weight, district, placeOftenGo, null);
 			if (update > 0) {
 				petUpdateReturnBean.setResult("0");
 				petUpdateReturnBean.setId(petId);

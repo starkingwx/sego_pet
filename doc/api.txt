@@ -144,11 +144,12 @@ Return: json	{
 					nickname : string,
 					sex : int,
 					breed : int,
-					age : int,
+					birthday : long,
 					height : float,
 					weight : float,
 					district : string,
 					placeoftengo : string,
+					deviceid : string,
 					score : int
 				}
  code: 	0	成功

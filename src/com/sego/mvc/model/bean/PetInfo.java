@@ -17,13 +17,13 @@ public class PetInfo extends ResultBean {
 	private String ownerid;
 	private String avatar;
 	private int breed;
-	private int age;
 	private float height;
 	private String district;
 	private String placeoftengo;
 	private String deviceid;
 	private int score;
-
+	private long birthday;
+	
 	// used for nearby pets
 	private long longitude;
 	private long latitude;
@@ -95,14 +95,6 @@ public class PetInfo extends ResultBean {
 
 	public void setBreed(int breed) {
 		this.breed = breed;
-	}
-
-	public int getAge() {
-		return age;
-	}
-
-	public void setAge(int age) {
-		this.age = age;
 	}
 
 	public float getHeight() {
@@ -191,6 +183,14 @@ public class PetInfo extends ResultBean {
 
 	public void setVitality(long vitality) {
 		this.vitality = vitality;
+	}
+
+	public long getBirthday() {
+		return birthday;
+	}
+
+	public void setBirthday(long birthday) {
+		this.birthday = birthday;
 	}
 
 	public static void main(String[] args) {

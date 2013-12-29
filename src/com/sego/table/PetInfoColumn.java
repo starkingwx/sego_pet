@@ -9,7 +9,7 @@ public enum PetInfoColumn {
 	ownerid,
 	avatar,
 	breed,
-	age,
+	birthday,
 	height,
 	district,
 	placeoftengo,

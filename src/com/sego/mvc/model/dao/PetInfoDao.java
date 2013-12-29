@@ -11,9 +11,6 @@ import org.springframework.jdbc.core.SqlParameter;
 
 import com.imeeting.framework.ContextLoader;
 import com.richitec.dao.BaseDao;
-import com.richitec.dao.BaseDao.TableField;
-import com.richitec.util.ArrayUtil;
-import com.richitec.util.StringUtil;
 import com.sego.mvc.model.bean.Galleries;
 import com.sego.mvc.model.bean.PetInfo;
 import com.sego.mvc.model.bean.PetInfos;
@@ -28,7 +25,7 @@ public class PetInfoDao extends BaseDao {
 	 * @param nickname
 	 * @param sex
 	 * @param breed
-	 * @param age
+	 * @param birthday
 	 * @param height
 	 * @param weight
 	 * @param district
@@ -36,16 +33,16 @@ public class PetInfoDao extends BaseDao {
 	 * @return petid - last insert id
 	 */
 	public long createPetInfo(String userName, String nickname, String sex,
-			String breed, String age, String height, String weight,
+			String breed, String birthday, String height, String weight,
 			String district, String placeOftenGo) {
 		log.info(String
-				.format("createPetInfo - userName: %s, nickname: %s, sex: %s, breed: %s, age: %s, height: %s, weight: %s, district: %s, place: %s",
-						userName, nickname, sex, breed, age, height, weight,
+				.format("createPetInfo - userName: %s, nickname: %s, sex: %s, breed: %s, birthday: %s, height: %s, weight: %s, district: %s, place: %s",
+						userName, nickname, sex, breed, birthday, height, weight,
 						district, placeOftenGo));
 		
 		TableField[] values = new TableField[]{new TableField("nickname", nickname, Types.VARCHAR), 
 				new TableField("sex", sex, Types.TINYINT), new TableField("breed", breed, Types.TINYINT),
-				new TableField("age", age, Types.INTEGER), new TableField("height", height, Types.FLOAT),
+				new TableField("birthday", birthday, Types.BIGINT), new TableField("height", height, Types.FLOAT),
 				new TableField("weight", weight, Types.FLOAT), new TableField("district", district, Types.VARCHAR),
 				new TableField("placeoftengo", placeOftenGo, Types.VARCHAR), new TableField("ownerid", userName, Types.VARCHAR)};
 		String[] keys = new String[] { PetInfoColumn.petid.name() };
@@ -75,7 +72,7 @@ public class PetInfoDao extends BaseDao {
 	 * @param nickname
 	 * @param sex
 	 * @param breed
-	 * @param age
+	 * @param birthday
 	 * @param height
 	 * @param weight
 	 * @param district
@@ -83,15 +80,15 @@ public class PetInfoDao extends BaseDao {
 	 * @return update count
 	 */
 	public int updatePetInfo(String petId, String nickname, String sex,
-			String breed, String age, String height, String weight,
+			String breed, String birthday, String height, String weight,
 			String district, String placeOftenGo, String deviceId) {
 		log.info(String
-				.format("updatePetInfo - nickname: %s, sex: %s, breed: %s, age: %s, height: %s, weight: %s, district: %s, place: %s",
-						 nickname, sex, breed, age, height, weight,
+				.format("updatePetInfo - nickname: %s, sex: %s, breed: %s, birthday: %s, height: %s, weight: %s, district: %s, place: %s",
+						 nickname, sex, breed, birthday, height, weight,
 						district, placeOftenGo));
 		TableField[] updateParams = new TableField[]{new TableField("nickname", nickname, Types.VARCHAR), 
 				new TableField("sex", sex, Types.TINYINT), new TableField("breed", breed, Types.TINYINT),
-				new TableField("age", age, Types.INTEGER), new TableField("height", height, Types.FLOAT),
+				new TableField("birthday", birthday, Types.BIGINT), new TableField("height", height, Types.FLOAT),
 				new TableField("weight", weight, Types.FLOAT), new TableField("district", district, Types.VARCHAR),
 				new TableField("placeoftengo", placeOftenGo, Types.VARCHAR), new TableField("deviceId", deviceId, Types.VARCHAR)};
 		String selection = "WHERE petid = ?";
@@ -160,7 +157,7 @@ public class PetInfoDao extends BaseDao {
 		petInfo.setOwnerid((String) (map.get(PetInfoColumn.ownerid.name())));
 		petInfo.setAvatar((String) (map.get(PetInfoColumn.avatar.name())));
 		petInfo.setBreed((Integer) map.get(PetInfoColumn.breed.name()));
-		petInfo.setAge((Integer) (map.get(PetInfoColumn.age.name())));
+		petInfo.setBirthday((Long) (map.get(PetInfoColumn.birthday.name())));
 		petInfo.setHeight((Float) (map.get(PetInfoColumn.height.name())));
 		petInfo.setDistrict((String) (map.get(PetInfoColumn.district.name())));
 		petInfo.setPlaceoftengo((String) (map.get(PetInfoColumn.placeoftengo
