@@ -101,8 +101,9 @@ Param:	identifier*
 Return:	json	{
 					result : "code", 
 					userId : string, 
-					username : string, 
-					userkey : string
+					username : string, // 10位数字的用户名
+					userkey : string,
+					password : string // 第一次登录时会返回默认密码，以便以后修改
 				}
  code:	0	成功
 		1	identifier为空
@@ -150,7 +151,8 @@ Return: json	{
 					district : string,
 					placeoftengo : string,
 					deviceid : string,
-					score : int
+					score : int,
+					devicepwd : string
 				}
  code: 	0	成功
 				

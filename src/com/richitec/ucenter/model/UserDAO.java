@@ -305,6 +305,11 @@ public class UserDAO {
 		String sql = "SELECT * FROM im_user WHERE username = ?";
 		return jdbc.queryForMap(sql, userName);
 	}
+	
+	public Map<String, Object> getUserByThirdLoginId(String identifer) {
+		String sql = "SELECT * FROM im_user WHERE thridloginid = ?";
+		return jdbc.queryForMap(sql, identifer);
+	}
 
 	@Deprecated
 	public Map<String, Object> getUserByDeviceId(String deviceId) {
@@ -346,7 +351,7 @@ public class UserDAO {
 	public UserBean loginWithThirdIdentifier(String identifier) {
 		UserBean userBean = new UserBean();
 		try {
-			Map<String, Object> userInfo = getUser(identifier);
+			Map<String, Object> userInfo = getUserByThirdLoginId(identifier);
 			// user exist, just return
 			userBean.setUserId((String) userInfo.get("id"));
 			userBean.setUsername((String) userInfo.get("username"));
@@ -356,17 +361,30 @@ public class UserDAO {
 			log.info(e.getMessage());
 			// user doesn't exist, insert new
 			String id = RandomString.genRandomChars(32);
+			String username = RandomString.genRandomNum(10);
 			String userkey = RandomString.genRandomChars(32);
-			String sql = "INSERT INTO im_user(id, username, password, userkey) VALUES (?,?,?,?)";
-			Object[] params = new Object[] { id, identifier,
-					CryptoUtil.md5("123"), userkey };
+			String defaultPwd = "123456";
+			
+			try {
+				if (isExistsLoginName(username)) {
+					username = RandomString.genRandomNum(10);
+				}
+			} catch (SQLException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+			
+			String sql = "INSERT INTO im_user(id, username, password, userkey, thridloginid) VALUES (?,?,?,?,?)";
+			Object[] params = new Object[] { id, username,
+					CryptoUtil.md5(defaultPwd), userkey, identifier };
 			try {
 				int rows = jdbc.update(sql, params);
 				if (rows > 0) {
 					userBean.setResult("0");
 					userBean.setUserId(id);
-					userBean.setUsername(identifier);
+					userBean.setUsername(username);
 					userBean.setUserkey(userkey);
+					userBean.setPassword(defaultPwd);
 				} else {
 					userBean.setResult("2");
 				}

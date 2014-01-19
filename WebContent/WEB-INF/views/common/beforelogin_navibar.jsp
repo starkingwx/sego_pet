@@ -1,5 +1,5 @@
 <%@page import="com.imeeting.constants.WebConstants"%>
-<%@page import="com.imeeting.web.user.UserBean"%>
+<%@page import="com.imeeting.bean.UserBean"%>
 <%@ page language="java" contentType="text/html; charset=utf-8"
 	pageEncoding="utf-8"%>
 <%

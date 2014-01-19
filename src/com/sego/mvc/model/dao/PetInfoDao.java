@@ -81,16 +81,17 @@ public class PetInfoDao extends BaseDao {
 	 */
 	public int updatePetInfo(String petId, String nickname, String sex,
 			String breed, String birthday, String height, String weight,
-			String district, String placeOftenGo, String deviceId) {
+			String district, String placeOftenGo, String deviceId, String devicePwd) {
 		log.info(String
-				.format("updatePetInfo - nickname: %s, sex: %s, breed: %s, birthday: %s, height: %s, weight: %s, district: %s, place: %s",
+				.format("updatePetInfo - nickname: %s, sex: %s, breed: %s, birthday: %s, height: %s, weight: %s, district: %s, place: %s, devicePwd: %s",
 						 nickname, sex, breed, birthday, height, weight,
-						district, placeOftenGo));
+						district, placeOftenGo, devicePwd));
 		TableField[] updateParams = new TableField[]{new TableField("nickname", nickname, Types.VARCHAR), 
 				new TableField("sex", sex, Types.TINYINT), new TableField("breed", breed, Types.TINYINT),
 				new TableField("birthday", birthday, Types.BIGINT), new TableField("height", height, Types.FLOAT),
 				new TableField("weight", weight, Types.FLOAT), new TableField("district", district, Types.VARCHAR),
-				new TableField("placeoftengo", placeOftenGo, Types.VARCHAR), new TableField("deviceId", deviceId, Types.VARCHAR)};
+				new TableField("placeoftengo", placeOftenGo, Types.VARCHAR), new TableField("deviceId", deviceId, Types.VARCHAR), 
+				new TableField("devicepwd", devicePwd, Types.VARCHAR)};
 		String selection = "WHERE petid = ?";
 		TableField[] selectionArgs = new TableField[]{new TableField("petid", petId, Types.INTEGER)};
 		return update("f_pets", updateParams, selection, selectionArgs);
@@ -157,12 +158,17 @@ public class PetInfoDao extends BaseDao {
 		petInfo.setOwnerid((String) (map.get(PetInfoColumn.ownerid.name())));
 		petInfo.setAvatar((String) (map.get(PetInfoColumn.avatar.name())));
 		petInfo.setBreed((Integer) map.get(PetInfoColumn.breed.name()));
-		petInfo.setBirthday((Long) (map.get(PetInfoColumn.birthday.name())));
+		Long birthday = (Long) (map.get(PetInfoColumn.birthday.name()));
+		if (birthday == null) {
+			birthday = 0L;
+		}
+		petInfo.setBirthday(birthday);
 		petInfo.setHeight((Float) (map.get(PetInfoColumn.height.name())));
 		petInfo.setDistrict((String) (map.get(PetInfoColumn.district.name())));
 		petInfo.setPlaceoftengo((String) (map.get(PetInfoColumn.placeoftengo
 				.name())));
 		petInfo.setDeviceid((String) (map.get(PetInfoColumn.deviceId.name())));
+		petInfo.setDevicepwd((String) (map.get(PetInfoColumn.devicepwd.name())));
 		petInfo.setScore((Integer) (map.get(PetInfoColumn.score.name())));
 		return petInfo;
 	}

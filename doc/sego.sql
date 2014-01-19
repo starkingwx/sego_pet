@@ -106,11 +106,6 @@ CREATE TABLE `gallery` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=29 DEFAULT CHARSET=utf8;
 
-CREATE DEFINER = 'root'@'localhost' TRIGGER `delete_photo` AFTER DELETE ON `gallery`
-  FOR EACH ROW
-BEGIN
-	DELETE FROM photo WHERE galleryid = old.id;
-END;
 
 #
 # Structure for the `im_device_info` table : 

@@ -2,7 +2,6 @@ package com.sego.mvc.controller;
 
 import java.io.IOException;
 import java.util.List;
-import java.util.Map;
 import java.util.UUID;
 
 import javax.annotation.PostConstruct;
@@ -19,10 +18,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import com.imeeting.bean.UserBean;
 import com.imeeting.framework.ContextLoader;
 import com.imeeting.mvc.controller.ExceptionController;
-import com.richitec.bean.ResultBean;
 import com.richitec.util.FileUtil;
 import com.richitec.util.JSONUtil;
 import com.richitec.util.StringUtil;
@@ -52,7 +49,7 @@ public class PetInfoController extends ExceptionController {
 			@RequestParam(value = "nickname", defaultValue = "") String nickname,
 			@RequestParam(value = "sex", defaultValue = "") String sex,
 			@RequestParam(value = "breed", defaultValue = "") String breed,
-			@RequestParam(value = "birthday", defaultValue = "") String birthday,
+			@RequestParam(value = "birthday", defaultValue = "0") String birthday,
 			@RequestParam(value = "height", defaultValue = "") String height,
 			@RequestParam(value = "weight", defaultValue = "") String weight,
 			@RequestParam(value = "district", defaultValue = "") String district,
@@ -77,7 +74,7 @@ public class PetInfoController extends ExceptionController {
 		} else {
 			// save pet info
 			int update = petInfoDao.updatePetInfo(petId, nickname, sex, breed,
-					birthday, height, weight, district, placeOftenGo, null);
+					birthday, height, weight, district, placeOftenGo, null, null);
 			if (update > 0) {
 				petUpdateReturnBean.setResult("0");
 				petUpdateReturnBean.setId(petId);
@@ -208,7 +205,7 @@ public class PetInfoController extends ExceptionController {
 			@RequestParam(value = "petid") String petId,
 			@RequestParam(value = "deviceno") String deviceNo
 			) throws IOException {
-		ResultBean resultBean = new ResultBean();
+		DeviceBindResult resultBean = new DeviceBindResult();
 		if (StringUtil.isNullOrEmpty(deviceNo)) {
 			resultBean.setResult("4"); // device id is empty
 		} else if (StringUtil.isNullOrEmpty(petId)) {
@@ -217,7 +214,7 @@ public class PetInfoController extends ExceptionController {
 			DeviceManager deviceManager = ContextLoader.getDeviceManager();
 			resultBean = deviceManager.bindDevice(Integer.parseInt(petId), deviceNo);
 			if ("0".equals(resultBean.getResult())) {
-				petInfoDao.updatePetInfo(petId, null, null, null, null, null, null, null, null, deviceNo);
+				petInfoDao.updatePetInfo(petId, null, null, null, null, null, null, null, null, deviceNo, resultBean.getDevice_password());
 			}
 		}
 		response.getWriter().print(JSONUtil.toString(resultBean));

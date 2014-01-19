@@ -124,7 +124,7 @@ public class HttpUtil {
 			log.debug("Send synchronous get request excetion message = "
 					+ e.getMessage());
 
-			e.printStackTrace();
+//			e.printStackTrace();
 
 			_getHttpRequest.abort();
 		}
@@ -180,7 +180,7 @@ public class HttpUtil {
 				log.debug("Post request post body unsupported encoding exceptio message = "
 						+ e.getMessage());
 
-				e.printStackTrace();
+//				e.printStackTrace();
 			}
 
 		}
@@ -200,7 +200,7 @@ public class HttpUtil {
 			log.debug("Send synchronous post request excetion message = "
 					+ e.getMessage());
 
-			e.printStackTrace();
+//			e.printStackTrace();
 			_postHttpRequest.abort();
 		}
 		return responseResult;
@@ -228,7 +228,7 @@ public class HttpUtil {
 				log.debug("Get http response entity excetion message = "
 						+ e.getMessage());
 
-				e.printStackTrace();
+//				e.printStackTrace();
 			}
 		} else {
 			log.debug("Get http response entity, response is null");

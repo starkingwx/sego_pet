@@ -1,7 +1,7 @@
 <%@page import="com.imeeting.mvc.controller.ProfileController"%>
 <%@ page language="java" contentType="text/html; charset=utf-8"
     pageEncoding="utf-8"%>
-<%@ page import="com.imeeting.web.user.UserBean" %>
+<%@ page import="com.imeeting.bean.UserBean" %>
 <%
 	UserBean userBean = (UserBean)session.getAttribute(UserBean.SESSION_BEAN);
 Integer nicknameRetCode = (Integer) request.getAttribute(ProfileController.NicknameRetCode);
@@ -58,7 +58,7 @@ if (nicknameRetCode != null) {
                             <div class="control-group info">
                                 <label class="control-label">登录名</label>
                                 <div class="controls">
-                                    <input type="text" disabled="disabled" value="<%=userBean.getUserName() %>">
+                                    <input type="text" disabled="disabled" value="<%=userBean.getUsername() %>">
                                     <span class="help-inline">不可更改</span>
                                 </div>
                             </div>
@@ -66,7 +66,7 @@ if (nicknameRetCode != null) {
                                 <label class="control-label">名称</label>
                                 <div class="controls">
                                    <input id="iptNewNickname" type="text" maxlength="20" placeholder="请输入新的名称" name="nickname"
-                                    value="<%=userBean.getNickName() %>"/>
+                                    value="<%=userBean.getNickname() %>"/>
                                    <span id="infoNickname" class="help-inline"><%=nicknameInfo %></span>
                                 </div>
                             </div>

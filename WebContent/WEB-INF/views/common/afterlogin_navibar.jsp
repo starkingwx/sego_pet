@@ -1,5 +1,5 @@
 <%@page import="com.imeeting.constants.WebConstants"%>
-<%@page import="com.imeeting.web.user.UserBean"%>
+<%@page import="com.imeeting.bean.UserBean"%>
 <%@ page language="java" contentType="text/html; charset=utf-8"
 	pageEncoding="utf-8"%>
 <%
@@ -20,7 +20,7 @@
 				class="icon-bar"></span> <span class="icon-bar"></span>
 			</a> <a class="brand" href="/imeetings/home">智会</a>
 			<ul class="nav">
-				<li><a id="username" class="im-attendee-name" title="<%=userBean.getUserName()%>">
+				<li><a id="username" class="im-attendee-name" title="<%=userBean.getUsername()%>">
 				    <i class="icon-user"></i><%=userBean.getDisplayName()%></a>
 				</li>
 				<li>

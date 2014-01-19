@@ -14,5 +14,6 @@ public enum PetInfoColumn {
 	district,
 	placeoftengo,
 	deviceId,
+	devicepwd,
 	score
 }

@@ -1,7 +1,6 @@
 package com.sego.mvc.model.bean;
 
 import java.util.List;
-import java.util.UUID;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
@@ -23,6 +22,7 @@ public class PetInfo extends ResultBean {
 	private String deviceid;
 	private int score;
 	private long birthday;
+	private String devicepwd;
 	
 	// used for nearby pets
 	private long longitude;
@@ -191,6 +191,14 @@ public class PetInfo extends ResultBean {
 
 	public void setBirthday(long birthday) {
 		this.birthday = birthday;
+	}
+
+	public String getDevicepwd() {
+		return devicepwd;
+	}
+
+	public void setDevicepwd(String devicepwd) {
+		this.devicepwd = devicepwd;
 	}
 
 	public static void main(String[] args) {
