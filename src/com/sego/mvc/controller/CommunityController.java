@@ -47,14 +47,15 @@ public class CommunityController {
 			@RequestParam(value = "longitude") String longitude,
 			@RequestParam(value = "latitude") String latitude)
 			throws IOException {
+		
 		PetInfos petInfos = new PetInfos();
 		if (StringUtil.isNullOrEmpty(longitude)
 				|| StringUtil.isNullOrEmpty(latitude)) {
 			petInfos.setResult("1");
 		} else {
 			try {
-				long lng = Long.parseLong(longitude);
-				long lat = Long.parseLong(latitude);
+				float lng = Float.parseFloat(longitude);
+				float lat = Float.parseFloat(latitude);
 				petInfos = communityDao.getNearbyPets(petId, lng, lat);
 				petInfos.setResult("0");
 			} catch (NumberFormatException e) {

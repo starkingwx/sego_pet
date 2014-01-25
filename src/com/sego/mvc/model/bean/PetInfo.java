@@ -30,7 +30,8 @@ public class PetInfo extends ResultBean {
 	private String address;
 	private String termtime;
 	private long vitality;
-
+	private String distance_desc;
+	
 	private List<Gallery> galleries;
 
 	public long getPetid() {
@@ -199,6 +200,14 @@ public class PetInfo extends ResultBean {
 
 	public void setDevicepwd(String devicepwd) {
 		this.devicepwd = devicepwd;
+	}
+	
+	public String getDistance_desc() {
+		return distance_desc;
+	}
+
+	public void setDistance_desc(String distance_desc) {
+		this.distance_desc = distance_desc;
 	}
 
 	public static void main(String[] args) {

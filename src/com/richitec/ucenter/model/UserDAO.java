@@ -361,7 +361,7 @@ public class UserDAO {
 			log.info(e.getMessage());
 			// user doesn't exist, insert new
 			String id = RandomString.genRandomChars(32);
-			String username = RandomString.genRandomNum(10);
+			String username = RandomString.genRandomNum(8);
 			String userkey = RandomString.genRandomChars(32);
 			String defaultPwd = "123456";
 			

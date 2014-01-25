@@ -220,10 +220,13 @@ Return: json	{
 Path:	community/getnearbypets
 Param:	longitude*
 		latitude*
-Return:	json	{
+Return:	json	
+				{
 					result 	: "code",
 					list	: [array of PetInfo]
 				}
+		PetInfo 多增加distance_desc : string， 是“xx公里以内"的文字描述		
+		
  code: 	0	成功	
 		1	坐标为空
 		2	坐标不是数字

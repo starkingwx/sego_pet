@@ -58,7 +58,10 @@ public class CommunityDao extends BaseDao {
 		return petInfos;
 	}
 
-	public PetInfos getNearbyPets(String petId, long lng, long lat) {
+	private static final long GPS_TRANSFORM_UNIT = 1000000;
+	
+	public PetInfos getNearbyPets(String petId, float lng, float lat) {
+		log.info("latitude: " + lat + " longitude: " + lng);
 //		String sql = "SELECT * FROM f_location WHERE ABS(longitutde - ?) < 1 AND ABS(latitude - ?) < 1";
 //		List<Map<String, Object>> list = jdbc.queryForList(sql, lng, lat);
 //		StringBuffer idBuffer = new StringBuffer();
@@ -96,13 +99,15 @@ public class CommunityDao extends BaseDao {
 //
 //		return petInfos;
 		
+		long longitude = (long) (lng * GPS_TRANSFORM_UNIT);
+		long latitude = (long) (lat * GPS_TRANSFORM_UNIT);
 		PetInfos petInfos = new PetInfos();
 		
 		PetInfoDao petInfoDao = ContextLoader.getPetInfoDao();
 		PetInfo petInfo = petInfoDao.getPetDetail(petId);
 		String deviceId = petInfo.getDeviceid();
 		if (!StringUtil.isNullOrEmpty(deviceId)) {
-			List<TrackSdata> trackData = ContextLoader.getDeviceManager().queryNearbyPets(lng, lat, 1000, deviceId);
+			List<TrackSdata> trackData = ContextLoader.getDeviceManager().queryNearbyPets(longitude, latitude, 10000, deviceId);
 			if (trackData.size() > 0) {
 				StringBuffer deviceIdList = new StringBuffer();
 				for (TrackSdata data : trackData) {
@@ -120,6 +125,16 @@ public class CommunityDao extends BaseDao {
 							pet.setAddress(data.getAddress());
 							pet.setTermtime(data.getTermtime());
 							pet.setVitality(data.getVitality());
+							double petLng = pet.getLongitude() * 1.0f / GPS_TRANSFORM_UNIT;
+							double petLat = pet.getLatitude() * 1.0f / GPS_TRANSFORM_UNIT;
+							double distance = DistanceUtil.getDistance(lng, lat, petLng, petLat);
+							if (distance <= 1000) {
+								pet.setDistance_desc("1公里以内");
+							} else if (distance <= 3000) {
+								pet.setDistance_desc("3公里以内");
+							} else {
+								pet.setDistance_desc("10公里以内");
+							}
 							break;
 						}
 					}
