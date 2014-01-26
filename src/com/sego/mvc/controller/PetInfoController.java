@@ -41,6 +41,21 @@ public class PetInfoController extends ExceptionController {
 		petInfoDao = ContextLoader.getPetInfoDao();
 	}
 
+	/**
+	 * 宠物信息新增和修改
+	 * @param response
+	 * @param userName
+	 * @param petId
+	 * @param nickname
+	 * @param sex
+	 * @param breed
+	 * @param birthday
+	 * @param height
+	 * @param weight
+	 * @param district
+	 * @param placeOftenGo
+	 * @throws IOException
+	 */
 	@RequestMapping(value = "/modify")
 	public void modifyPetInfo(
 			HttpServletResponse response,
@@ -85,6 +100,12 @@ public class PetInfoController extends ExceptionController {
 		response.getWriter().print(JSONUtil.toString(petUpdateReturnBean));
 	}
 
+	/**
+	 * 获取宠物列表
+	 * @param response
+	 * @param userName
+	 * @throws IOException
+	 */
 	@RequestMapping(value = "/getpets")
 	public void getPetInfoList(HttpServletResponse response,
 			@RequestParam(value = "username") String userName)
@@ -95,6 +116,12 @@ public class PetInfoController extends ExceptionController {
 		response.getWriter().print(json);
 	}
 
+	/**
+	 * 获取宠物详情
+	 * @param response
+	 * @param petId
+	 * @throws IOException
+	 */
 	@RequestMapping(value = "/getpetdetail")
 	public void getPetDetailInfo(HttpServletResponse response,
 			@RequestParam(value = "petid") String petId) throws IOException {
@@ -108,6 +135,12 @@ public class PetInfoController extends ExceptionController {
 		response.getWriter().print(JSONUtil.toString(petInfo));
 	}
 
+	/**
+	 * 上传宠物头像
+	 * @param request
+	 * @param response
+	 * @throws IOException
+	 */
 	@RequestMapping(value = "/uploadavatar")
 	public void uploadPetAvatar(HttpServletRequest request,
 			HttpServletResponse response) throws IOException {
@@ -185,6 +218,12 @@ public class PetInfoController extends ExceptionController {
 		response.getWriter().print(JSONUtil.toString(petUpdateReturnBean));
 	}
 
+	/**
+	 * 搜索宠物
+	 * @param response
+	 * @param phone
+	 * @throws IOException
+	 */
 	@RequestMapping(value = "/searchpets")
 	public void searchPetInfo(HttpServletResponse response,
 			@RequestParam(value = "phone") String phone) throws IOException {
@@ -199,6 +238,14 @@ public class PetInfoController extends ExceptionController {
 		response.getWriter().print(json);
 	}
 
+	/**
+	 * 绑定设备号
+	 * @param response
+	 * @param userName
+	 * @param petId
+	 * @param deviceNo
+	 * @throws IOException
+	 */
 	@RequestMapping(value = "/binddevice")
 	public void bindPetDevice(HttpServletResponse response, 
 			@RequestParam(value = "username") String userName,

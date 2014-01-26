@@ -40,6 +40,13 @@ public class GalleryController {
 		galleryDao = ContextLoader.getGalleryDao();
 	}
 
+	/**
+	 * 获取相册列表
+	 * @param response
+	 * @param userName
+	 * @param petId
+	 * @throws IOException
+	 */
 	@RequestMapping(value = "/getgalleries")
 	public void getGalleries(HttpServletResponse response,
 			@RequestParam(value = "username") String userName,
@@ -55,6 +62,12 @@ public class GalleryController {
 		response.getWriter().print(JSONUtil.toString(galleries));
 	}
 
+	/**
+	 * 获取相册内的所有照片
+	 * @param response
+	 * @param galleryId
+	 * @throws IOException
+	 */
 	@RequestMapping(value = "/getgallery")
 	public void gatGallery(HttpServletResponse response,
 			@RequestParam(value = "galleryid") String galleryId)
@@ -69,6 +82,13 @@ public class GalleryController {
 		response.getWriter().print(JSONUtil.toString(gallery));
 	}
 
+	/**
+	 * 创建相册
+	 * @param response
+	 * @param userName
+	 * @param title
+	 * @throws IOException
+	 */
 	@RequestMapping(value = "/creategallery")
 	public void createGallery(HttpServletResponse response,
 			@RequestParam(value = "username") String userName,
@@ -84,6 +104,13 @@ public class GalleryController {
 		response.getWriter().print(JSONUtil.toString(resultBean));
 	}
 
+	/**
+	 * 删除相册
+	 * @param response
+	 * @param userName
+	 * @param galleryId
+	 * @throws IOException
+	 */
 	@RequestMapping(value = "/delgallery")
 	public void delGallery(HttpServletResponse response,
 			@RequestParam(value = "username") String userName,
@@ -102,6 +129,13 @@ public class GalleryController {
 		response.getWriter().print(JSONUtil.toString(resultBean));
 	}
 
+	/**
+	 * 删除照片
+	 * @param response
+	 * @param userName
+	 * @param photoId
+	 * @throws IOException
+	 */
 	@RequestMapping(value = "/delphoto")
 	public void delPhoto(HttpServletResponse response,
 			@RequestParam(value = "username") String userName,
@@ -119,6 +153,12 @@ public class GalleryController {
 		response.getWriter().print(JSONUtil.toString(resultBean));
 	}
 
+	/**
+	 * 上传照片
+	 * @param request
+	 * @param response
+	 * @throws IOException
+	 */
 	@RequestMapping(value = "/uploadphoto")
 	public void uploadPhoto(HttpServletRequest request,
 			HttpServletResponse response) throws IOException {
@@ -189,6 +229,14 @@ public class GalleryController {
 		response.getWriter().print(JSONUtil.toString(photoBean));
 	}
 
+	/**
+	 * 设置相册信息
+	 * @param response
+	 * @param galleryId
+	 * @param title
+	 * @param photoPath
+	 * @throws IOException
+	 */
 	@RequestMapping(value = "/setgalleryinfo")
 	public void setGalleryInfo(HttpServletResponse response,
 			@RequestParam(value = "galleryid") String galleryId,
@@ -208,6 +256,15 @@ public class GalleryController {
 		response.getWriter().print(JSONUtil.toString(resultBean));
 	}
 
+	/**
+	 * 设置照片信息
+	 * @param response
+	 * @param photoId
+	 * @param type
+	 * @param description
+	 * @param name
+	 * @throws IOException
+	 */
 	@RequestMapping(value = "/setphotoinfo")
 	public void setPhotoInfo(
 			HttpServletResponse response,

@@ -32,6 +32,13 @@ public class CommunityController {
 		petInfoDao = ContextLoader.getPetInfoDao();
 	}
 
+	/**
+	 * 获取推荐宠物	 
+	 *
+	 * @param response
+	 * @param userName
+	 * @throws IOException
+	 */
 	@RequestMapping(value = "/getrecommendpets")
 	public void getRecommendedPets(HttpServletResponse response,
 			@RequestParam(value = "username") String userName)
@@ -41,6 +48,14 @@ public class CommunityController {
 		response.getWriter().print(JSONUtil.toString(petInfos));
 	}
 
+	/**
+	 * 获取附近宠物
+	 * @param response
+	 * @param petId
+	 * @param longitude
+	 * @param latitude
+	 * @throws IOException
+	 */
 	@RequestMapping(value = "/getnearbypets")
 	public void getNearbyPets(HttpServletResponse response,
 			@RequestParam(value = "petid") String petId,
@@ -66,6 +81,12 @@ public class CommunityController {
 		response.getWriter().print(JSONUtil.toString(petInfos));
 	}
 
+	/**
+	 * 获取关注的宠物
+	 * @param response
+	 * @param userName
+	 * @throws IOException
+	 */
 	@RequestMapping(value = "/getconcernpets")
 	public void getConcernedPets(HttpServletResponse response,
 			@RequestParam(value = "username") String userName)
@@ -75,6 +96,13 @@ public class CommunityController {
 		response.getWriter().print(JSONUtil.toString(petInfos));
 	}
 
+	/**
+	 * 关注宠物
+	 * @param response
+	 * @param userName
+	 * @param petId
+	 * @throws IOException
+	 */
 	@RequestMapping(value = "/concernpet")
 	public void concernPet(HttpServletResponse response,
 			@RequestParam(value = "username") String userName,
@@ -99,6 +127,13 @@ public class CommunityController {
 		response.getWriter().print(JSONUtil.toString(resultBean));
 	}
 
+	/**
+	 * 取消关注宠物
+	 * @param response
+	 * @param userName
+	 * @param petId
+	 * @throws IOException
+	 */
 	@RequestMapping(value = "/unconcernpet")
 	public void unconcernPet(HttpServletResponse response,
 			@RequestParam(value = "username") String userName,
@@ -121,6 +156,14 @@ public class CommunityController {
 		response.getWriter().print(JSONUtil.toString(resultBean));
 	}
 
+	/**
+	 * 留言
+	 * @param response
+	 * @param userName
+	 * @param receiverPetId
+	 * @param content
+	 * @throws IOException
+	 */
 	@RequestMapping(value = "/leavemsg")
 	public void leaveMsgToPet(HttpServletResponse response,
 			@RequestParam(value = "username") String userName,
@@ -158,6 +201,14 @@ public class CommunityController {
 		response.getWriter().print(JSONUtil.toString(resultBean));
 	}
 
+	/**
+	 * 回复留言
+	 * @param response
+	 * @param userName
+	 * @param content
+	 * @param msgId
+	 * @throws IOException
+	 */
 	@RequestMapping(value = "/replymsg")
 	public void replyMsg(HttpServletResponse response,
 			@RequestParam(value = "username") String userName,
@@ -188,6 +239,13 @@ public class CommunityController {
 		response.getWriter().print(JSONUtil.toString(resultBean));
 	}
 
+	/**
+	 * 删除留言
+	 * @param response
+	 * @param userName
+	 * @param msgId
+	 * @throws IOException
+	 */
 	@RequestMapping(value = "/delmsg")
 	public void delMsg(HttpServletResponse response,
 			@RequestParam(value = "username") String userName,
@@ -210,6 +268,13 @@ public class CommunityController {
 		response.getWriter().print(JSONUtil.toString(resultBean));
 	}
 
+	/**
+	 * 获取留言列表信息
+	 * @param response
+	 * @param userName
+	 * @param petId
+	 * @throws IOException
+	 */
 	@RequestMapping(value = "/getleavemsgs")
 	public void getLeaveMsgs(HttpServletResponse response,
 			@RequestParam(value = "username") String userName,
@@ -224,6 +289,12 @@ public class CommunityController {
 		response.getWriter().print(JSONUtil.toString(msgs));
 	}
 
+	/**
+	 * 获取留言详情
+	 * @param response
+	 * @param msgId
+	 * @throws IOException
+	 */
 	@RequestMapping(value = "/getleavemsgdetail")
 	public void getLeaveMsgDetail(HttpServletResponse response,
 			@RequestParam(value = "msgid") String msgId) throws IOException {
@@ -237,6 +308,12 @@ public class CommunityController {
 		response.getWriter().print(JSONUtil.toString(msgs));
 	}
 
+	/**
+	 * 获取黑名单
+	 * @param response
+	 * @param userName
+	 * @throws IOException
+	 */
 	@RequestMapping(value = "/getblacklist")
 	public void getBlackList(HttpServletResponse response,
 			@RequestParam(value = "username") String userName)
@@ -246,6 +323,13 @@ public class CommunityController {
 		response.getWriter().print(JSONUtil.toString(petInfos));
 	}
 
+	/**
+	 * 加入黑名单
+	 * @param response
+	 * @param userName
+	 * @param petId
+	 * @throws IOException
+	 */
 	@RequestMapping(value = "/addblacklist")
 	public void addPetToBlackList(HttpServletResponse response,
 			@RequestParam(value = "username") String userName,
