@@ -354,6 +354,13 @@ public class CommunityController {
 		response.getWriter().print(JSONUtil.toString(resultBean));
 	}
 
+	/**
+	 * 从黒名单移除
+	 * @param response
+	 * @param userName
+	 * @param petId
+	 * @throws IOException
+	 */
 	@RequestMapping(value = "/delblacklist")
 	public void delPetFromBlackList(HttpServletResponse response,
 			@RequestParam(value = "username") String userName,
