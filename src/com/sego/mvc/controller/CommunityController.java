@@ -72,7 +72,6 @@ public class CommunityController {
 				float lng = Float.parseFloat(longitude);
 				float lat = Float.parseFloat(latitude);
 				petInfos = communityDao.getNearbyPets(petId, lng, lat);
-				petInfos.setResult("0");
 			} catch (NumberFormatException e) {
 				e.printStackTrace();
 				petInfos.setResult("2");

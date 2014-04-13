@@ -140,7 +140,7 @@ public class DeviceManager {
 		operation.setCmdtype(DeviceOperationConstants.ARCHIVE_OPERATION.name());
 
 		ArchiveOperation arop = new ArchiveOperation();
-		arop.setTablename("neighbour");
+		arop.setTablename("realstatus");
 		arop.setOperation(DeviceOperationConstants.QUERY.name());
 
 		List<String> field = new ArrayList<String>();
@@ -150,7 +150,7 @@ public class DeviceManager {
 		field.add(DeviceField.termtime.name());
 		field.add(DeviceField.status.name());
 		field.add(DeviceField.vitality.name());
-		field.add(DeviceField.address.name());
+		field.add(DeviceField.roughaddr.name());
 
 		arop.setField(field);
 

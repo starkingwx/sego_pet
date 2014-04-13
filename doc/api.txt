@@ -218,7 +218,8 @@ Return: json	{
  
 2. 获取附近的宠物(sig)
 Path:	community/getnearbypets
-Param:	longitude*
+Param:	petid*
+		longitude*
 		latitude*
 Return:	json	
 				{
@@ -230,6 +231,7 @@ Return:	json
  code: 	0	成功	
 		1	坐标为空
 		2	坐标不是数字
+		3	未绑定设备号
 
 3. 获取关注的宠物(sig)
 Path: community/getconcernpets
