@@ -7,5 +7,6 @@ public enum DeviceField {
 	termtime,
 	status,
 	vitality,
-	roughaddr
+	roughaddr,
+	posid
 }

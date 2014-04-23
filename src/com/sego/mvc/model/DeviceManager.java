@@ -42,13 +42,21 @@ public class DeviceManager {
 		operation.setArchive_operation(dbop);
 
 		Terminal terminalInfo = new Terminal();
-		terminalInfo.setDeviceno(deviceId);
 		terminalInfo.setUserid(userId);
 
 		List<Terminal> terms = new ArrayList<Terminal>();
 		terms.add(terminalInfo);
 		dbop.setTerminal(terms);
 
+		WhereCondition whereCond = new WhereCondition();
+		whereCond.setName("deviceno");
+		whereCond.setType("VARCHAR");
+		whereCond.setValue(deviceId);
+		
+		List<WhereCondition> wheres = new ArrayList<WhereCondition>();
+		wheres.add(whereCond);
+		dbop.setWherecond(wheres);
+		
 		DeviceBindResult bindResult = new DeviceBindResult();
 		bindResult.setResult("3"); // set failed as default
 		HttpResponseResult response = postToDeviceServer(
@@ -90,16 +98,17 @@ public class DeviceManager {
 
 	private HttpResponseResult postToDeviceServer(String op, String deviceno) {
 		Map<String, String> params = new HashMap<String, String>();
-		params.put("c", "MP");
+		params.put("c", "PC");
 		params.put("op", op);
 		params.put("t", String.valueOf(System.currentTimeMillis() + timeDelta));
-		params.put("d", deviceno);
+//		params.put("d", deviceno);
 		params.put("v", "1.0");
+		params.put("ak", "S001");
 
 		Configuration config = ContextLoader.getConfiguration();
 		HttpResponseResult response = HttpUtil.postRequestWithSignature(
 				config.getDeviceServerUrl() + "/rest/operate",
-				PostRequestFormat.URLENCODED, params, CryptoUtil.md5("123456"));
+				PostRequestFormat.URLENCODED, params, /*CryptoUtil.md5("123456")*/ "");
 		return response;
 	}
 
@@ -147,6 +156,7 @@ public class DeviceManager {
 		field.add(DeviceField.termid.name());
 		field.add(DeviceField.x.name());
 		field.add(DeviceField.y.name());
+		field.add(DeviceField.posid.name());
 		field.add(DeviceField.termtime.name());
 		field.add(DeviceField.status.name());
 		field.add(DeviceField.vitality.name());

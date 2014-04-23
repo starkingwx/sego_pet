@@ -6,6 +6,7 @@ import com.fasterxml.jackson.annotation.JsonInclude.Include;
 @JsonInclude(Include.NON_NULL)
 public class WhereCondition {
 	private String name;
+	private String type;
 	private String value;
 
 	public String getName() {
@@ -24,4 +25,13 @@ public class WhereCondition {
 		this.value = value;
 	}
 
+	public String getType() {
+		return type;
+	}
+
+	public void setType(String type) {
+		this.type = type;
+	}
+
+	
 }
