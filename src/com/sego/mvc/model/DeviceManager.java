@@ -78,6 +78,7 @@ public class DeviceManager {
 							bindResult.setDevice_id(term.getId());
 							bindResult.setDevice_password(term.getPassword());
 						}
+						
 					} 
 				} else if (CommandType.ERROR_MESSAGE.name().equals(
 						res.getCmdtype())) {

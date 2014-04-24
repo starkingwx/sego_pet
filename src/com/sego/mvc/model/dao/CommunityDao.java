@@ -108,7 +108,7 @@ public class CommunityDao extends BaseDao {
 		String deviceId = petInfo.getDeviceid();
 		log.info("getNearbyPets - deviceId: " + deviceId);
 		if (!StringUtil.isNullOrEmpty(deviceId)) {
-			List<TrackSdata> trackData = ContextLoader.getDeviceManager().queryNearbyPets(longitude, latitude, 10000, deviceId);
+			List<TrackSdata> trackData = ContextLoader.getDeviceManager().queryNearbyPets(longitude, latitude, 1000, deviceId);
 			if (trackData.size() > 0) {
 				StringBuffer deviceIdList = new StringBuffer();
 				for (TrackSdata data : trackData) {
