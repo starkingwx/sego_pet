@@ -11,7 +11,7 @@ public class TrackSdata {
 	private String termtime;
 	private int status;
 	private long vitality;
-	private String address;
+	private String roughaddr;
 
 	public long getTermid() {
 		return termid;
@@ -61,12 +61,12 @@ public class TrackSdata {
 		this.vitality = vitality;
 	}
 
-	public String getAddress() {
-		return address;
+	public String getRoughaddr() {
+		return roughaddr;
 	}
 
-	public void setAddress(String address) {
-		this.address = address;
+	public void setRoughaddr(String address) {
+		this.roughaddr = address;
 	}
 
 }

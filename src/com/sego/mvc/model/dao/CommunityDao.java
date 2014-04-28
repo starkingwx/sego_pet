@@ -109,6 +109,7 @@ public class CommunityDao extends BaseDao {
 		log.info("getNearbyPets - deviceId: " + deviceId);
 		if (!StringUtil.isNullOrEmpty(deviceId)) {
 			List<TrackSdata> trackData = ContextLoader.getDeviceManager().queryNearbyPets(longitude, latitude, 1000, deviceId);
+			log.debug("Tracksdata size: " + trackData.size());
 			if (trackData.size() > 0) {
 				StringBuffer deviceIdList = new StringBuffer();
 				for (TrackSdata data : trackData) {
@@ -116,14 +117,16 @@ public class CommunityDao extends BaseDao {
 				}
 				deviceIdList = StringUtil.deleteLastChar(deviceIdList, ',');
 				String sql = "SELECT * FROM f_pets WHERE deviceId IN (" + deviceIdList.toString() + ")";
+				log.debug("SQL: " + sql);
 				List<Map<String, Object>> list = jdbc.queryForList(sql);
+				log.debug("Query list size: " + list.size());
 				petInfos = PetInfoDao.convertListToPetInfos(list);
 				for (PetInfo pet : petInfos.getList()) {
 					for (TrackSdata data : trackData) {
 						if (pet.getDeviceid().equals(String.valueOf(data.getTermid()))) {
 							pet.setLongitude(data.getX());
 							pet.setLatitude(data.getY());
-							pet.setAddress(data.getAddress());
+							pet.setAddress(data.getRoughaddr());
 							pet.setTermtime(data.getTermtime());
 							pet.setVitality(data.getVitality());
 							double petLng = pet.getLongitude() * 1.0f / GPS_TRANSFORM_UNIT;
