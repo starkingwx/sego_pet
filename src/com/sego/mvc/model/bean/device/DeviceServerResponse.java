@@ -17,7 +17,7 @@ public class DeviceServerResponse {
 	}
 	
 	private String status;
-	private long ts;
+	private Long ts;
 	private String cmdtype;
 	private ArchiveOperation archive_operation;
 	private ErrorMsg error_message;
@@ -30,7 +30,7 @@ public class DeviceServerResponse {
 		this.status = status;
 	}
 
-	public long getTs() {
+	public Long getTs() {
 		return ts;
 	}
 

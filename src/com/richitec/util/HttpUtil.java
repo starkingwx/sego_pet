@@ -40,8 +40,8 @@ public class HttpUtil {
 	private HttpClient _mDefaultHttpClient;
 
 	// connection and socket timeout
-	private int _mTimeoutConnection = 5000;
-	private int _mTimeoutSocket = 10000;
+	private int _mTimeoutConnection = 20000;
+	private int _mTimeoutSocket = 20000;
 
 	private HttpUtil() {
 		// init http param

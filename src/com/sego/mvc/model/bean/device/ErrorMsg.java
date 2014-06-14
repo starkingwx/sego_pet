@@ -6,7 +6,7 @@ import com.fasterxml.jackson.annotation.JsonInclude.Include;
 @JsonInclude(Include.NON_NULL)
 public class ErrorMsg {
 	private String errtype;
-	private int code;
+	private Integer code;
 	private String description;
 
 	public String getErrtype() {
@@ -17,7 +17,7 @@ public class ErrorMsg {
 		this.errtype = errtype;
 	}
 
-	public int getCode() {
+	public Integer getCode() {
 		return code;
 	}
 

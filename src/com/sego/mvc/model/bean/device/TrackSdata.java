@@ -5,15 +5,15 @@ import com.fasterxml.jackson.annotation.JsonInclude.Include;
 
 @JsonInclude(Include.NON_NULL)
 public class TrackSdata {
-	private long termid;
-	private long x;
-	private long y;
+	private Long termid;
+	private Long x;
+	private Long y;
 	private String termtime;
-	private int status;
-	private long vitality;
+	private Integer status;
+	private Long vitality;
 	private String roughaddr;
 
-	public long getTermid() {
+	public Long getTermid() {
 		return termid;
 	}
 
@@ -21,7 +21,7 @@ public class TrackSdata {
 		this.termid = termid;
 	}
 
-	public long getX() {
+	public Long getX() {
 		return x;
 	}
 
@@ -29,7 +29,7 @@ public class TrackSdata {
 		this.x = x;
 	}
 
-	public long getY() {
+	public Long getY() {
 		return y;
 	}
 
@@ -45,7 +45,7 @@ public class TrackSdata {
 		this.termtime = time;
 	}
 
-	public int getStatus() {
+	public Integer getStatus() {
 		return status;
 	}
 
@@ -53,7 +53,7 @@ public class TrackSdata {
 		this.status = status;
 	}
 
-	public long getVitality() {
+	public Long getVitality() {
 		return vitality;
 	}
 

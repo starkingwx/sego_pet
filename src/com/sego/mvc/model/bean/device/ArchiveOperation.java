@@ -13,8 +13,8 @@ public class ArchiveOperation {
 	private String affectid;
 	private List<String> field;
 	private List<WhereCondition> wherecond;
-	private int offset;
-	private int rows;
+	private Integer offset;
+	private Integer rows;
 	private List<TrackSdata> track_sdata;
 
 	public String getTablename() {
@@ -65,7 +65,7 @@ public class ArchiveOperation {
 		this.wherecond = wherecond;
 	}
 
-	public int getOffset() {
+	public Integer getOffset() {
 		return offset;
 	}
 
@@ -73,7 +73,7 @@ public class ArchiveOperation {
 		this.offset = offset;
 	}
 
-	public int getRows() {
+	public Integer getRows() {
 		return rows;
 	}
 

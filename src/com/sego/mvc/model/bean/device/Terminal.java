@@ -2,23 +2,24 @@ package com.sego.mvc.model.bean.device;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
+import com.richitec.util.JSONUtil;
 
 @JsonInclude(Include.NON_NULL)
 public class Terminal {
 	private String deviceno;
-	private long userid;
+	private Long userid;
 	private String name1;
 	private String name2;
-	private int type;
-	private int icon;
-	private int corpid;
-	private int groupid;
+	private Integer type;
+	private Integer icon;
+	private Integer corpid;
+	private Integer groupid;
 	private String simphno;
 	private String imei;
 	private String installdate;
 	private String expirydate;
 	private String password;
-	private long id;
+	private Long id;
 	
 	
 	public String getDeviceno() {
@@ -29,7 +30,7 @@ public class Terminal {
 		this.deviceno = deviceno;
 	}
 
-	public long getUserid() {
+	public Long getUserid() {
 		return userid;
 	}
 
@@ -53,7 +54,7 @@ public class Terminal {
 		this.name2 = name2;
 	}
 
-	public int getType() {
+	public Integer getType() {
 		return type;
 	}
 
@@ -61,7 +62,7 @@ public class Terminal {
 		this.type = type;
 	}
 
-	public int getIcon() {
+	public Integer getIcon() {
 		return icon;
 	}
 
@@ -69,7 +70,7 @@ public class Terminal {
 		this.icon = icon;
 	}
 
-	public int getCorpid() {
+	public Integer getCorpid() {
 		return corpid;
 	}
 
@@ -77,7 +78,7 @@ public class Terminal {
 		this.corpid = corpid;
 	}
 
-	public int getGroupid() {
+	public Integer getGroupid() {
 		return groupid;
 	}
 
@@ -125,12 +126,22 @@ public class Terminal {
 		this.password = password;
 	}
 
-	public long getId() {
+	public Long getId() {
 		return id;
 	}
 
-	public void setId(long id) {
+	public void setId(Long id) {
 		this.id = id;
 	}
 
+	public static void main(String[] args) {
+		Terminal terminal = new Terminal();
+		terminal.setUserid(12);
+		terminal.setName1("hello");
+		
+		String json = JSONUtil.toString(terminal);
+		System.out.println("Json: " + json);
+		
+		
+	}
 }

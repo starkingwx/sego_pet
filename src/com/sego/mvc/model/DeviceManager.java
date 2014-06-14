@@ -42,7 +42,7 @@ public class DeviceManager {
 		operation.setArchive_operation(dbop);
 
 		Terminal terminalInfo = new Terminal();
-		terminalInfo.setUserid(userId);
+		terminalInfo.setUserid((long) userId);
 
 		List<Terminal> terms = new ArrayList<Terminal>();
 		terms.add(terminalInfo);
