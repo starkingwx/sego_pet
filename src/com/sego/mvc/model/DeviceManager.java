@@ -31,7 +31,7 @@ import com.sego.mvc.model.constant.DeviceField;
 public class DeviceManager {
 	private static Log log = LogFactory.getLog(DeviceManager.class);
 
-	public DeviceBindResult bindDevice(int userId, String deviceId) {
+	public DeviceBindResult bindDevice(int userId, long deviceId) {
 		Operation operation = new Operation();
 		operation.setCmdtype(DeviceOperationConstants.ARCHIVE_OPERATION.name());
 
@@ -51,7 +51,7 @@ public class DeviceManager {
 		WhereCondition whereCond = new WhereCondition();
 		whereCond.setName("deviceno");
 		whereCond.setType("VARCHAR");
-		whereCond.setValue(deviceId);
+		whereCond.setValue(String.valueOf(deviceId));
 		
 		List<WhereCondition> wheres = new ArrayList<WhereCondition>();
 		wheres.add(whereCond);
@@ -60,7 +60,7 @@ public class DeviceManager {
 		DeviceBindResult bindResult = new DeviceBindResult();
 		bindResult.setResult("3"); // set failed as default
 		HttpResponseResult response = postToDeviceServer(
-				JSONUtil.toString(operation), deviceId);
+				JSONUtil.toString(operation), String.valueOf(deviceId));
 
 		log.info("bindDevice - status: " + response.getStatusCode()
 				+ " response text: " + response.getResponseText());
@@ -75,8 +75,12 @@ public class DeviceManager {
 						List<Terminal> terminalList = res.getArchive_operation().getTerminal();
 						if (terminalList.size() > 0) {
 							Terminal term = terminalList.get(0);
-							bindResult.setDevice_id(term.getId());
-							bindResult.setDevice_password(term.getPassword());
+							bindResult.setDevice_id(deviceId);
+							if (term.getPassword() != null) {
+								bindResult.setDevice_password(term.getPassword());
+							} else {
+								bindResult.setDevice_password("");
+							}
 						}
 						
 					} 

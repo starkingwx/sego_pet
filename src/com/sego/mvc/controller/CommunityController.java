@@ -383,4 +383,15 @@ public class CommunityController {
 		}
 		response.getWriter().print(JSONUtil.toString(resultBean));
 	}
+	
+	@RequestMapping(value = "/updatelocation")
+	public void updateLocation(HttpServletResponse response, @RequestParam(value = "username") String userName,
+			@RequestParam(value = "petid") String petId,
+			@RequestParam(value = "longitude") String longitude,
+			@RequestParam(value = "latitude") String latitude) throws IOException {
+		// TODO: update location in db
+		ResultBean resultBean = new ResultBean();
+		resultBean.setResult("0");
+		response.getWriter().print(JSONUtil.toString(resultBean));
+	}
 }

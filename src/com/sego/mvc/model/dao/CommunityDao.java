@@ -62,42 +62,6 @@ public class CommunityDao extends BaseDao {
 	
 	public PetInfos getNearbyPets(String petId, float lng, float lat) {
 		log.info("latitude: " + lat + " longitude: " + lng);
-//		String sql = "SELECT * FROM f_location WHERE ABS(longitutde - ?) < 1 AND ABS(latitude - ?) < 1";
-//		List<Map<String, Object>> list = jdbc.queryForList(sql, lng, lat);
-//		StringBuffer idBuffer = new StringBuffer();
-//		if (list != null) {
-//			for (Map<String, Object> map : list) {
-//				String longitude = String.valueOf(map
-//						.get(LocationColum.longitude.name()));
-//				String latitude = String.valueOf(map.get(LocationColum.latitude
-//						.name()));
-//				int id = (Integer) map.get(LocationColum.id.name());
-//				double lng2 = Double.parseDouble(longitude);
-//				double lat2 = Double.parseDouble(latitude);
-//				if (DistanceUtil.getDistance(lng, lat, lng2, lat2) < MAX_DISTANCE) {
-//					idBuffer.append(id).append(',');
-//				}
-//			}
-//			if (idBuffer.toString().endsWith(",")) {
-//				idBuffer.deleteCharAt(idBuffer.length() - 1);
-//			}
-//		}
-//		PetInfos petInfos = new PetInfos();
-//		List<PetInfo> petInfoList = new ArrayList<PetInfo>();
-//		petInfos.setList(petInfoList);
-//		if (idBuffer.length() > 0) {
-//			sql = "SELECT * FROM f_pets WHERE petid IN (" + idBuffer.toString()
-//					+ ")";
-//			List<Map<String, Object>> petList = jdbc.queryForList(sql);
-//			if (petList != null) {
-//				for (Map<String, Object> map : petList) {
-//					PetInfo petInfo = PetInfoDao.convertMapToPetInfo(map);
-//					petInfoList.add(petInfo);
-//				}
-//			}
-//		}
-//
-//		return petInfos;
 		
 		long longitude = (long) (lng * GPS_TRANSFORM_UNIT);
 		long latitude = (long) (lat * GPS_TRANSFORM_UNIT);
@@ -146,7 +110,46 @@ public class CommunityDao extends BaseDao {
 			}
 			petInfos.setResult("0");
 		} else {
-			petInfos.setResult("3"); // no device id
+			petInfos.setResult("0");
+			//TODO： query from phone's location table
+//			String sql = "SELECT * FROM f_location WHERE ABS(longitutde - ?) < 1 AND ABS(latitude - ?) < 1";
+//			List<Map<String, Object>> list = jdbc.queryForList(sql, lng, lat);
+//			StringBuffer idBuffer = new StringBuffer();
+//			if (list != null) {
+//				for (Map<String, Object> map : list) {
+//					String longitude = String.valueOf(map
+//							.get(LocationColum.longitude.name()));
+//					String latitude = String.valueOf(map.get(LocationColum.latitude
+//							.name()));
+//					int id = (Integer) map.get(LocationColum.id.name());
+//					double lng2 = Double.parseDouble(longitude);
+//					double lat2 = Double.parseDouble(latitude);
+//					if (DistanceUtil.getDistance(lng, lat, lng2, lat2) < MAX_DISTANCE) {
+//						idBuffer.append(id).append(',');
+//					}
+//				}
+//				if (idBuffer.toString().endsWith(",")) {
+//					idBuffer.deleteCharAt(idBuffer.length() - 1);
+//				}
+//			}
+//			PetInfos petInfos = new PetInfos();
+//			List<PetInfo> petInfoList = new ArrayList<PetInfo>();
+//			petInfos.setList(petInfoList);
+//			if (idBuffer.length() > 0) {
+//				sql = "SELECT * FROM f_pets WHERE petid IN (" + idBuffer.toString()
+//						+ ")";
+//				List<Map<String, Object>> petList = jdbc.queryForList(sql);
+//				if (petList != null) {
+//					for (Map<String, Object> map : petList) {
+//						PetInfo petInfo = PetInfoDao.convertMapToPetInfo(map);
+//						petInfoList.add(petInfo);
+//					}
+//				}
+//			}
+	//
+//			return petInfos;
+			
+			
 		}
 		return petInfos;
 	}

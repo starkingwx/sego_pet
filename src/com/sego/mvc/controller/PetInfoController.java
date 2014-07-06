@@ -259,9 +259,14 @@ public class PetInfoController extends ExceptionController {
 			resultBean.setResult("5"); // pet id is empty
 		} else {
 			DeviceManager deviceManager = ContextLoader.getDeviceManager();
-			resultBean = deviceManager.bindDevice(Integer.parseInt(petId), deviceNo);
-			if ("0".equals(resultBean.getResult())) {
-				petInfoDao.updatePetInfo(petId, null, null, null, null, null, null, null, null, deviceNo, resultBean.getDevice_password());
+			try {
+				resultBean = deviceManager.bindDevice(Integer.parseInt(petId), Long.parseLong(deviceNo));
+				if ("0".equals(resultBean.getResult())) {
+					petInfoDao.updatePetInfo(petId, null, null, null, null, null, null, null, null, String.valueOf(resultBean.getDevice_id()), resultBean.getDevice_password());
+				}
+			} catch (NumberFormatException e) {
+				// TODO: handle exception
+				resultBean.setResult("6"); //  not valid deviceno
 			}
 		}
 		response.getWriter().print(JSONUtil.toString(resultBean));

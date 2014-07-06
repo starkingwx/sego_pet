@@ -231,7 +231,7 @@ Return:	json
  code: 	0	成功	
 		1	坐标为空
 		2	坐标不是数字
-		3	未绑定设备号
+
 
 3. 获取关注的宠物(sig)
 Path: community/getconcernpets
@@ -372,6 +372,18 @@ Return:	json	{
 		3	不在黑名单中
 		4	删除失败	
 
+14. 上传GPS地理位置(sig)
+Path: community/updatelocation
+Param: username*
+		petid*
+		longitude*  // 经度，浮点数表示
+		latitude*	// 纬度，浮点数表示
+Return: json 	｛
+					result : "code"
+				 }
+ code: 	0	成功
+ 		1	失败
+
 相册
 1. 获取相册列表(sig)
 Path: gallery/getgalleries
@@ -482,4 +494,25 @@ Return: json	{
  code: 	0	成功
 		1	photoid 为空
 		2	修改失败
+		
+系统信息
+1. 获取系统推送信息
+Path: systeminfo/getnewnotice
+Param: username* // 用户登录名
+		lastmsgid	// 上一次获取的最新消息ID， 如不传此值，将会获取全部的消息，否则返回lastmsgid之后的消息
+Return: json	
+		SystemMessages	{
+							result : "code",
+							messages : [array of SystemMessage]
+						 } 
+		SystemMessage   {
+							id			：integer,		// 消息ID
+							title		: string,		// 标题
+							createtime 	: long,			// 创建时间	
+							coverimg	: string,		// 封面图片
+							message		: string,		// 简介
+							sourceurl	: string		// 全文url - 使用webview打开(相对路径，需要自己拼接到服务器地址后面)
+						}
+ code:	0	成功
+ 		1   获取失败
 		

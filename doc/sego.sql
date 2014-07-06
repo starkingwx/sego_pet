@@ -61,12 +61,11 @@ DROP TABLE IF EXISTS `f_location`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `f_location` (
-  `deviceId` varchar(100) COLLATE utf8_unicode_ci NOT NULL,
+  `petid` int(11) COLLATE utf8_unicode_ci NOT NULL,
   `longitude` varchar(20) COLLATE utf8_unicode_ci DEFAULT NULL,
   `latitude` varchar(20) COLLATE utf8_unicode_ci DEFAULT NULL,
-  `id` int(11) DEFAULT NULL,
   `shijian` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  PRIMARY KEY (`deviceId`)
+  PRIMARY KEY (`petid`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
