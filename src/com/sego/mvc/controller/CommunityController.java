@@ -389,9 +389,15 @@ public class CommunityController {
 			@RequestParam(value = "petid") String petId,
 			@RequestParam(value = "longitude") String longitude,
 			@RequestParam(value = "latitude") String latitude) throws IOException {
-		// TODO: update location in db
 		ResultBean resultBean = new ResultBean();
-		resultBean.setResult("0");
+		if (StringUtil.isNullOrEmpty(petId) || StringUtil.isNullOrEmpty(longitude) || StringUtil.isNullOrEmpty(latitude)) {
+			resultBean.setResult("1");
+		} else {
+			long id = communityDao.updateLocation(petId, longitude, latitude);
+			if (id > 0) {
+				resultBean.setResult("0");
+			}
+		}
 		response.getWriter().print(JSONUtil.toString(resultBean));
 	}
 }

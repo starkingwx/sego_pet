@@ -12,6 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.imeeting.framework.ContextLoader;
 import com.richitec.dao.BaseDao;
+import com.richitec.dao.BaseDao.TableField;
 import com.richitec.util.DistanceUtil;
 import com.richitec.util.StringUtil;
 import com.sego.mvc.model.DeviceManager;
@@ -307,5 +308,24 @@ public class CommunityDao extends BaseDao {
 	public int delPetFromBlackList(String petId, String userName) {
 		String sql = "DELETE FROM f_blacklist WHERE loginid = ? AND blackpetid = ?";
 		return jdbc.update(sql, userName, petId);
+	}
+	
+	public long updateLocation(String petId, String longitude, String latitude) {
+		String sql = "SELECT count(petid) FROM f_location WHERE petid = ?";
+		int count = jdbc.queryForInt(sql, petId);
+		if (count > 0) {
+			// update location
+			TableField[] updateParams = new TableField[]{new TableField("longitude", longitude, Types.VARCHAR), 
+					new TableField("latitude", latitude, Types.VARCHAR)};
+			String selection = "WHERE petid = ?";
+			TableField[] selectionArgs = new TableField[]{new TableField("petid", petId, Types.INTEGER)};
+			return update("f_location", updateParams, selection, selectionArgs);
+		} else {
+			// insert location
+			TableField[] values = new TableField[]{ new TableField("petid", petId, Types.INTEGER),
+					new TableField("longitude", longitude, Types.VARCHAR), new TableField("latitude", latitude, Types.VARCHAR)};
+			String[] keys = new String[] { LeaveMsgColumn.id.name() };
+			return insert("f_location", values, keys);
+		}
 	}
 }
