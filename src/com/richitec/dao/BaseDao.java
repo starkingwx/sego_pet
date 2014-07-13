@@ -90,6 +90,8 @@ public class BaseDao {
 		ArrayList<Integer> typeList = new ArrayList<Integer>();
 		for (TableField field : updateFields) {
 			if (!StringUtil.isNullOrEmpty(field.getValue())) {
+				log.info("param - name: " + field.getName() + " value: " + field.getValue());
+				
 				sqlBuffer.append(field.getName()).append("=?,");
 				objList.add(field.getValue());
 				typeList.add(field.getType());
@@ -99,6 +101,7 @@ public class BaseDao {
 		if (!StringUtil.isNullOrEmpty(selection)) {
 			sqlBuffer.append(" ").append(selection);
 			for (TableField field : selectionArgs) {
+				log.info("param - name: " + field.getName() + " value: " + field.getValue());
 				objList.add(field.getValue());
 				typeList.add(field.getType());
 			}

@@ -64,7 +64,7 @@ CREATE TABLE `f_location` (
   `petid` int(11) COLLATE utf8_unicode_ci NOT NULL,
   `longitude` varchar(20) COLLATE utf8_unicode_ci DEFAULT NULL,
   `latitude` varchar(20) COLLATE utf8_unicode_ci DEFAULT NULL,
-  `shijian` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `shijian` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`petid`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;

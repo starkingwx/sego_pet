@@ -1,9 +1,8 @@
 package com.sego.table;
 
 public enum LocationColum {
-	deviceId,
+	petid,
 	longitude,
 	latitude,
-	id,
 	shijian
 }
