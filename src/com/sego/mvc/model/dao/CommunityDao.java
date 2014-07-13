@@ -72,6 +72,10 @@ public class CommunityDao extends BaseDao {
 		
 		PetInfoDao petInfoDao = ContextLoader.getPetInfoDao();
 		PetInfo petInfo = petInfoDao.getPetDetail(petId);
+		if (petInfo == null) {
+			petInfos.setResult("3"); // pet doesn't exist
+			return petInfos;
+		}
 		String deviceId = petInfo.getDeviceid();
 		log.info("getNearbyPets - deviceId: " + deviceId);
 		if (!StringUtil.isNullOrEmpty(deviceId)) {
@@ -111,66 +115,79 @@ public class CommunityDao extends BaseDao {
 					}
 				}
 			}
-			petInfos.setResult("0");
-		} else {
-			petInfos.setResult("0");
-			//TODO： query from phone's location table
-			String sql = "SELECT * FROM f_location WHERE ABS(longitude - ?) <= 1 AND ABS(latitude - ?) <= 1 AND shijian >= ?";
-			List<Map<String, Object>> list = jdbc.queryForList(sql, lng, lat, (System.currentTimeMillis() - HOUR) / 1000);
-			StringBuffer idBuffer = new StringBuffer();
-			if (list != null) {
-				for (Map<String, Object> map : list) {
+		}
+		petInfos.setResult("0");
+
+		//TODO： query from phone's location table
+		String sql = "SELECT * FROM f_location WHERE ABS(longitude - ?) <= 1 AND ABS(latitude - ?) <= 1 AND shijian >= ?";
+		List<Map<String, Object>> list = jdbc.queryForList(sql, lng, lat, (System.currentTimeMillis() - HOUR) / 1000);
+		StringBuffer idBuffer = new StringBuffer();
+		if (list != null) {
+			for (Map<String, Object> map : list) {
+				String lngTmp = String.valueOf(map
+						.get(LocationColum.longitude.name()));
+				String latTmp = String.valueOf(map.get(LocationColum.latitude
+						.name()));
+				int id = (Integer) map.get(LocationColum.petid.name());
+				if (isPetIdContainedInPetInfoList(petInfos.getList(), id)) {
+					continue;
+				}
+				double lng2 = Double.parseDouble(lngTmp);
+				double lat2 = Double.parseDouble(latTmp);
+				if (DistanceUtil.getDistance(lng, lat, lng2, lat2) <= MAX_DISTANCE) {
+					idBuffer.append(id).append(',');
+				}
+			}
+			if (idBuffer.toString().endsWith(",")) {
+				idBuffer.deleteCharAt(idBuffer.length() - 1);
+			}
+		}
+	
+		if (petInfos.getList() == null) {
+			petInfos.setList(new ArrayList<PetInfo>());
+		}
+		if (idBuffer.length() > 0) {
+			sql = "SELECT p.*, l.longitude, l.latitude FROM f_pets p JOIN f_location l ON p.petid = l.petid WHERE p.petid IN (" + idBuffer.toString()
+					+ ")";
+			List<Map<String, Object>> petList = jdbc.queryForList(sql);
+			if (petList != null) {
+				List<PetInfo> petInfoList = petInfos.getList();
+				for (Map<String, Object> map : petList) {
+					PetInfo petInfoTmp = PetInfoDao.convertMapToPetInfo(map);
+					
 					String lngTmp = String.valueOf(map
 							.get(LocationColum.longitude.name()));
 					String latTmp = String.valueOf(map.get(LocationColum.latitude
 							.name()));
-					int id = (Integer) map.get(LocationColum.petid.name());
 					double lng2 = Double.parseDouble(lngTmp);
 					double lat2 = Double.parseDouble(latTmp);
-					if (DistanceUtil.getDistance(lng, lat, lng2, lat2) <= MAX_DISTANCE) {
-						idBuffer.append(id).append(',');
+					double dis = DistanceUtil.getDistance(lng, lat, lng2, lat2);
+					if (dis <= 1000) {
+						petInfoTmp.setDistance_desc("1公里以内");
+					} else if (dis <= 3000) {
+						petInfoTmp.setDistance_desc("3公里以内");
+					} else {
+						petInfoTmp.setDistance_desc("10公里以内");
 					}
-				}
-				if (idBuffer.toString().endsWith(",")) {
-					idBuffer.deleteCharAt(idBuffer.length() - 1);
+					
+					petInfoList.add(petInfoTmp);
 				}
 			}
-		
-			List<PetInfo> petInfoList = new ArrayList<PetInfo>();
-			petInfos.setList(petInfoList);
-			if (idBuffer.length() > 0) {
-				sql = "SELECT p.*, l.longitude, l.latitude FROM f_pets p JOIN f_location l ON p.petid = l.petid WHERE p.petid IN (" + idBuffer.toString()
-						+ ")";
-				List<Map<String, Object>> petList = jdbc.queryForList(sql);
-				if (petList != null) {
-					for (Map<String, Object> map : petList) {
-						PetInfo petInfoTmp = PetInfoDao.convertMapToPetInfo(map);
-						
-						String lngTmp = String.valueOf(map
-								.get(LocationColum.longitude.name()));
-						String latTmp = String.valueOf(map.get(LocationColum.latitude
-								.name()));
-						double lng2 = Double.parseDouble(lngTmp);
-						double lat2 = Double.parseDouble(latTmp);
-						double dis = DistanceUtil.getDistance(lng, lat, lng2, lat2);
-						if (dis <= 1000) {
-							petInfoTmp.setDistance_desc("1公里以内");
-						} else if (dis <= 3000) {
-							petInfoTmp.setDistance_desc("3公里以内");
-						} else {
-							petInfoTmp.setDistance_desc("10公里以内");
-						}
-						
-						petInfoList.add(petInfoTmp);
-					}
-				}
-			}
-	
-			return petInfos;
-			
-			
 		}
+
 		return petInfos;
+	}
+	
+	private boolean isPetIdContainedInPetInfoList(List<PetInfo> list, int petId) {
+		if (list == null) {
+			return false;
+		}
+		for (PetInfo petInfo : list) {
+			if (petInfo.getPetid() == petId) {
+				return true;
+			}
+		}
+		return false;
 	}
 
 	public PetInfos getConcernedPets(String userName) {

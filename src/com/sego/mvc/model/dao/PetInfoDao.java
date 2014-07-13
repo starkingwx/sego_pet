@@ -139,13 +139,19 @@ public class PetInfoDao extends BaseDao {
 	 * @param petId
 	 * @return
 	 */
-	public PetInfo getPetDetail(String petId) {
-		String sql = "SELECT * FROM f_pets WHERE petid = ?";
-		Map<String, Object> map = jdbc.queryForMap(sql, petId);
-		PetInfo petInfo = convertMapToPetInfo(map);
-		Galleries galleries = ContextLoader.getGalleryDao().getRecentGalleriesByPetId(petId, 3);
-		petInfo.setGalleries(galleries.getList());
-		return petInfo;
+	public PetInfo getPetDetail(String petId) { 
+		try {
+			String sql = "SELECT * FROM f_pets WHERE petid = ?";
+			Map<String, Object> map = jdbc.queryForMap(sql, petId);
+			PetInfo petInfo = convertMapToPetInfo(map);
+			Galleries galleries = ContextLoader.getGalleryDao().getRecentGalleriesByPetId(petId, 3);
+			petInfo.setGalleries(galleries.getList());
+			return petInfo;
+		} catch (Exception e) {
+			log.info(e.getMessage());
+			return null;
+		}
+		
 	}
 
 	public static PetInfo convertMapToPetInfo(Map<String, Object> map) {
